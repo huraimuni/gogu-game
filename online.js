@@ -27,7 +27,7 @@
   /* ---------- 상태 합치기 ---------- */
   function seasonReset(o,season){
     var n=G.fresh();
-    n.shop=(o&&o.shop)||{};     // 포인트샵 아이템은 시즌이 바뀌어도 유지
+    n.shop=(o&&o.shop)||{}; n.skin=o&&o.skin;     // 포인트샵 아이템은 시즌이 바뀌어도 유지
     n.season=season; n.born=Date.now();
     return n;
   }
@@ -37,6 +37,7 @@
     var has=function(i){return U.items.indexOf(i)>=0};
     G.perks.offlineH = has("perk_offline24")?24:has("perk_offline12")?12:8;
     G.perks.couponMax = has("perk_coupon15")?15:10;
+    G.owned = U.items.slice(); if(G.onItems) G.onItems();
   }
 
   function afterLoad(d){
@@ -167,6 +168,7 @@
     b.addEventListener("click",function(){G.openSheet(tab)});p.appendChild(b);
   }
   function tabMore(p){
+    menuItem(p,"스킨","고구마 · 화로 · 불 꾸미기","sk");
     menuItem(p,"클랜","클랜 만들기 · 가입 · 클랜원 보기","cl");
     menuItem(p,U.gifts>0?"내정보 ("+U.gifts+")":"내정보",U.gifts>0?"받을 선물이 있어요":"닉네임 · 내 코드 · 선물함 · 보유 아이템","me");
     if(!U.ready)note(p,"서버 연결 후 이용할 수 있어요.");

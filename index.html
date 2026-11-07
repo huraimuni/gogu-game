@@ -324,7 +324,7 @@ body.boost .term .f2{animation-duration:.2s}
   function load(){
     var d=fresh();
     try{var r=localStorage.getItem(KEY);if(r){var o=JSON.parse(r);for(var k in o)d[k]=o[k];}}catch(e){}
-    if((d.season||0)!==curSeason()){var n=fresh();n.shop=d.shop||{};d=n}   // 시즌이 바뀌면 진행은 초기화, 아이템은 유지
+    if((d.season||0)!==curSeason()){var n=fresh();n.shop=d.shop||{};n.skin=d.skin;d=n}   // 시즌이 바뀌면 진행은 초기화, 아이템은 유지
     return d;
   }
   function save(){
@@ -474,7 +474,7 @@ body.boost .term .f2{animation-duration:.2s}
   var sheetOpen=false;
   function openSheet(t){
     tab=t;sheetOpen=true;
-    document.querySelectorAll(".stab button[data-t]").forEach(function(x){x.setAttribute("aria-selected",x.dataset.t===((t==="cl"||t==="me")?"more":t)?"true":"false")});
+    document.querySelectorAll(".stab button[data-t]").forEach(function(x){x.setAttribute("aria-selected",x.dataset.t===((t==="cl"||t==="me"||t==="sk")?"more":t)?"true":"false")});
     $("sheet").classList.add("on");$("sheet").setAttribute("aria-hidden","false");$("scrim").classList.add("on");
     renderPanel();paintTop();paintPanel();
   }
@@ -549,18 +549,26 @@ body.boost .term .f2{animation-duration:.2s}
   });
   window.GoguGame={
     state:function(){return S},
-    setState:function(o){S=o;lastT=Date.now();renderPanel();paintTop();paintPanel();save()},
+    setState:function(o){S=o;lastT=Date.now();renderPanel();paintTop();paintPanel();save();if(window.GoguGame&&window.GoguGame.onItems)window.GoguGame.onItems()},
     fresh:fresh,save:save,toast:toast,fmt:fmt,el:el,$:$,
     perks:PERK,
     registerTab:function(id,fn){ext[id]=fn},
     refresh:function(){if(sheetOpen&&ext[tab])renderPanel();paintTop()},
     currentTab:function(){return sheetOpen?tab:null},
-    openSheet:openSheet
+    openSheet:openSheet,
+    owned:[],
+    setArt:function(a,b){
+      document.querySelectorAll("#term .f1").forEach(function(i){i.src=a});
+      document.querySelectorAll("#term .f2").forEach(function(i){i.src=b});
+      var sa=$("spA"),sb=$("spB"),ti=document.querySelector(".total img");
+      if(sa)sa.src=a;if(sb)sb.src=b;if(ti)ti.src=a;
+    }
   };
   if(window.GoguOnline)window.GoguOnline.start(window.GoguGame);
   paintTop();
 })();
 </script>
+<script src="skins.js"></script>
 <script src="online.js"></script>
 
 </body>

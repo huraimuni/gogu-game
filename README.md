@@ -11,3 +11,7 @@
 4. 첫 로그인 후 SQL Editor에서 운영자 지정: `update gogu_profiles set is_admin = true where code = '내 코드';`
 
 모든 테이블·함수 이름은 `gogu_` 로 시작해 다른 앱과 섞이지 않습니다.
+
+## 스킨
+- 고구마 / 화로 / 불 3칸, 무료 / 유료 / 이벤트 3등급 (`skins.js`).
+- 유료·이벤트 스킨은 `supabase/skins.sql`을 SQL Editor에서 한 번 실행하면 등록되고, 운영자 페이지에서 코드로 지급합니다.
