@@ -3,6 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="icon" href="icons/appicon_512.png">
+<link rel="apple-touch-icon" href="icons/appicon_512.png">
+<meta name="theme-color" content="#0e1426">
 <title>고구마 굽기</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&display=swap">
@@ -125,10 +128,10 @@ body.boost .term .f2{animation-duration:.2s}
   padding:12px max(16px,env(safe-area-inset-left,0px)) 0 max(16px,env(safe-area-inset-right,0px))}
 .sheet.on{transform:translateY(0)}
 .grip{width:44px;height:5px;border-radius:3px;background:#cfd6e1;margin:0 auto 10px;flex:none}
-.stab{display:flex;gap:18px;border-bottom:1px solid var(--line);flex:none}
-.stab button{border:0;background:none;font:700 16px var(--f-body);color:var(--sheet-muted);padding:8px 4px 10px;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-1px}
+.stab{display:flex;gap:11px;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--line);flex:none}
+.stab button{white-space:nowrap;border:0;background:none;font:700 15px var(--f-body);color:var(--sheet-muted);padding:8px 4px 10px;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-1px}
 .stab button[aria-selected="true"]{color:var(--sheet-fg);border-bottom-color:var(--sheet-fg)}
-.stab .x{margin-left:auto;font-size:20px;color:var(--sheet-muted)}
+.stab .x{position:sticky;right:0;background:var(--sheet);margin-left:auto;font-size:20px;color:var(--sheet-muted)}
 .hud{flex:none;margin:12px 0 8px;border:3px solid transparent;border-radius:16px;padding:9px 14px;
   background:linear-gradient(#fff,#fff) padding-box,linear-gradient(90deg,#ff5d7a,#ffb347,#ffe36e) border-box}
 .hud .m{font:400 22px var(--f-display);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
@@ -155,6 +158,24 @@ body.boost .term .f2{animation-duration:.2s}
 .btn{border:0;border-radius:12px;background:var(--blue);color:#fff;font:700 14px var(--f-body);padding:10px 14px;cursor:pointer;white-space:nowrap}
 .btn:disabled{background:#c5cdda;cursor:default}
 .btn.ghost{background:#e6ebf3;color:var(--sheet-fg)}
+
+.seg{display:flex;gap:6px;margin:0 0 10px;flex-wrap:wrap}
+.seg button{border:1px solid var(--line);background:#fff;color:var(--sheet-fg);border-radius:999px;padding:6px 12px;font:700 13px var(--f-body);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--sheet-fg);color:#fff;border-color:var(--sheet-fg)}
+.rk{display:grid;grid-template-columns:34px 1fr auto;gap:8px;align-items:center;background:var(--row);border-radius:14px;padding:9px 12px;margin-bottom:6px;font:600 14px var(--f-body)}
+.rk.me{outline:2px solid var(--blue);background:#fff}
+.rk .n{color:var(--sheet-muted);font-variant-numeric:tabular-nums}.rk .v{font-variant-numeric:tabular-nums;color:#b0651a;font-weight:700}
+.rk small{color:var(--sheet-muted);font-weight:500;margin-left:4px}
+.card{background:var(--row);border-radius:16px;padding:12px 14px;margin-bottom:10px;font:500 14px/1.5 var(--f-body)}
+.card h4{margin:0 0 6px;font:700 14px var(--f-body);color:var(--sheet-muted)}
+.card .big{font:700 18px var(--f-body)}
+.card .row{display:flex;gap:8px;align-items:center;margin-top:8px}
+.card input{flex:1;min-width:0;border:1px solid var(--line);border-radius:10px;padding:9px 10px;font:500 15px var(--f-body);background:#fff;color:var(--sheet-fg)}
+.card .btn,.cbtn{border:0;border-radius:10px;padding:9px 14px;font:700 14px var(--f-body);background:var(--blue);color:#fff;cursor:pointer}
+.cbtn.ghost{background:#e3e8f1;color:var(--sheet-fg)}
+.kakao{width:100%;border:0;border-radius:12px;padding:13px;font:700 16px var(--f-body);background:#fee500;color:#191600;cursor:pointer}
+.muted{color:var(--sheet-muted);font-size:13px}
+.codebox{font:700 18px/1 ui-monospace,Menlo,monospace;letter-spacing:.04em}
 .item:focus-visible,.btn:focus-visible,.stab button:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
 .note{font-size:12px;color:var(--sheet-muted);display:flex;justify-content:space-between;gap:8px;align-items:center;margin-top:6px}
 .note a{color:var(--blue);font-weight:700}
@@ -194,6 +215,7 @@ body.boost .term .f2{animation-duration:.2s}
       <img class="f2" alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAHmUlEQVR4Xu2dTWhdRRTHp9ZCQ2MMocWSVE1NwBpitIKiGxciGFFwpxZ1IcGNq4Kr1r3Z6kYoUtxY/FgpWKygRXBTFNSmJa3QaNUmtLaEWlMiiETOfe88zp03H2fmztw772V+UJLcrzf3/O//nJm5990Kkclk+oRdI6MbnFPhbMfZJmMAAnhldX3DFkjOdpxtMgHEALjB5m6XkXAJXKxtMwRukLnbubgoo4ETbM42vSDGrf1yFVxdXdkyPTmxcfbCkoCfvXpeW3ql4eCAdrC1TX54x6h4//S34utXXi1t88HCha59YLvpSf2xEBCaGyNVD9Blf4D9YXVh69a+89jjRVOmHthR/Fw8fdO7aWcvrWn3/Wn1crHu+5srpW1UAcY2wwUhA/u7iJKUIHBi9KRenpnsBJ6Lj0AmYQAUhwoEQZaFkMUDXMQAkqgheGJw9eOVnxIPjuzuvvKF6Fw8KAQVyVUIpDFBaGpKVQgT4GTZEXBOr935ULHbe0Js+IhSuyDU5pCSaD2oiku6OvD6ovjw3SlruuKAIhRC/PGDV6pCaqshKAQ2fnrPYBQxMNDAgWOz3fG89FX3st8WimVvHr6rex1BriUdN7RFAHxcQalFEGplAMWo6g7qCBBC3D2jDuieJ9XCtIXwESNEvVARPWWZxPBBTkuFEAgJcEkc2RV0O0dnUKq6QUVUh5jEwMGaqY641ASgJA4TU5qiKQpxHVe4Ek0QWQw5VcVEJ4ytRiA6IYAYrqBEEQQHeHL/ndaOOrAN+GRUQgCxXUGJVkNUg6mYuAafohOibjGAW0IHSZ7+oJiCBjVFNQloA44ZWgzVFEhdBE9ZunQl45O+qgSe44iQUyC+REtZNlTBBZFCBZ1bHyh0OiR28dYRzSFAlTqCeb3KMQBbfZBpSgikMYfYqCqESQyammztqJsoDaKFPURgVflfdVyTG5A6u7A+BBeETqvjzabQoqgE0qG744ftlFNUqOW+BE1ZcDJDO3cVbblx7WqnTaHqAWJzAhWBtgeDT9spyH2LUMurEFQQGQgMvSUrB9LkHFvQVfw88G9xIdDAVwlOE1QSxPZAAoBXq+oBAJ+gq4DPQCcAunbVudy3t+ZdQ+DkXpg72BWfLz47Vix7+rmXSuvo8l8++sT54rvnxeeLfTjHpzS1/cdH3/YSxcshIMajTzzjHFQEg0sDfO/6ttLxIP2ohO0VID6nTh53vq/u7JCqYmw2Tp087uSU4JOLmWpkQRLDq4YsLnyX2Gn0D9khieFc1AFVf75Kr6sql1d+r3qIEqvXWg9au0JnJxDX8YhXytLN/2SqPwQRJGWBQNC9a4LQ7vCFTtlUwcshPsgdgamZR0qHqbpeTjMjO8tPrLuub4ogDgGacEm/uQPwKuo66h7FxxDEp6CHSldAMIfU7ZIYYvgQUozggmSqE9Qhdbkkljtc01Vod2SHJEhwh8R2SSx3uBLDHdkhCRLFIbFcEtMdLvUjljuyQxKktqkTAK9wvBpVs6Mm5rffKFY/e99W8fm5/8Shf4aKv8/sL79eA9YBuN4HOnsttzsmtQqigjs9DbMAcyf2i6OzP3ZEEedaAgmxVRsj7vEpnMebYhGthsQAxAB36LjjqdtKq8BRcnCbDDaHnhJEBsRRCaQTDcT485uJpEVpPGVxr1isH1x3qFIQHKOV8obYn1s3jQkC9yvkexYmjrRXHlnXbPWptHy89Xf7RwEegy7TAYV896j5VRsx6OmU1Y9kQRKjsZQFYxHuOISOPwC5NyVz5cu/i0UwHqEFHscngG2M0tRTNI07BMYJ+A8ChcGny1jM7u3aTO5tyX/Tz5bb0RSNC6JCNX4wjT9M6Nyk+owUSFIQAKZDrF1i2RXtv1EEW2pLkcZqiAwEXx5rgCg07yvrhyJVcepMqiTrEMrcweHu+GmEUNFLTklSEFov8HfnoGoEo8dOca4rSUEoVAijKHvfaO0GQji4h6JKm3WThCBOgfAMtg7sPDi1ISJJCOIMFQWcge5ggjVJTl8p0JuC6JDFIcL1Slc4mW4vQq/arpohO4ML7Hfi19LxUnQH0LhDoufuwDUnNo0LEgXHmpIS/SlID5OUIOz60cc0LojtXvlmo3FBMmWyIImRBUmMaIJYby4JIbZtL78jKxU47eKcnw9RRur0ZZKmF9UMDA6LeTEsDq0t+bQ9CvODE2IA/n9Ewwt2yOsEnV9QZiPo16IR6e2eVtbXrhfbLE8IMdbWZvmt28XY4b+s+1Jc9qGfRYGLhEuM74lES1k+oBgAiAFBk4Gg63ARkH5WSiQjiCrQqqBxg45imgTsEtv+X+NGJ1rKwpaP77u/cxLLF89bT8iUdlxSkg1dytK6b3xfZ9XF82c6v/t8/8REcEGwfugepKaiuAaFA4pmOrbr51IxKPj0ZUhRgvayOMWcntzYktkxroGjmGoEp37oRJBp97iC9baCOkQlCPcrB5x0FhuuCPI3dkP2toIKAthcwhWIElIsbtDl1KQjpBhAcEFQFDwB+k52Lj6i+eLy/XSEPrUfsn5EE4QiTzH4CNQ08tcmQotAieIQE5w5oDpF43xHJaYAMrULwoEjWijqDHYmk8lkMplNxP9c1ieikbY2BgAAAABJRU5ErkJggg==">
     </button>
     <div class="side">
+      <button class="sq" id="openRank" type="button"><span class="b">랭킹</span></button>
       <button class="sq" id="openShop" type="button"><span class="b">상점</span></button>
     </div>
   </div>
@@ -212,6 +234,9 @@ body.boost .term .f2{animation-duration:.2s}
     <button role="tab" id="t-up" aria-selected="true" data-t="up">상점</button>
     <button role="tab" id="t-sh" aria-selected="false" data-t="sh">포인트샵</button>
     <button role="tab" id="t-ms" aria-selected="false" data-t="ms">미션</button>
+    <button role="tab" id="t-rk" aria-selected="false" data-t="rk">랭킹</button>
+    <button role="tab" id="t-cl" aria-selected="false" data-t="cl">클랜</button>
+    <button role="tab" id="t-me" aria-selected="false" data-t="me">내정보</button>
     <button class="x" id="closeSheet" type="button" aria-label="닫기">닫기</button>
   </div>
   <div class="hud"><div class="m" id="hm">0원</div><div class="r"><span class="s">초당 <span id="hs">0</span></span> · <span class="c">터치당 <span id="hc">1</span></span></div></div>
@@ -233,6 +258,8 @@ body.boost .term .f2{animation-duration:.2s}
 </div>
 <div class="toast" id="toast"></div>
 
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>
 (function(){
   var KEY="gogu-v1";
@@ -266,7 +293,8 @@ body.boost .term .f2{animation-duration:.2s}
     {id:"s6",kind:"s",nm:"프랜차이즈 본점 계약",ab:"본점",base:14000000,gain:36000},
     {id:"s7",kind:"s",nm:"전국 군고구마 체인",ab:"전국",base:220000000,gain:310000}
   ];
-  var GROW=1.15, OFFLINE_CAP=8*3600;
+  var GROW=1.15, PERK={offlineH:8,couponMax:10}, ext={};
+  function offCap(){return PERK.offlineH*3600}
   var MIS=[
     {id:"m1",nm:"고구마 10번 굽기",goal:10,get:function(){return S.clicks},pts:20},
     {id:"m2",nm:"초당 10원 달성",goal:10,get:function(){return rawS()},pts:30},
@@ -283,11 +311,17 @@ body.boost .term .f2{animation-duration:.2s}
     {id:"p3",nm:"무쇠 화로 VIP",ab:"VIP",ef:"터치당·초당 +25%",cost:400,c:.25,s:.25},
     {id:"p4",nm:"황금 집게",ab:"골드",ef:"터치당·초당 +50%",cost:1200,c:.5,s:.5}
   ];
-  function fresh(){return {money:0,total:0,clicks:0,boosts:0,lv:{},pts:0,done:{},shop:{},coupons:3,couponAt:Date.now(),boostEnd:0,last:Date.now()}}
+  function curSeason(){ // 서버와 같은 규칙: 2026-12-01 전은 0, 이후 3개월마다 +1 (한국시간)
+    var k=new Date(Date.now()+9*3600*1000),y=k.getUTCFullYear(),m=k.getUTCMonth()+1;
+    if(y<2026||(y===2026&&m<12))return 0;
+    return 1+Math.floor(((y-2026)*12+m-12)/3);
+  }
+  function fresh(){return {money:0,total:0,clicks:0,boosts:0,lv:{},pts:0,done:{},shop:{},coupons:3,couponAt:Date.now(),boostEnd:0,last:Date.now(),season:curSeason(),born:Date.now()}}
   var S=load();
   function load(){
     var d=fresh();
     try{var r=localStorage.getItem(KEY);if(r){var o=JSON.parse(r);for(var k in o)d[k]=o[k];}}catch(e){}
+    if((d.season||0)!==curSeason()){var n=fresh();n.shop=d.shop||{};d=n}   // 시즌이 바뀌면 진행은 초기화, 아이템은 유지
     return d;
   }
   function save(){
@@ -354,6 +388,7 @@ body.boost .term .f2{animation-duration:.2s}
 
   function renderPanel(){
     var p=$("panel");p.innerHTML="";
+    if(ext[tab]){ext[tab](p);return}
     if(tab==="up"){
       [["c","터치당 수입"],["s","초당 수입 · 구매하면 자동으로 벌어요"]].forEach(function(g){
         p.appendChild(el("div","group",g[1]));
@@ -409,6 +444,7 @@ body.boost .term .f2{animation-duration:.2s}
   }
   function paintPanel(){
     var p=$("panel");
+    if(ext[tab])return;
     if(tab==="up"){
       var items=p.querySelectorAll(".item");
       for(var i=0;i<items.length;i++){
@@ -443,6 +479,7 @@ body.boost .term .f2{animation-duration:.2s}
   $("openShop").addEventListener("click",function(){openSheet("up")});
   $("openPts").addEventListener("click",function(){openSheet("sh")});
   $("openMis").addEventListener("click",function(){openSheet("ms")});
+  $("openRank").addEventListener("click",function(){openSheet("rk")});
   $("lvBtn").addEventListener("click",function(){openSheet("ms")});
   $("scrim").addEventListener("click",closeSheet);
   $("closeSheet").addEventListener("click",closeSheet);
@@ -464,7 +501,7 @@ body.boost .term .f2{animation-duration:.2s}
   // 시간 기준 정산: 화면을 꺼두거나 다른 탭에 있어도 지난 시간만큼 초당 수입이 쌓인다 (최대 8시간)
   var lastT=Date.now();
   function settle(now){
-    var dt=Math.max(0,Math.min((now-lastT)/1000,OFFLINE_CAP));lastT=now;
+    var dt=Math.max(0,Math.min((now-lastT)/1000,offCap()));lastT=now;
     if(dt<=0)return 0;
     var g=rawS()*dt;                                   // 쿠폰 배율은 켜져 있던 구간만 적용
     if(S.boostEnd>now-dt*1000){
@@ -473,13 +510,13 @@ body.boost .term .f2{animation-duration:.2s}
     }
     S.money+=g;S.total+=g;
     var add=Math.floor((now-S.couponAt)/180000);
-    if(add>0){S.coupons=Math.min(10,S.coupons+add);S.couponAt=now}
-    if(S.coupons>=10)S.couponAt=now;
+    if(add>0){S.coupons=Math.min(PERK.couponMax,S.coupons+add);S.couponAt=now}
+    if(S.coupons>=PERK.couponMax)S.couponAt=now;
     return g;
   }
   (function(){
     var now=Date.now();
-    lastT=Math.max(S.last||now,now-OFFLINE_CAP*1000);
+    lastT=Math.max(S.last||now,now-offCap()*1000);
     var g=settle(now);
     if(g>=1)window.__pt="자리를 비운 사이 "+fmt(g)+"원이 쌓였어요";
   })();
@@ -501,9 +538,21 @@ body.boost .term .f2{animation-duration:.2s}
     var sp=$("splash");sp.classList.add("off");setTimeout(function(){sp.remove()},400);
     if(window.__pt){var m=window.__pt;window.__pt=null;setTimeout(function(){toast(m)},350)}
   });
+  window.GoguGame={
+    state:function(){return S},
+    setState:function(o){S=o;lastT=Date.now();renderPanel();paintTop();paintPanel();save()},
+    fresh:fresh,save:save,toast:toast,fmt:fmt,el:el,$:$,
+    perks:PERK,
+    registerTab:function(id,fn){ext[id]=fn},
+    refresh:function(){if(sheetOpen&&ext[tab])renderPanel();paintTop()},
+    currentTab:function(){return sheetOpen?tab:null},
+    openSheet:openSheet
+  };
+  if(window.GoguOnline)window.GoguOnline.start(window.GoguGame);
   paintTop();
 })();
 </script>
+<script src="online.js"></script>
 
 </body>
 </html>
