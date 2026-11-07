@@ -94,6 +94,7 @@ body.boost .term .f2{animation-duration:.2s}
 .lv{flex:1;min-width:0;display:flex;align-items:center;gap:8px;background:#fff;border-radius:999px;padding:6px 14px 6px 6px;color:var(--sheet-fg)}
 .dia{width:34px;height:34px;flex:none;border-radius:50%;background:linear-gradient(135deg,#6aa6ff,#a56bff);color:#fff;font:400 15px/34px var(--f-display);text-align:center}
 .lv .bar{flex:1;height:14px;border-radius:7px;background:#e6ebf2;overflow:hidden;position:relative}
+.lv{border:0;font:inherit;cursor:pointer;text-align:left}.lv:focus-visible{outline:3px solid var(--gold);outline-offset:3px}.lv.can{animation:pulse .8s ease-in-out infinite}
 .lv .bar>div{height:100%;width:0;background:linear-gradient(90deg,#4ccf86,#4aa3ff,#a56bff);transition:width .2s}
 .lv .bar span{position:absolute;inset:0;text-align:center;font:700 10px/14px var(--f-body);color:#173}
 .splash{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;
@@ -199,7 +200,7 @@ body.boost .term .f2{animation-duration:.2s}
 
   <div class="bottom">
     <button class="cp" id="cp" type="button" aria-label="화력 최대 쿠폰 사용"><span id="cpT">화력<br>최대</span><i id="cpN">3</i></button>
-    <div class="lv"><div class="dia" id="dia">1</div><div class="bar"><div id="lvb"></div><span id="lvt">0%</span></div></div>
+    <button class="lv" id="lvBtn" type="button" aria-label="레벨 미션 열기"><div class="dia" id="dia">1</div><div class="bar"><div id="lvb"></div><span id="lvt">0%</span></div></button>
   </div>
 </div>
 
@@ -223,7 +224,7 @@ body.boost .term .f2{animation-duration:.2s}
     <div class="sp-art"><img class="f1" id="spA" alt=""><img class="f2" id="spB" alt=""></div>
     <div class="sp-tag">고구마 굽기</div>
     <h2>추억의 붕어빵게임이여<br>돌아와라!!</h2>
-    <p class="sp-msg">이 게임은 기존 붕어빵게임이 서비스 종료되니 아쉬움을 달래기 위해 당근게임 부활을 기리며 만든 게임입니다.</p>
+    <p class="sp-msg">붕어빵게임이 돌아오길 간절히 바라는<br>찐팬이 만든 게임입니다.</p>
     <p class="sp-sub">당근마켓과 관련 없는 개인 제작 게임이며, 그림과 이름은 모두 새로 만들었습니다.</p>
     <div class="sp-bar"><div></div></div>
     <p class="sp-load" id="spLoad">불 피우는 중…</p>
@@ -398,7 +399,7 @@ body.boost .term .f2{animation-duration:.2s}
     var lv=level(),cur=null;
     for(var i=0;i<MIS.length;i++){if(!S.done[MIS[i].id]){cur=MIS[i];break}}
     var pr=cur?Math.min(1,cur.get()/cur.goal):1;
-    $("dia").textContent=lv+1;$("lvb").style.width=(pr*100)+"%";$("lvt").textContent=cur?Math.floor(pr*100)+"%":"MAX";
+    $("dia").textContent=lv+1;$("lvb").style.width=(pr*100)+"%";$("lvt").textContent=cur?(claimable()>0?"미션 완료! 눌러서 받기":cur.nm+" "+fmt(Math.floor(Math.min(cur.get(),cur.goal)))+"/"+fmt(cur.goal)):"MAX";$("lvBtn").classList.toggle("can",claimable()>0);
     var cl=claimable(),mb=$("misBadge");mb.hidden=cl===0;mb.textContent=cl;
     var left=S.boostEnd-Date.now();
     $("cpN").textContent=S.coupons;
@@ -442,6 +443,7 @@ body.boost .term .f2{animation-duration:.2s}
   $("openShop").addEventListener("click",function(){openSheet("up")});
   $("openPts").addEventListener("click",function(){openSheet("sh")});
   $("openMis").addEventListener("click",function(){openSheet("ms")});
+  $("lvBtn").addEventListener("click",function(){openSheet("ms")});
   $("scrim").addEventListener("click",closeSheet);
   $("closeSheet").addEventListener("click",closeSheet);
   document.querySelectorAll(".stab button[data-t]").forEach(function(t){
