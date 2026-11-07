@@ -171,9 +171,6 @@
     menuItem(p,"스킨","고구마 · 화로 · 불 꾸미기","sk");
     menuItem(p,"클랜","클랜 만들기 · 가입 · 클랜원 보기","cl");
     menuItem(p,U.gifts>0?"내정보 ("+U.gifts+")":"내정보",U.gifts>0?"받을 선물이 있어요":"닉네임 · 내 코드 · 선물함 · 보유 아이템","me");
-    var cm=el("a","menu");cm.href="https://open.kakao.com/o/p80tC5Vi";cm.target="_blank";cm.rel="noopener noreferrer";cm.style.textDecoration="none";
-    var cl=el("div");cl.appendChild(document.createTextNode("커뮤니티 가기"));cl.appendChild(el("small",null,"카카오톡 오픈채팅에서 같이 이야기해요"));
-    cm.appendChild(cl);cm.appendChild(el("i",null,"›"));p.appendChild(cm);
     if(!U.ready)note(p,"서버 연결 후 이용할 수 있어요.");
     else if(!U.user)needLogin(p);
   }

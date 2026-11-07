@@ -130,8 +130,6 @@ body.boost .term .f2{animation-duration:.2s}
 .grip{width:44px;height:5px;border-radius:3px;background:#cfd6e1;margin:0 auto 10px;flex:none}
 .stab{display:flex;gap:11px;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--line);flex:none}
 .stab button{white-space:nowrap;border:0;background:none;font:700 15px var(--f-body);color:var(--sheet-muted);padding:8px 4px 10px;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-1px}
-.stab button[data-t]{display:none}
-.stitle{font:700 17px var(--f-body);padding:6px 4px 10px;align-self:center}
 .stab button[aria-selected="true"]{color:var(--sheet-fg);border-bottom-color:var(--sheet-fg)}
 .stab .x{position:sticky;right:0;background:var(--sheet);margin-left:auto;font-size:20px;color:var(--sheet-muted)}
 .hud{flex:none;margin:12px 0 8px;border:3px solid transparent;border-radius:16px;padding:9px 14px;
@@ -221,7 +219,6 @@ body.boost .term .f2{animation-duration:.2s}
       <img class="f2" alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAHmUlEQVR4Xu2dTWhdRRTHp9ZCQ2MMocWSVE1NwBpitIKiGxciGFFwpxZ1IcGNq4Kr1r3Z6kYoUtxY/FgpWKygRXBTFNSmJa3QaNUmtLaEWlMiiETOfe88zp03H2fmztw772V+UJLcrzf3/O//nJm5990Kkclk+oRdI6MbnFPhbMfZJmMAAnhldX3DFkjOdpxtMgHEALjB5m6XkXAJXKxtMwRukLnbubgoo4ETbM42vSDGrf1yFVxdXdkyPTmxcfbCkoCfvXpeW3ql4eCAdrC1TX54x6h4//S34utXXi1t88HCha59YLvpSf2xEBCaGyNVD9Blf4D9YXVh69a+89jjRVOmHthR/Fw8fdO7aWcvrWn3/Wn1crHu+5srpW1UAcY2wwUhA/u7iJKUIHBi9KRenpnsBJ6Lj0AmYQAUhwoEQZaFkMUDXMQAkqgheGJw9eOVnxIPjuzuvvKF6Fw8KAQVyVUIpDFBaGpKVQgT4GTZEXBOr935ULHbe0Js+IhSuyDU5pCSaD2oiku6OvD6ovjw3SlruuKAIhRC/PGDV6pCaqshKAQ2fnrPYBQxMNDAgWOz3fG89FX3st8WimVvHr6rex1BriUdN7RFAHxcQalFEGplAMWo6g7qCBBC3D2jDuieJ9XCtIXwESNEvVARPWWZxPBBTkuFEAgJcEkc2RV0O0dnUKq6QUVUh5jEwMGaqY641ASgJA4TU5qiKQpxHVe4Ek0QWQw5VcVEJ4ytRiA6IYAYrqBEEQQHeHL/ndaOOrAN+GRUQgCxXUGJVkNUg6mYuAafohOibjGAW0IHSZ7+oJiCBjVFNQloA44ZWgzVFEhdBE9ZunQl45O+qgSe44iQUyC+REtZNlTBBZFCBZ1bHyh0OiR28dYRzSFAlTqCeb3KMQBbfZBpSgikMYfYqCqESQyammztqJsoDaKFPURgVflfdVyTG5A6u7A+BBeETqvjzabQoqgE0qG744ftlFNUqOW+BE1ZcDJDO3cVbblx7WqnTaHqAWJzAhWBtgeDT9spyH2LUMurEFQQGQgMvSUrB9LkHFvQVfw88G9xIdDAVwlOE1QSxPZAAoBXq+oBAJ+gq4DPQCcAunbVudy3t+ZdQ+DkXpg72BWfLz47Vix7+rmXSuvo8l8++sT54rvnxeeLfTjHpzS1/cdH3/YSxcshIMajTzzjHFQEg0sDfO/6ttLxIP2ohO0VID6nTh53vq/u7JCqYmw2Tp087uSU4JOLmWpkQRLDq4YsLnyX2Gn0D9khieFc1AFVf75Kr6sql1d+r3qIEqvXWg9au0JnJxDX8YhXytLN/2SqPwQRJGWBQNC9a4LQ7vCFTtlUwcshPsgdgamZR0qHqbpeTjMjO8tPrLuub4ogDgGacEm/uQPwKuo66h7FxxDEp6CHSldAMIfU7ZIYYvgQUozggmSqE9Qhdbkkljtc01Vod2SHJEhwh8R2SSx3uBLDHdkhCRLFIbFcEtMdLvUjljuyQxKktqkTAK9wvBpVs6Mm5rffKFY/e99W8fm5/8Shf4aKv8/sL79eA9YBuN4HOnsttzsmtQqigjs9DbMAcyf2i6OzP3ZEEedaAgmxVRsj7vEpnMebYhGthsQAxAB36LjjqdtKq8BRcnCbDDaHnhJEBsRRCaQTDcT485uJpEVpPGVxr1isH1x3qFIQHKOV8obYn1s3jQkC9yvkexYmjrRXHlnXbPWptHy89Xf7RwEegy7TAYV896j5VRsx6OmU1Y9kQRKjsZQFYxHuOISOPwC5NyVz5cu/i0UwHqEFHscngG2M0tRTNI07BMYJ+A8ChcGny1jM7u3aTO5tyX/Tz5bb0RSNC6JCNX4wjT9M6Nyk+owUSFIQAKZDrF1i2RXtv1EEW2pLkcZqiAwEXx5rgCg07yvrhyJVcepMqiTrEMrcweHu+GmEUNFLTklSEFov8HfnoGoEo8dOca4rSUEoVAijKHvfaO0GQji4h6JKm3WThCBOgfAMtg7sPDi1ISJJCOIMFQWcge5ggjVJTl8p0JuC6JDFIcL1Slc4mW4vQq/arpohO4ML7Hfi19LxUnQH0LhDoufuwDUnNo0LEgXHmpIS/SlID5OUIOz60cc0LojtXvlmo3FBMmWyIImRBUmMaIJYby4JIbZtL78jKxU47eKcnw9RRur0ZZKmF9UMDA6LeTEsDq0t+bQ9CvODE2IA/n9Ewwt2yOsEnV9QZiPo16IR6e2eVtbXrhfbLE8IMdbWZvmt28XY4b+s+1Jc9qGfRYGLhEuM74lES1k+oBgAiAFBk4Gg63ARkH5WSiQjiCrQqqBxg45imgTsEtv+X+NGJ1rKwpaP77u/cxLLF89bT8iUdlxSkg1dytK6b3xfZ9XF82c6v/t8/8REcEGwfugepKaiuAaFA4pmOrbr51IxKPj0ZUhRgvayOMWcntzYktkxroGjmGoEp37oRJBp97iC9baCOkQlCPcrB5x0FhuuCPI3dkP2toIKAthcwhWIElIsbtDl1KQjpBhAcEFQFDwB+k52Lj6i+eLy/XSEPrUfsn5EE4QiTzH4CNQ08tcmQotAieIQE5w5oDpF43xHJaYAMrULwoEjWijqDHYmk8lkMplNxP9c1ieikbY2BgAAAABJRU5ErkJggg==">
     </button>
     <div class="side">
-      <button class="sq" id="openMore" type="button"><span class="b">더보기</span></button>
       <button class="sq" id="openRank" type="button"><span class="b">랭킹</span></button>
       <button class="sq" id="openShop" type="button"><span class="b">상점</span></button>
     </div>
@@ -237,7 +234,7 @@ body.boost .term .f2{animation-duration:.2s}
 
 <section class="sheet" id="sheet" aria-hidden="true">
   <div class="grip"></div>
-  <div class="stab" role="tablist"><b class="stitle" id="sTitle">상점</b>
+  <div class="stab" role="tablist">
     <button role="tab" id="t-up" aria-selected="true" data-t="up">상점</button>
     <button role="tab" id="t-sh" aria-selected="false" data-t="sh">포인트샵</button>
     <button role="tab" id="t-ms" aria-selected="false" data-t="ms">미션</button>
@@ -477,7 +474,6 @@ body.boost .term .f2{animation-duration:.2s}
   var sheetOpen=false;
   function openSheet(t){
     tab=t;sheetOpen=true;
-    var TT={up:"상점",sh:"포인트샵",ms:"미션",rk:"랭킹",more:"더보기",cl:"클랜",me:"내정보",sk:"스킨"};$("sTitle").textContent=TT[t]||"";
     document.querySelectorAll(".stab button[data-t]").forEach(function(x){x.setAttribute("aria-selected",x.dataset.t===((t==="cl"||t==="me"||t==="sk")?"more":t)?"true":"false")});
     $("sheet").classList.add("on");$("sheet").setAttribute("aria-hidden","false");$("scrim").classList.add("on");
     renderPanel();paintTop();paintPanel();
@@ -486,7 +482,6 @@ body.boost .term .f2{animation-duration:.2s}
   $("openShop").addEventListener("click",function(){openSheet("up")});
   $("openPts").addEventListener("click",function(){openSheet("sh")});
   $("openMis").addEventListener("click",function(){openSheet("ms")});
-  $("openMore").addEventListener("click",function(){openSheet("more")});
   $("openRank").addEventListener("click",function(){openSheet("rk")});
   $("lvBtn").addEventListener("click",function(){openSheet("ms")});
   $("scrim").addEventListener("click",closeSheet);
