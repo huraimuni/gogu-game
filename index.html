@@ -19,7 +19,7 @@
   --f-display:"Do Hyeon","Noto Sans KR",system-ui,sans-serif; --f-body:"Noto Sans KR",system-ui,sans-serif;
 }
 *{box-sizing:border-box}
-html,body{height:100%}
+html,body{height:100%;overscroll-behavior:none}
 body{margin:0;background:var(--night1);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.4;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
   -webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;overflow-x:hidden}
@@ -535,9 +535,15 @@ body.boost .term .f2{animation-duration:.2s}
   });
   window.addEventListener("pagehide",save);
   var tf=document.querySelectorAll("#term img");
-  $("spA").src=tf[0].src;$("spB").src=tf[1].src;
-  setTimeout(function(){$("spLoad").hidden=true;$("spGo").hidden=false;$("spGo").focus()},2300);
-  $("spGo").addEventListener("click",function(){
+  if($("spA")){$("spA").src=tf[0].src;$("spB").src=tf[1].src}
+  setTimeout(function(){if(!$("spGo"))return;$("spLoad").hidden=true;$("spGo").hidden=false;$("spGo").focus()},2300);
+  var spSeen=false;try{spSeen=sessionStorage.getItem("gogu-sp")==="1"}catch(e){}
+  if(spSeen){   // 새로고침해도 첫 화면을 다시 보여주지 않는다
+    $("splash").remove();
+    if(window.__pt){var m0=window.__pt;window.__pt=null;setTimeout(function(){toast(m0)},350)}
+  }
+  if($("spGo"))$("spGo").addEventListener("click",function(){
+    try{sessionStorage.setItem("gogu-sp","1")}catch(e){}
     var sp=$("splash");sp.classList.add("off");setTimeout(function(){sp.remove()},400);
     if(window.__pt){var m=window.__pt;window.__pt=null;setTimeout(function(){toast(m)},350)}
   });
