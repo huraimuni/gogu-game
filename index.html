@@ -176,6 +176,10 @@ body.boost .term .f2{animation-duration:.2s}
 .kakao{width:100%;border:0;border-radius:12px;padding:13px;font:700 16px var(--f-body);background:#fee500;color:#191600;cursor:pointer}
 .muted{color:var(--sheet-muted);font-size:13px}
 .codebox{font:700 18px/1 ui-monospace,Menlo,monospace;letter-spacing:.04em}
+.menu{display:flex;justify-content:space-between;align-items:center;width:100%;border:0;background:var(--row);border-radius:16px;padding:16px;margin-bottom:10px;font:700 16px var(--f-body);color:var(--sheet-fg);cursor:pointer;text-align:left}
+.menu small{display:block;font:500 13px var(--f-body);color:var(--sheet-muted);margin-top:2px}
+.menu i{font-style:normal;color:var(--sheet-muted);font-size:20px}
+.back{margin-bottom:10px}
 .item:focus-visible,.btn:focus-visible,.stab button:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
 .note{font-size:12px;color:var(--sheet-muted);display:flex;justify-content:space-between;gap:8px;align-items:center;margin-top:6px}
 .note a{color:var(--blue);font-weight:700}
@@ -235,8 +239,7 @@ body.boost .term .f2{animation-duration:.2s}
     <button role="tab" id="t-sh" aria-selected="false" data-t="sh">포인트샵</button>
     <button role="tab" id="t-ms" aria-selected="false" data-t="ms">미션</button>
     <button role="tab" id="t-rk" aria-selected="false" data-t="rk">랭킹</button>
-    <button role="tab" id="t-cl" aria-selected="false" data-t="cl">클랜</button>
-    <button role="tab" id="t-me" aria-selected="false" data-t="me">내정보</button>
+    <button role="tab" id="t-more" aria-selected="false" data-t="more">더보기</button>
     <button class="x" id="closeSheet" type="button" aria-label="닫기">닫기</button>
   </div>
   <div class="hud"><div class="m" id="hm">0원</div><div class="r"><span class="s">초당 <span id="hs">0</span>원</span> · <span class="c">터치당 <span id="hc">1</span>원</span></div></div>
@@ -471,7 +474,7 @@ body.boost .term .f2{animation-duration:.2s}
   var sheetOpen=false;
   function openSheet(t){
     tab=t;sheetOpen=true;
-    document.querySelectorAll(".stab button[data-t]").forEach(function(x){x.setAttribute("aria-selected",x.dataset.t===t?"true":"false")});
+    document.querySelectorAll(".stab button[data-t]").forEach(function(x){x.setAttribute("aria-selected",x.dataset.t===((t==="cl"||t==="me")?"more":t)?"true":"false")});
     $("sheet").classList.add("on");$("sheet").setAttribute("aria-hidden","false");$("scrim").classList.add("on");
     renderPanel();paintTop();paintPanel();
   }

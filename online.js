@@ -155,8 +155,27 @@
     note(p,"랭킹은 화력 최대 7배와 포인트샵 보너스를 뺀 기본 수입으로 계산해요. 초당 최고·터치당 최고 기록이 올라가요.");
   }
 
+  /* ---------- 더보기 탭 ---------- */
+  function back(p){
+    var b=el("button","cbtn ghost back","← 더보기");b.type="button";
+    b.addEventListener("click",function(){G.openSheet("more")});p.appendChild(b);
+  }
+  function menuItem(p,title,sub,tab){
+    var b=el("button","menu");b.type="button";
+    var l=el("div");l.appendChild(document.createTextNode(title));l.appendChild(el("small",null,sub));
+    b.appendChild(l);b.appendChild(el("i",null,"›"));
+    b.addEventListener("click",function(){G.openSheet(tab)});p.appendChild(b);
+  }
+  function tabMore(p){
+    menuItem(p,"클랜","클랜 만들기 · 가입 · 클랜원 보기","cl");
+    menuItem(p,U.gifts>0?"내정보 ("+U.gifts+")":"내정보",U.gifts>0?"받을 선물이 있어요":"닉네임 · 내 코드 · 선물함 · 보유 아이템","me");
+    if(!U.ready)note(p,"서버 연결 후 이용할 수 있어요.");
+    else if(!U.user)needLogin(p);
+  }
+
   /* ---------- 클랜 탭 ---------- */
   function tabClan(p){
+    back(p);
     if(!U.ready){offline(p);return}
     if(!U.user){needLogin(p);return}
     var box=el("div");box.appendChild(el("div","muted","불러오는 중…"));p.appendChild(box);
@@ -201,6 +220,7 @@
 
   /* ---------- 내정보 탭 ---------- */
   function tabMe(p){
+    back(p);
     if(!U.ready){offline(p);return}
     if(!U.user||!U.profile){needLogin(p);return}
     var pr=U.profile;
@@ -263,14 +283,14 @@
   }
 
   function updateBadge(){
-    var b=document.getElementById("t-me");if(!b)return;
-    b.textContent=U.gifts>0?"내정보 ("+U.gifts+")":"내정보";
+    var b=document.getElementById("t-more");if(!b)return;
+    b.textContent=U.gifts>0?"더보기 ("+U.gifts+")":"더보기";
   }
 
   /* ---------- 시작 ---------- */
   function start(game){
     G=game;
-    G.registerTab("rk",tabRank);G.registerTab("cl",tabClan);G.registerTab("me",tabMe);
+    G.registerTab("rk",tabRank);G.registerTab("cl",tabClan);G.registerTab("me",tabMe);G.registerTab("more",tabMore);
     if(!cfg.SUPABASE_URL||!cfg.SUPABASE_ANON_KEY||!window.supabase){return}
     try{
       sb=window.supabase.createClient(cfg.SUPABASE_URL,cfg.SUPABASE_ANON_KEY,
