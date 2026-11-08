@@ -555,15 +555,51 @@
     b.addEventListener("click",function(){
       if(b.disabled)return; b.disabled=true; e.textContent="";
       rpc("gogu_onboard_nickname",{p_name:i.value}).then(function(nm){
-        if(U.profile)U.profile.nickname=nm; gateClose(); G.refresh(); toast("환영해요, "+nm+"님!");
+        if(U.profile)U.profile.nickname=nm; G.refresh(); toast("환영해요, "+nm+"님!"); checkRules();
       }).catch(function(x){ b.disabled=false; e.textContent=errMsg(x); });
     });
     w.appendChild(t);w.appendChild(d);w.appendChild(i);w.appendChild(e);w.appendChild(b);o.appendChild(w);
     setTimeout(function(){try{i.focus();i.select()}catch(_){}},50);
   }
+
+  function showTutorial(){
+    var o=ovl(); o.innerHTML="";
+    var pages=[
+      ["🍠","게임 방법","고구마를 눌러서 구워요!\n아이템을 사면 가만히 있어도\n초당 수익이 올라가요."],
+      ["🏆","랭킹과 시즌","시즌마다 초당·터치당 기록으로\n랭킹을 겨뤄요.\n시즌 1은 12월 1일에 시작해요."],
+      ["🤝","공정한 경쟁 규칙","매크로(자동 터치) 프로그램은\n사용할 수 없어요. 공정한 경쟁을 위한 규칙이에요.\n\n의심 패턴이 확인되면 랭킹에서 잠시 제외되고,\n직접 했다면 이의 신청 후 경고 1회로 풀어 드려요.\n같은 시즌에 다시 확인되면 영구 제외돼요."]
+    ];
+    var i=0;
+    function draw(){
+      o.innerHTML="";
+      var pg=pages[i],last=i===pages.length-1;
+      var w=el("div");w.style.cssText="width:100%;max-width:340px;text-align:center";
+      var ic=el("div",null,pg[0]);ic.style.cssText="font-size:56px;margin-bottom:6px";
+      var t=el("div",null,pg[1]);t.style.cssText="font-size:22px;font-weight:800;margin-bottom:12px";
+      var d=el("div",null,pg[2]);d.style.cssText="white-space:pre-line;opacity:.92;font-size:14.5px;line-height:1.7;margin-bottom:20px";
+      var dots=el("div",null,pages.map(function(_,k){return k===i?"●":"○"}).join(" "));dots.style.cssText="margin-bottom:16px;color:#ffd067;letter-spacing:2px";
+      var b=el("button","kakao",last?"규칙을 확인했어요":"다음");b.type="button";
+      b.addEventListener("click",function(){
+        if(!last){i++;draw();return}
+        b.disabled=true;
+        rpc("gogu_rules_ack").then(function(){gateClose()}).catch(function(){b.disabled=false;toast("잠시 후 다시 눌러 주세요")});
+      });
+      w.appendChild(ic);w.appendChild(t);w.appendChild(d);w.appendChild(dots);w.appendChild(b);
+      if(!last){
+        var sk=el("button",null,"건너뛰기");sk.type="button";
+        sk.style.cssText="margin-top:10px;background:none;border:0;color:#fff;opacity:.6;font-size:13px;cursor:pointer";
+        sk.addEventListener("click",function(){i=pages.length-1;draw()});w.appendChild(sk);
+      }
+      o.appendChild(w);
+    }
+    draw();
+  }
+  function checkRules(){
+    rpc("gogu_rules_status").then(function(need){ if(need===true)showTutorial(); else gateClose(); }).catch(function(){ gateClose(); });
+  }
   function checkOnboard(){
     rpc("gogu_onboard_status").then(function(need){
-      if(need===true)showNick(U.profile&&U.profile.nickname); else gateClose();
+      if(need===true)showNick(U.profile&&U.profile.nickname); else checkRules();
     }).catch(function(){});
   }
 
