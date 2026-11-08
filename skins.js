@@ -133,6 +133,19 @@
     if(!ready)return;
     var sel=equipped();
     G.setArt(render(sel,0),render(sel,1));
+    glowFor(BY[sel.f]);
+  }
+  // 화력 최대 때의 불빛·불씨 색을 장착한 불 스킨에 맞춘다
+  function glowFor(k){
+    var r=document.documentElement.style,b=document.body;
+    if(!k||(!k.pal&&!k.rainbow)){r.removeProperty("--fa");r.removeProperty("--fb");r.removeProperty("--fe");b.classList.remove("fire-rainbow");return}
+    if(k.rainbow){r.setProperty("--fa","255,120,60");r.setProperty("--fb","255,60,60");r.setProperty("--fe","255,210,90");b.classList.add("fire-rainbow");return}
+    b.classList.remove("fire-rainbow");
+    var d=hex(k.pal[0]),m=hex(k.pal[1]),l=hex(k.pal[2]);
+    function t(c){return Math.round(c[0])+","+Math.round(c[1])+","+Math.round(c[2])}
+    r.setProperty("--fa",t(m));
+    r.setProperty("--fb",t([m[0]*.7+d[0]*.3,m[1]*.7+d[1]*.3,m[2]*.7+d[2]*.3]));
+    r.setProperty("--fe",t(l));
   }
 
   /* ---------- 스킨 탭 ---------- */

@@ -197,7 +197,7 @@
   }
 
   /* ---------- 친구 탭 ---------- */
-  var FR = { open: null };
+  var FR = { open: null, kind: "ps" };
   function tabFriends(p){
     O.back(p);
     if(!U.ready){ O.offline(p); return; }
@@ -227,17 +227,33 @@
         });
         box.appendChild(ic);
       }
-      var lc = el("div", "card"); lc.appendChild(el("h4", null, "내 친구 · 초당 최고 순"));
-      if(!d.friends.length) lc.appendChild(el("div", "muted", "아직 친구가 없어요. 친구 코드를 주고받아 보세요!"));
-      d.friends.forEach(function(f, i){
-        var row = el("button", "menu"); row.type = "button"; row.style.marginBottom = "6px"; row.style.padding = "12px 14px";
-        var l = el("div"); l.appendChild(document.createTextNode((i + 1) + ". " + (f.title ? "[" + f.title + "] " : "") + f.nickname));
-        l.appendChild(el("small", null, f.ps == null ? "기록 비공개" : "초당 " + G.fmt(Number(f.ps)) + "원 · 터치당 " + G.fmt(Number(f.pc)) + "원"));
-        row.appendChild(l); row.appendChild(el("i", null, "›"));
-        row.addEventListener("click", function(){ FR.open = f; G.refresh(); });
-        lc.appendChild(row);
-      });
+      var lc = el("div", "card"); lc.appendChild(el("h4", null, "친구 랭킹 (나 포함)"));
       box.appendChild(lc);
+      var segw = el("div", "seg");
+      [["ps", "초당 최고"], ["pc", "터치당 최고"]].forEach(function(o){
+        var bt = el("button", null, o[1]); bt.type = "button"; bt.setAttribute("aria-pressed", String(FR.kind === o[0]));
+        bt.addEventListener("click", function(){ FR.kind = o[0]; G.refresh(); }); segw.appendChild(bt);
+      });
+      lc.appendChild(segw);
+      var listBox = el("div"); lc.appendChild(listBox);
+      var myq = Promise.all([rpc("gogu_my_rank", { p_kind: "ps" }).catch(function(){ return null; }), rpc("gogu_my_rank", { p_kind: "pc" }).catch(function(){ return null; })]);
+      myq.then(function(m){
+        var hide = U.profile && (U.profile.flag_state === "hold" || U.profile.flag_state === "banned");
+        var key = FR.kind, rows = d.friends.map(function(f){ return { f: f, nick: f.nickname, title: f.title, v: f[key] == null ? null : Number(f[key]) }; });
+        var mine = key === "ps" ? m[0] : m[1];
+        rows.push({ me: true, nick: (U.profile && U.profile.nickname) || "나", title: U.profile && U.profile.title, v: hide || !mine ? null : Number(mine.value) });
+        rows.sort(function(a, b){ return (b.v == null ? -1 : b.v) - (a.v == null ? -1 : a.v); });
+        if(rows.length === 1) listBox.appendChild(el("div", "muted", "친구를 추가하면 친구끼리 순위가 매겨져요!"));
+        rows.forEach(function(r, i){
+          var row = el("button", "menu"); row.type = "button"; row.style.marginBottom = "6px"; row.style.padding = "12px 14px";
+          if(r.me) row.style.outline = "2px solid #2f6df6";
+          var l = el("div"); l.appendChild(document.createTextNode((r.v == null ? "-" : (i + 1)) + ". " + (r.title ? "[" + r.title + "] " : "") + r.nick + (r.me ? " (나)" : "")));
+          l.appendChild(el("small", null, r.v == null ? "기록 없음/비공개" : (key === "ps" ? "초당 최고 " : "터치당 최고 ") + G.fmt(r.v) + "원"));
+          row.appendChild(l); if(!r.me) row.appendChild(el("i", null, "›"));
+          if(!r.me) row.addEventListener("click", function(){ FR.open = r.f; G.refresh(); });
+          listBox.appendChild(row);
+        });
+      });
       if(d.outgoing.length){
         var oc = el("div", "card"); oc.appendChild(el("h4", null, "보낸 신청 (상대가 수락하면 친구가 돼요)"));
         d.outgoing.forEach(function(f){

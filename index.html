@@ -15,6 +15,7 @@
   color-scheme:dark;
   --night1:#080c16; --night2:#141c30; --snow:#cfd8e6; --lamp:#ffb45e;
   --fg:#f4f7fc; --muted:#9aa8bf; --gold:#ffcf4a; --gold2:#f0a21c; --red:#e5483d; --green:#34c77b;
+  --fa:255,130,40; --fb:255,90,20; --fe:255,179,71;
   --sheet:#ffffff; --sheet-fg:#161d2b; --sheet-muted:#6b7688; --row:#f2f5f9; --line:#e0e6ee; --blue:#2f6df6;
   --f-display:"Do Hyeon","Noto Sans KR",system-ui,sans-serif; --f-body:"Noto Sans KR",system-ui,sans-serif;
 }
@@ -28,7 +29,7 @@ body{margin:0;background:var(--night1);color:var(--fg);font-family:var(--f-body)
 .scene .lamp{position:absolute;right:8%;top:20%;width:7px;height:48%;background:#6b4a2b;border-radius:3px}
 .scene .lamp::before{content:"";position:absolute;left:-26px;top:-8px;width:58px;height:12px;border-radius:8px 8px 0 0;background:#3a2a1a}
 .scene .glow{position:absolute;right:-8%;top:8%;width:62vmax;height:62vmax;max-width:520px;max-height:520px;border-radius:50%;
-  background:radial-gradient(circle,rgba(255,180,94,.34) 0%,rgba(255,180,94,.12) 38%,rgba(255,180,94,0) 68%)}
+  background:radial-gradient(circle,rgba(var(--fe),.34) 0%,rgba(var(--fe),.12) 38%,rgba(var(--fe),0) 68%)}
 .scene .ground{position:absolute;left:0;right:0;bottom:0;height:18%;
   background:linear-gradient(180deg,#9aa6bb 0%,#c3cddd 100%);opacity:.9}
 .app{box-sizing:border-box;position:relative;z-index:1;max-width:480px;margin:0 auto;height:100%;display:flex;flex-direction:column;
@@ -63,11 +64,11 @@ body{margin:0;background:var(--night1);color:var(--fg);font-family:var(--f-body)
 
 .heat{position:absolute;left:50%;top:50%;width:min(300px,74vw);aspect-ratio:1;transform:translate(-50%,-50%);z-index:1;pointer-events:none}
 .heat::before{content:"";position:absolute;left:8%;right:8%;bottom:-4%;height:46%;border-radius:50%;
-  background:radial-gradient(ellipse at 50% 70%,rgba(255,130,40,.55) 0%,rgba(255,90,20,.22) 45%,rgba(255,90,20,0) 72%);opacity:.35;transition:opacity .4s}
+  background:radial-gradient(ellipse at 50% 70%,rgba(var(--fa),.55) 0%,rgba(var(--fb),.22) 45%,rgba(var(--fb),0) 72%);opacity:.35;transition:opacity .4s}
 .heat .sm{position:absolute;left:var(--x);top:36%;width:34%;aspect-ratio:1;border-radius:50%;opacity:0;filter:blur(7px);
   background:radial-gradient(circle,rgba(210,214,224,.55) 0%,rgba(210,214,224,.22) 50%,rgba(210,214,224,0) 72%);
   animation:smk var(--t) ease-out var(--d) infinite}
-.heat .em{position:absolute;left:var(--x);bottom:16%;width:5px;height:5px;background:#ffb347;box-shadow:0 0 6px 1px rgba(255,140,40,.9);opacity:0;
+.heat .em{position:absolute;left:var(--x);bottom:16%;width:5px;height:5px;background:rgb(var(--fe));box-shadow:0 0 6px 1px rgba(var(--fa),.9);opacity:0;
   animation:emb var(--t) ease-out var(--d) infinite}
 .heat .more{display:none}
 @keyframes smk{0%{transform:translate(0,0) scale(.4);opacity:0}15%{opacity:.5}100%{transform:translate(var(--sx),-150%) scale(1.7);opacity:0}}
@@ -80,7 +81,9 @@ body.boost .heat .sm{animation-duration:calc(var(--t)*.55);filter:blur(6px);
 body.boost .heat .em{animation-duration:calc(var(--t)*.7)}
 body.boost .scene .glow{filter:brightness(1.9) saturate(1.2)}
 .scene .glow{transition:filter .4s}
-body.boost .term img{filter:drop-shadow(0 16px 14px rgba(0,0,0,.45)) drop-shadow(0 0 16px rgba(255,120,30,.75)) brightness(1.12)}
+body.boost .term img{filter:drop-shadow(0 16px 14px rgba(0,0,0,.45)) drop-shadow(0 0 16px rgba(var(--fa),.75)) brightness(1.12)}
+body.fire-rainbow .heat,body.fire-rainbow .scene .glow{animation:rbw 3s linear infinite}
+@keyframes rbw{to{filter:hue-rotate(360deg)}}
 body.boost .term .f1{animation-duration:.2s}
 body.boost .term .f2{animation-duration:.2s}
 .fx{position:absolute;pointer-events:none;font:400 22px var(--f-display);color:var(--gold);text-shadow:0 2px 4px rgba(0,0,0,.7);z-index:5;animation:rise .8s ease-out forwards;white-space:nowrap}
@@ -140,6 +143,7 @@ body.boost .term .f2{animation-duration:.2s}
 .hud .r{font:700 13px var(--f-body);color:var(--sheet-muted);font-variant-numeric:tabular-nums}
 .hud .r .s{color:#b0651a}.hud .r .c{color:#2f8a5c}
 .list{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding:2px 0 24px;overscroll-behavior:contain}
+.teaser{margin:4px 2px 10px;padding:10px 12px;border-radius:12px;background:var(--row);color:var(--sheet-muted);font:700 13px var(--f-body);text-align:center}
 .group{font:700 12px var(--f-body);color:var(--sheet-muted);letter-spacing:.06em;margin:8px 2px 0}
 .item{display:grid;grid-template-columns:52px 1fr auto;gap:12px;align-items:center;width:100%;text-align:left;font:inherit;color:inherit;
   background:var(--row);border:2px solid transparent;border-radius:18px;padding:10px 12px;cursor:pointer}
@@ -287,18 +291,44 @@ body.boost .term .f2{animation-duration:.2s}
   }
   var UP=[
     {id:"c1",kind:"c",nm:"집게질 연습",ab:"집게",base:15,gain:1},
+    {id:"c1b",kind:"c",nm:"나무 집게",ab:"나무",base:50,gain:3},
     {id:"c2",kind:"c",nm:"부채질",ab:"부채",base:120,gain:6},
+    {id:"c2b",kind:"c",nm:"장작 쌓기",ab:"쌓기",base:400,gain:20},
     {id:"c3",kind:"c",nm:"참나무 장작",ab:"장작",base:1400,gain:45},
+    {id:"c3b",kind:"c",nm:"숯불 풀무",ab:"풀무",base:5000,gain:130},
     {id:"c4",kind:"c",nm:"백탄 숯",ab:"숯",base:18000,gain:380},
+    {id:"c4b",kind:"c",nm:"은박 쿠킹",ab:"은박",base:70000,gain:1200},
     {id:"c5",kind:"c",nm:"황금 고구마 품종",ab:"황금",base:240000,gain:3200},
+    {id:"c6",kind:"c",nm:"전설의 화로",ab:"전설",base:3400000,gain:27000},
+    {id:"c7",kind:"c",nm:"불의 정령",ab:"정령",base:50000000,gain:230000},
+    {id:"c8",kind:"c",nm:"태양열 직화",ab:"태양",base:750000000,gain:2000000},
+    {id:"c9",kind:"c",nm:"용암 굽기",ab:"용암",base:11000000000,gain:17000000},
+    {id:"c10",kind:"c",nm:"별빛 화덕",ab:"별빛",base:170000000000,gain:150000000},
+    {id:"c11",kind:"c",nm:"우주 화염",ab:"우주",base:2600000000000,gain:1300000000},
+    {id:"c12",kind:"c",nm:"블랙홀 오븐",ab:"블랙",base:40000000000000,gain:11000000000},
     {id:"s1",kind:"s",nm:"동네 단골",ab:"단골",base:40,gain:1},
+    {id:"s1b",kind:"s",nm:"리어카 장사",ab:"리어",base:130,gain:3},
     {id:"s2",kind:"s",nm:"퇴근길 골목 장사",ab:"퇴근",base:500,gain:8},
+    {id:"s2b",kind:"s",nm:"역 앞 노점",ab:"노점",base:1800,gain:25},
     {id:"s3",kind:"s",nm:"겨울 야시장 자리",ab:"야시",base:6000,gain:65},
+    {id:"s3b",kind:"s",nm:"시장 점포",ab:"점포",base:25000,gain:230},
     {id:"s4",kind:"s",nm:"군고구마 트럭",ab:"트럭",base:80000,gain:520},
+    {id:"s4b",kind:"s",nm:"배달 앱 입점",ab:"배달",base:350000,gain:1700},
     {id:"s5",kind:"s",nm:"편의점 납품",ab:"편의",base:1100000,gain:4200},
+    {id:"s5b",kind:"s",nm:"공장 직송",ab:"직송",base:4000000,gain:13000},
     {id:"s6",kind:"s",nm:"프랜차이즈 본점 계약",ab:"본점",base:14000000,gain:36000},
-    {id:"s7",kind:"s",nm:"전국 군고구마 체인",ab:"전국",base:220000000,gain:310000}
+    {id:"s6b",kind:"s",nm:"수출 물류",ab:"물류",base:60000000,gain:110000},
+    {id:"s7",kind:"s",nm:"전국 군고구마 체인",ab:"전국",base:220000000,gain:310000},
+    {id:"s8",kind:"s",nm:"해외 수출 계약",ab:"수출",base:3500000000,gain:2700000},
+    {id:"s9",kind:"s",nm:"고구마 농장 인수",ab:"농장",base:56000000000,gain:23000000},
+    {id:"s10",kind:"s",nm:"고구마 공장 자동화",ab:"자동",base:900000000000,gain:200000000},
+    {id:"s11",kind:"s",nm:"고구마 연구소",ab:"연구",base:14000000000000,gain:1700000000},
+    {id:"s12",kind:"s",nm:"글로벌 브랜드",ab:"브랜",base:230000000000000,gain:14500000000},
+    {id:"s13",kind:"s",nm:"고구마 위성 도시",ab:"위성",base:3700000000000000,gain:120000000000},
+    {id:"s14",kind:"s",nm:"달나라 고구마 농장",ab:"달나",base:60000000000000000,gain:1050000000000},
+    {id:"s15",kind:"s",nm:"고구마 은하 제국",ab:"은하",base:950000000000000000,gain:9000000000000}
   ];
+
   var GROW=1.15, PERK={offlineH:8,couponMax:10}, ext={};
   function offCap(){return PERK.offlineH*3600}
   var MIS=[
@@ -309,7 +339,9 @@ body.boost .term .f2{animation-duration:.2s}
     {id:"m5",nm:"초당 10만원 달성",goal:1e5,get:function(){return rawS()},pts:90},
     {id:"m6",nm:"초당 1,000만원 달성",goal:1e7,get:function(){return rawS()},pts:140},
     {id:"m7",nm:"초당 10억원 달성",goal:1e9,get:function(){return rawS()},pts:220},
-    {id:"m8",nm:"초당 1조원 달성",goal:1e12,get:function(){return rawS()},pts:400}
+    {id:"m8",nm:"초당 1조원 달성",goal:1e12,get:function(){return rawS()},pts:400},
+    {id:"m9",nm:"초당 100조원 달성",goal:1e14,get:function(){return rawS()},pts:600},
+    {id:"m10",nm:"초당 1경원 달성",goal:1e16,get:function(){return rawS()},pts:900}
   ];
   var SHOP=[
     {id:"p1",nm:"두꺼운 가죽 장갑",ab:"터치",ef:"터치당 +10%",cost:60,c:.10,s:0},
@@ -398,7 +430,10 @@ body.boost .term .f2{animation-duration:.2s}
     if(tab==="up"){
       [["c","터치당 수입"],["s","초당 수입 · 구매하면 자동으로 벌어요"]].forEach(function(g){
         p.appendChild(el("div","group",g[1]));
-        UP.filter(function(u){return u.kind===g[0]}).forEach(function(u){
+        var list=UP.filter(function(u){return u.kind===g[0]}),top=-1;
+        list.forEach(function(u,i){if(lvl(u.id)>0)top=i});
+        var shown=list.slice(0,Math.min(list.length,top+4));   // 산 단계 + 앞으로 3단계까지만 보여줘요
+        shown.forEach(function(u){
           var b=el("button","item "+u.kind);b.type="button";b.dataset.id=u.id;
           var ic=el("div","ico",u.ab);ic.appendChild(el("em",null,"Lv."+lvl(u.id)));
           var mid=el("div");mid.appendChild(el("div","nm",u.nm));
@@ -406,6 +441,7 @@ body.boost .term .f2{animation-duration:.2s}
           b.appendChild(ic);b.appendChild(mid);b.appendChild(el("div","cost",fmt(cost(u))+"원"));
           b.addEventListener("click",function(){buy(u)});p.appendChild(b);
         });
+        if(shown.length<list.length)p.appendChild(el("div","teaser","🔒 더 키우면 새로운 "+(list.length-shown.length)+"단계가 열려요"));
       });
     }else if(tab==="ms"){
       MIS.forEach(function(m){
