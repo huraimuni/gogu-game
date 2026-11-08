@@ -51,7 +51,8 @@
       }else{
         var useServer=true;
         if(hasProgress(local) && (local.total||0)!==(srv.total||0) && (local.season||0)===d.season){
-          useServer=confirm("이 기기 진행(누적 "+G.fmt(local.total||0)+"원)과 서버 저장(누적 "+G.fmt(srv.total||0)+"원)이 달라요.\n\n확인 = 서버 저장 불러오기\n취소 = 이 기기 진행으로 덮어쓰기");
+          useServer=(srv.total||0)>(local.total||0);   // 더 많이 진행한 쪽을 자동으로 이어가요
+          if(useServer)toast("서버에 저장된 더 높은 기록을 불러왔어요");
         }
         if(useServer){ var base=G.fresh(); for(var k in srv)base[k]=srv[k]; base.season=d.season; if(!base.born)base.born=Date.now(); G.setState(base); }
         else{ local.season=d.season; G.setState(local); sync(true); }
@@ -332,7 +333,7 @@
     }
     sb.auth.getSession().then(function(r){onSession(r.data&&r.data.session)});
     sb.auth.onAuthStateChange(function(ev,s){ if(ev==="SIGNED_IN")setTimeout(function(){onSession(s)},0) });
-    setInterval(function(){ if(!document.hidden)sync(false) },30000);
+    setInterval(function(){ if(!document.hidden)sync(false) },15000);
     document.addEventListener("visibilitychange",function(){ if(document.hidden)sync(false) });
     window.addEventListener("pagehide",function(){ sync(false) });
   }

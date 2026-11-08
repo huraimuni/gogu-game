@@ -193,14 +193,22 @@ body.boost .term .f2{animation-duration:.2s}
 .item:focus-visible,.btn:focus-visible,.stab button:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
 .note{font-size:12px;color:var(--sheet-muted);display:flex;justify-content:space-between;gap:8px;align-items:center;margin-top:6px}
 .note a{color:var(--blue);font-weight:700}
-.pop{position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.62);padding:24px}
-.pop .box{background:#fff;color:var(--sheet-fg);border-radius:22px;padding:24px 20px 18px;max-width:340px;width:100%;text-align:center;box-shadow:0 18px 50px rgba(0,0,0,.5)}
-.pop h3{margin:0 0 6px;font:700 17px var(--f-body)}
-.pop .pv{font:400 clamp(26px,8.5vw,34px) var(--f-display);color:#e8590c;margin:8px 0;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
-.pop .pm{margin:0 0 4px;font:500 14px/1.5 var(--f-body);color:var(--sheet-muted)}
-.pop .pr{display:flex;justify-content:space-between;gap:10px;background:var(--row);border-radius:12px;padding:10px 14px;margin:6px 0;font:700 15px var(--f-body)}
-.pop .pr b{color:#e8590c}
-.pop button{margin-top:14px;width:100%;border:0;border-radius:14px;padding:13px;font:700 16px var(--f-body);background:var(--sheet-fg);color:#fff;cursor:pointer}
+.pop{position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;background:rgba(4,8,20,.72);padding:24px;animation:popbg .25s ease-out}
+.pop .box{position:relative;width:100%;max-width:330px;text-align:center;color:var(--fg);padding:20px 18px 18px;border-radius:26px;
+  background:radial-gradient(120% 80% at 50% 0%,rgba(255,150,50,.22),rgba(255,150,50,0) 60%),linear-gradient(180deg,#232c4e,#0f1530);
+  border:3px solid #ffd978;box-shadow:0 0 0 3px #7a4a10,0 0 30px rgba(255,160,40,.35),0 20px 50px rgba(0,0,0,.6),inset 0 2px 0 rgba(255,255,255,.18);animation:popin .32s cubic-bezier(.2,1.4,.4,1)}
+.pop .pi{width:76px;height:76px;margin:-52px auto 4px;image-rendering:pixelated;display:block;filter:drop-shadow(0 6px 6px rgba(0,0,0,.55))}
+.pop h3{margin:0 0 4px;font:400 23px var(--f-display);letter-spacing:.03em;color:var(--gold);text-shadow:0 2px 0 #7a3a00,0 0 14px rgba(255,170,40,.5)}
+.pop .pv{font:400 clamp(30px,10vw,40px) var(--f-display);color:#fff;margin:6px 0 4px;overflow-wrap:anywhere;font-variant-numeric:tabular-nums;text-shadow:0 3px 0 #b23a00,0 0 18px rgba(255,120,30,.6)}
+.pop .pm{margin:2px 0;font:500 14px/1.5 var(--f-body);color:#c4cee2}
+.pop .pr{display:flex;justify-content:space-between;align-items:center;gap:10px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.16);border-radius:14px;padding:9px 14px;margin:7px 0;font:400 17px var(--f-display);color:#e8eefb}
+.pop .pr b{font:400 22px var(--f-display);color:var(--gold);text-shadow:0 2px 0 #7a3a00}
+.pop button{margin-top:14px;width:100%;border:3px solid #fff2c4;border-radius:18px;padding:11px;font:400 20px var(--f-display);letter-spacing:.05em;color:#5a3a00;cursor:pointer;
+  background:linear-gradient(180deg,#ffe58a,#ffb830);box-shadow:0 4px 0 #b8741a,0 8px 14px rgba(0,0,0,.4)}
+.pop button:active{transform:translateY(3px);box-shadow:0 1px 0 #b8741a}
+@keyframes popin{0%{transform:scale(.6) translateY(20px);opacity:0}100%{transform:none;opacity:1}}
+@keyframes popbg{0%{opacity:0}100%{opacity:1}}
+@media (prefers-reduced-motion:reduce){.pop,.pop .box{animation:none}}
 .toast{position:fixed;left:50%;bottom:calc(110px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:#fff;color:var(--sheet-fg);
   padding:10px 16px;border-radius:14px;font:700 14px var(--f-body);opacity:0;pointer-events:none;transition:.25s;z-index:40;max-width:90vw;text-align:center}
 .toast.on{opacity:1;transform:translate(-50%,0)}
@@ -215,7 +223,7 @@ body.boost .term .f2{animation-duration:.2s}
 
   <div class="top">
     <button class="sq" id="openMis" type="button"><span class="b">미션<i id="misBadge" hidden>0</i></span></button>
-    <div class="title"><b>고구마 굽기</b><small>방치형 군고구마 게임 · v1.23</small></div>
+    <div class="title"><b>고구마 굽기</b><small>방치형 군고구마 게임 · v1.24</small></div>
     <button class="sq" id="openPts" type="button"><span class="b">포인트</span></button>
   </div>
 
@@ -269,7 +277,7 @@ body.boost .term .f2{animation-duration:.2s}
 <div class="splash" id="splash" role="dialog" aria-label="안내">
   <div class="sp-in">
     <div class="sp-art"><img class="f1" id="spA" alt=""><img class="f2" id="spB" alt=""></div>
-    <div class="sp-tag">고구마 굽기 · v1.23</div>
+    <div class="sp-tag">고구마 굽기 · v1.24</div>
     <p class="sp-msg">고구마를 터치해서 굽고,<br>화로를 키워 보세요.</p>
     <div class="sp-bar"><div></div></div>
     <p class="sp-load" id="spLoad">불 피우는 중…</p>
@@ -628,6 +636,7 @@ body.boost .term .f2{animation-duration:.2s}
     if(popOn||!popQ.length||$("splash"))return;
     popOn=true;var o=popQ.shift();
     var w=el("div","pop"),b=el("div","box");w.setAttribute("role","dialog");
+    var pi=el("img","pi");pi.alt="";var art=document.querySelector("#term .f1");if(art)pi.src=art.src;b.appendChild(pi);
     b.appendChild(el("h3",null,o.title));
     if(o.value)b.appendChild(el("div","pv",o.value));
     (o.lines||[]).forEach(function(l){b.appendChild(el("div","pm",l))});
