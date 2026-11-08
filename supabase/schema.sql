@@ -115,7 +115,7 @@ insert into public.gogu_items(id,name,kind,descr,tier,slot) values
  ('skin_f_rainbow','무지개 불꽃','skin','불 외형','event','fire'),
  ('perk_offline12','오프라인 적립 12시간','perk','자리를 비워도 최대 12시간까지 적립',null,null),
  ('perk_offline24','오프라인 적립 24시간','perk','자리를 비워도 최대 24시간까지 적립',null,null),
- ('perk_coupon15','쿠폰 보관 +5','perk','화력 최대 쿠폰을 최대 15장까지 보관',null,null),
+ ('perk_coupon15','쿠폰 보관 +5','perk','슈퍼장작 쿠폰을 최대 15장까지 보관',null,null),
  ('title_pioneer','개척자','title','랭킹 이름 옆에 붙는 칭호',null,null)
 on conflict (id) do update set name=excluded.name, kind=excluded.kind, descr=excluded.descr, tier=excluded.tier, slot=excluded.slot;
 

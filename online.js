@@ -217,7 +217,7 @@
         }).catch(function(){});
       }
     }).catch(function(e){box.innerHTML="";box.appendChild(el("div","card muted","랭킹을 불러오지 못했어요"))});
-    note(p,"랭킹은 화력 최대 7배와 포인트샵 보너스를 뺀 기본 수입으로 계산해요. 초당 최고·터치당 최고 기록이 올라가요.");
+    note(p,"랭킹은 슈퍼장작 7배와 포인트샵 보너스를 뺀 기본 수입으로 계산해요. 초당 최고·터치당 최고 기록이 올라가요.");
   }
 
   /* ---------- 더보기 탭 ---------- */
@@ -400,7 +400,7 @@
       if(!list||!list.length){gbox.appendChild(el("div","muted","받을 선물이 없어요"));return}
       list.forEach(function(g){
         var row=el("div","row");row.style.justifyContent="space-between";
-        var name=g.kind==="item"?(g.item_name||g.item_id)+(g.item_days?" ("+g.item_days+"일)":" (영구)"):g.kind==="points"?"포인트 "+g.amount:"화력 최대 쿠폰 "+g.amount+"장";
+        var name=g.kind==="item"?(g.item_name||g.item_id)+(g.item_days?" ("+g.item_days+"일)":" (영구)"):g.kind==="points"?"포인트 "+g.amount:"슈퍼장작 쿠폰 "+g.amount+"장";
         var l=el("div");l.appendChild(el("div",null,name));if(g.note)l.appendChild(el("div","muted",g.note));row.appendChild(l);
         var b=el("button","btn","받기");b.type="button";
         b.addEventListener("click",function(){

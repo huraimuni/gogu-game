@@ -194,8 +194,8 @@ select * from (values
   ('포인트 10',  'points',     10,   null, 250),
   ('포인트 30',  'points',     30,   null, 200),
   ('포인트 100', 'points',     100,  null, 90),
-  ('화력 최대 쿠폰 1장', 'coupon', 1, null, 150),
-  ('화력 최대 쿠폰 3장', 'coupon', 3, null, 60),
+  ('슈퍼장작 쿠폰 1장', 'coupon', 1, null, 150),
+  ('슈퍼장작 쿠폰 3장', 'coupon', 3, null, 60),
   ('이벤트 스킨 (7일, 무작위)',  'event_skin', null, 7,  45),
   ('이벤트 스킨 (30일, 무작위)', 'event_skin', null, 30, 5)
 ) v(label, kind, amount, item_days, weight)

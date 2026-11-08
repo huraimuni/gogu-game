@@ -225,7 +225,7 @@ html,body{touch-action:manipulation}
 
   <div class="top">
     <button class="sq" id="openMis" type="button"><span class="b">미션<i id="misBadge" hidden>0</i></span></button>
-    <div class="title"><b>고구마 굽기</b><small>방치형 군고구마 게임 · v1.55</small></div>
+    <div class="title"><b>고구마 굽기</b><small>방치형 군고구마 게임 · v1.56</small></div>
     <button class="sq" id="openPts" type="button"><span class="b">포인트</span></button>
   </div>
 
@@ -254,7 +254,7 @@ html,body{touch-action:manipulation}
   </div>
 
   <div class="bottom">
-    <button class="cp" id="cp" type="button" aria-label="화력 최대 쿠폰 사용"><span id="cpT">화력<br>최대</span><i id="cpN">3</i></button>
+    <button class="cp" id="cp" type="button" aria-label="슈퍼장작 쿠폰 사용"><span id="cpT">슈퍼<br>장작</span><i id="cpN">3</i></button>
     <button class="lv" id="lvBtn" type="button" aria-label="레벨 미션 열기"><div class="dia" id="dia">1</div><div class="bar"><div id="lvb"></div><span id="lvt">0%</span></div></button>
   </div>
 </div>
@@ -280,7 +280,7 @@ html,body{touch-action:manipulation}
   <div class="sp-in">
     <h2>고구마 굽기</h2>
     <div class="sp-art"><img class="f1" id="spA" alt=""><img class="f2" id="spB" alt=""></div>
-    <div class="sp-tag">방치형 군고구마 게임 · v1.55</div>
+    <div class="sp-tag">방치형 군고구마 게임 · v1.56</div>
     <p class="sp-msg">고구마를 터치해서 굽고,<br>화로를 키워 보세요.</p>
     <p class="sp-sub">3개월마다 새 시즌! 돈·레벨은 새로 시작하고<br>스킨과 아이템은 그대로 남아요.</p>
     <div class="sp-bar"><div></div></div>
@@ -290,8 +290,8 @@ html,body{touch-action:manipulation}
 </div>
 <div class="toast" id="toast"></div>
 
-<script src="config.js?v=155"></script>
-<script src="icons.js?v=155"></script>
+<script src="config.js?v=156"></script>
+<script src="icons.js?v=156"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.js"></script>
 <script>
 (function(){
@@ -357,7 +357,7 @@ html,body{touch-action:manipulation}
   var MIS=[
     {id:"m1",nm:"고구마 10번 굽기",goal:10,get:function(){return S.clicks},pts:20},
     {id:"m2",nm:"초당 10원 달성",goal:10,get:function(){return rawS()},pts:30},
-    {id:"m3",nm:"화력 최대 1회 사용",goal:1,get:function(){return S.boosts},pts:40},
+    {id:"m3",nm:"슈퍼장작 1회 사용",goal:1,get:function(){return S.boosts},pts:40},
     {id:"m4",nm:"초당 1,000원 달성",goal:1000,get:function(){return rawS()},pts:60},
     {id:"m5",nm:"초당 10만원 달성",goal:1e5,get:function(){return rawS()},pts:90},
     {id:"m6",nm:"초당 1,000만원 달성",goal:1e7,get:function(){return rawS()},pts:140},
@@ -543,7 +543,7 @@ html,body{touch-action:manipulation}
     var cl=claimable(),mb=$("misBadge");mb.hidden=cl===0;mb.textContent=cl;
     var left=bEnd()-Date.now();
     $("cpN").textContent=S.coupons;
-    $("cpT").innerHTML=left>0?(left>90000?"슈퍼장작<br>"+Math.ceil(left/60000)+"분":Math.ceil(left/1000)+"초"):"화력<br>최대";
+    $("cpT").innerHTML=left>0?(left>90000?"슈퍼장작<br>"+Math.ceil(left/60000)+"분":Math.ceil(left/1000)+"초"):"슈퍼<br>장작";
     $("cp").disabled=left>0||S.coupons<1;
     if(sheetOpen){$("hm").textContent=fmt(S.money)+"원";$("hs").textContent=fmt(ps());$("hc").textContent=fmt(pc())}
   }
@@ -697,9 +697,9 @@ html,body{touch-action:manipulation}
   paintTop();
 })();
 </script>
-<script src="skins.js?v=155"></script>
-<script src="online.js?v=155"></script>
-<script src="social.js?v=155"></script>
+<script src="skins.js?v=156"></script>
+<script src="online.js?v=156"></script>
+<script src="social.js?v=156"></script>
 
 </body>
 </html>
