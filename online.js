@@ -246,6 +246,12 @@
     if(!U.ready){offline(p);return}
     if(!U.user||!U.profile){needLogin(p);return}
     var pr=U.profile;
+    var ac=el("div","card");ac.appendChild(el("h4",null,"로그인 계정"));
+    var ar=el("div","row");ar.style.justifyContent="space-between";
+    var um=(U.user&&U.user.user_metadata)||{},an=um.name||um.full_name||um.nickname||um.preferred_username||pr.nickname;
+    var al=el("div");al.appendChild(el("div",null,"카카오 로그인 중"));al.appendChild(el("div","muted",String(an)));ar.appendChild(al);
+    var lo2=el("button","cbtn ghost","로그아웃");lo2.type="button";lo2.addEventListener("click",logout);ar.appendChild(lo2);
+    ac.appendChild(ar);p.appendChild(ac);
     var c=el("div","card");c.appendChild(el("h4",null,"닉네임"));
     var r=el("div","row");var inp=el("input");inp.value=pr.nickname;inp.maxLength=10;r.appendChild(inp);
     var sv=el("button","btn","변경");sv.type="button";sv.addEventListener("click",function(){
@@ -298,7 +304,6 @@
 
     var ft=el("div","row");ft.style.justifyContent="space-between";
     if(pr.is_admin){var a=el("a","cbtn ghost","운영자 페이지");a.href="admin.html";a.style.textDecoration="none";ft.appendChild(a)}
-    var lo=el("button","cbtn ghost","로그아웃");lo.type="button";lo.addEventListener("click",logout);ft.appendChild(lo);
     p.appendChild(ft);
     note(p,seasonEndText(U.season)+" · 시즌이 끝나면 진행은 초기화되고 아이템은 유지돼요.");
   }
