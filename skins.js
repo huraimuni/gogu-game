@@ -166,8 +166,9 @@
   }
   function tabSkin(p){
     var el=G.el;
-    var b=el("button","cbtn ghost back","← 더보기");b.type="button";
-    b.addEventListener("click",function(){G.openSheet("more")});p.appendChild(b);
+    var from=G.skFrom||"more";
+    var b=el("button","cbtn ghost back",from==="up"?"← 상점":"← 더보기");b.type="button";
+    b.addEventListener("click",function(){G.skFrom=null;G.openSheet(from)});p.appendChild(b);
     if(!ready){p.appendChild(el("div","muted","불러오는 중…"));return}
     var sel=equipped();
     var pv=el("div","skprev"),pi=el("img");pi.alt="";pi.src=render(sel,0);pv.appendChild(pi);p.appendChild(pv);
