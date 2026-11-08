@@ -247,7 +247,7 @@ button.danger{background:var(--red)}.wrap2{flex-wrap:wrap}.wrap2>*{flex:1 1 45%}
     rpc("gogu_admin_flagged").then(function(rows){
       w.innerHTML="";if(!rows.length){w.textContent="의심·제재 계정이 없어요";return}
       rows.forEach(function(r){
-        var sub=(STX[r.state]||r.state)+(r.note?" · "+r.note:"")+" · 규칙 구간 "+r.sus+" · 최장 연속 "+r.max_streak+"구간"+(r.save_flags>=3?" · 서버검증 이상 "+r.save_flags:"");
+        var sub=(STX[r.state]||r.state)+(r.note?" · "+r.note:"")+" · 규칙 구간 "+r.sus+" · 최장 연속 "+r.max_streak+"구간";
         checkRow(w,r.code,r.nickname+" ("+r.code+")",sub,r.appeal?"이의 신청: "+r.appeal:null);
       });
     }).catch(function(e){w.textContent="불러오지 못했어요: "+em(e)});
@@ -255,9 +255,19 @@ button.danger{background:var(--red)}.wrap2{flex-wrap:wrap}.wrap2>*{flex:1 1 45%}
   $("flagReload").addEventListener("click",loadFlags);
   function sanction(action,label){
     var codes=checked($("flagList"));if(!codes.length){out("flagRes","대상을 체크하세요","bad");return}
+    var names=[].slice.call($("flagList").querySelectorAll("input:checked")).map(function(x){var t=x.nextSibling&&x.nextSibling.firstChild;return t?t.textContent:x.value});
     var note=null;if(action==="hold"||action==="ban"){note=prompt("메모(선택)","")||null}
-    if(!confirm(codes.length+"명을 '"+label+"' 처리할까요?"))return;
-    rpc("gogu_admin_sanction",{p_codes:codes,p_action:action,p_note:note}).then(function(r){out("flagRes",r.done+"명 처리했어요"+(r.skipped?" (건너뜀 "+r.skipped+")":""),"ok");loadFlags()})
+    if(!confirm("'"+label+"' 처리할까요?\n\n"+names.join("\n")))return;
+    rpc("gogu_admin_sanction",{p_codes:codes,p_action:action,p_note:note}).then(function(r){
+      var box=$("flagRes");box.innerHTML="";box.className="";
+      (r.results||[]).forEach(function(x){
+        var d=mk("div",null,(x.ok?"✅ ":"⏭ ")+(x.nickname||x.code)+" ("+x.code+") — "+(x.ok?label+" 완료":"건너뜀: "+x.why));
+        d.style.cssText="padding:6px 8px;margin:4px 0;border-radius:8px;font-weight:700;background:"+(x.ok?"rgba(80,200,120,.2);color:#7ee2a0":"rgba(255,180,60,.18);color:#ffcf7a");
+        box.appendChild(d);
+      });
+      if(!(r.results||[]).length)out("flagRes",r.done+"명 처리했어요","ok");
+      setTimeout(loadFlags,1500);
+    })
       .catch(function(e){out("flagRes","실패: "+em(e),"bad")});
   }
   $("fHold").addEventListener("click",function(){sanction("hold","보류")});
