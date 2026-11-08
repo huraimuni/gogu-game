@@ -334,7 +334,7 @@
   function inviteCard(p,pr){
     var link=location.origin+location.pathname+"?ref="+pr.code;
     var c=el("div","card");c.appendChild(el("h4",null,"친구 초대"));
-    c.appendChild(el("div","muted","친구가 내 링크로 가입하면 친구도 나도 슈퍼장작 30분! (친구 최대 20명)"));
+    c.appendChild(el("div","muted","친구가 내 링크로 가입하면 친구도 나도 슈퍼장작 30분! 친구 3명을 초대할 때마다 랜덤 이벤트 스킨 7일권까지! (친구 최대 20명)"));
     var cnt=el("div","muted","불러오는 중…");cnt.style.margin="6px 0";c.appendChild(cnt);
     var r=el("div","row");
     var b1=el("button","btn","링크 복사");b1.type="button";b1.addEventListener("click",function(){copy(link)});r.appendChild(b1);
@@ -351,7 +351,7 @@
       redeem(ci.value).then(function(){ci.value="";G.refresh()}).catch(function(e){toast(errMsg(e))}).then(function(){ok.disabled=false});
     });r2.appendChild(ok);c.appendChild(r2);
     p.appendChild(c);
-    rpc("gogu_referral_my").then(function(m){cnt.textContent="내가 초대한 친구 "+m.invited+" / "+m.max+"명"+(m.used?" · 초대 코드 사용함":"")}).catch(function(){cnt.textContent=""});
+    rpc("gogu_referral_my").then(function(m){cnt.textContent="내가 초대한 친구 "+m.invited+" / "+m.max+"명"+(m.invited<m.max?" · 스킨 7일권까지 "+(3-m.invited%3)+"명":"")+(m.used?" · 초대 코드 사용함":"")}).catch(function(){cnt.textContent=""});
   }
 
   /* ---------- 내정보 탭 ---------- */
@@ -371,7 +371,8 @@
     var sv=el("button","btn","변경");sv.type="button";sv.addEventListener("click",function(){
       rpc("gogu_set_nickname",{p_name:inp.value}).then(function(n){pr.nickname=n;cache={};toast("닉네임을 바꿨어요");G.refresh()}).catch(function(e){toast(errMsg(e))});
     });r.appendChild(sv);c.appendChild(r);
-    c.appendChild(el("div","muted","닉네임은 한 번만 바꿀 수 있어요 (다음 변경은 준비 중)"));c.lastChild.style.marginTop="6px";p.appendChild(c);
+    var nn=el("div","muted","닉네임은 한 번만 바꿀 수 있어요. 이후에는 닉네임 변경권으로 바꿀 수 있어요 (변경권은 준비 중)");nn.style.marginTop="6px";c.appendChild(nn);p.appendChild(c);
+    rpc("gogu_nick_info").then(function(i){if(i&&i.tickets>0)nn.textContent="닉네임 변경권 "+i.tickets+"장 보유 중이에요. 바꾸면 1장이 사라져요.";else if(i&&!i.changed)nn.textContent="닉네임은 한 번 무료로 바꿀 수 있어요. 이후에는 변경권이 필요해요. 욕설·읽기 어려운 말은 쓸 수 없어요."}).catch(function(){});
 
     var c2=el("div","card");c2.appendChild(el("h4",null,"내 코드 (운영자 선물 받을 때 알려주세요)"));
     var r2=el("div","row");r2.appendChild(el("span","codebox",pr.code));

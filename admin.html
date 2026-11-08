@@ -118,6 +118,14 @@ button.danger{background:var(--red)}.wrap2{flex-wrap:wrap}.wrap2>*{flex:1 1 45%}
         <div class="muted">붕어빵 코드(BUNGEOPPANG · 붕어빵)를 쓴 사람, 친구 초대 총 건수와 많이 초대한 사람 순위가 보여요.</div>
       </div>
       <div class="card">
+        <label for="ntCode">닉네임 변경권 지급 (유저 코드)</label>
+        <input id="ntCode" placeholder="GOGU-XXXX-XXXX">
+        <input id="ntN" type="number" min="1" max="20" value="1">
+        <div class="row"><button id="ntGo" type="button">지급하기</button></div>
+        <div id="ntRes" style="margin-top:8px"></div>
+        <div class="muted">결제 연결 전에는 구매 신청을 확인한 뒤 여기서 직접 지급해요. 받은 유저는 내정보에서 닉네임을 다시 바꿀 수 있어요 (1장 = 1회).</div>
+      </div>
+      <div class="card">
         <label for="rwSeason">시즌 종료 보상 (시즌 번호)</label>
         <input id="rwSeason" type="number" min="0" placeholder="예: 1">
         <div class="row"><button id="rwView" class="ghost" type="button">미리보기</button><button id="rwGo" type="button">지급하기</button></div>
@@ -314,6 +322,10 @@ button.danger{background:var(--red)}.wrap2{flex-wrap:wrap}.wrap2>*{flex:1 1 45%}
       (r.top_inviters||[]).forEach(function(x){var d=mk("div");d.appendChild(mk("span",null,"[초대왕] "+x.nick+" · "+x.n+"명"));w.appendChild(d)});
       out("pmRes","붕어빵 코드 사용 "+(r.promo||[]).length+"명 · 친구 초대 "+r.referrals+"건","ok");
     }).catch(function(e){out("pmRes","실패: "+em(e),"bad")});
+  });
+  $("ntGo").addEventListener("click",function(){
+    var c=$("ntCode").value.trim(),n=parseInt($("ntN").value,10)||1;if(!c){out("ntRes","유저 코드를 넣어 주세요","bad");return}
+    rpc("gogu_admin_give_nick_ticket",{p_code:c,p_n:n}).then(function(nm){out("ntRes",nm+" 님께 변경권 "+n+"장을 드렸어요","ok")}).catch(function(e){out("ntRes","실패: "+em(e),"bad")});
   });
   $("rwView").addEventListener("click",function(){reward(false)});
   $("rwGo").addEventListener("click",function(){reward(true)});

@@ -225,7 +225,7 @@ html,body{touch-action:manipulation}
 
   <div class="top">
     <button class="sq" id="openMis" type="button"><span class="b">미션<i id="misBadge" hidden>0</i></span></button>
-    <div class="title"><b>고구마 굽기</b><small>방치형 군고구마 게임 · v1.58</small></div>
+    <div class="title"><b>고구마 굽기</b><small>방치형 군고구마 게임 · v1.59</small></div>
     <button class="sq" id="openPts" type="button"><span class="b">포인트</span></button>
   </div>
 
@@ -264,7 +264,7 @@ html,body{touch-action:manipulation}
 <section class="sheet" id="sheet" aria-hidden="true">
   <div class="grip"></div>
   <div class="stab" role="tablist"><b class="stitle" id="sTitle">상점</b>
-    <button role="tab" id="t-up" aria-selected="true" data-t="up">고구마 상점</button>
+    <button role="tab" id="t-up" aria-selected="true" data-t="up">상점</button>
     <button role="tab" id="t-sh" aria-selected="false" data-t="sh">포인트샵</button>
     <button role="tab" id="t-ms" aria-selected="false" data-t="ms">미션</button>
     <button role="tab" id="t-rk" aria-selected="false" data-t="rk">랭킹</button>
@@ -280,7 +280,7 @@ html,body{touch-action:manipulation}
   <div class="sp-in">
     <h2>고구마 굽기</h2>
     <div class="sp-art"><img class="f1" id="spA" alt=""><img class="f2" id="spB" alt=""></div>
-    <div class="sp-tag">방치형 군고구마 게임 · v1.58</div>
+    <div class="sp-tag">방치형 군고구마 게임 · v1.59</div>
     <p class="sp-msg">고구마를 터치해서 굽고,<br>화로를 키워 보세요.</p>
     <p class="sp-sub">3개월마다 새 시즌! 돈·레벨은 새로 시작하고<br>스킨과 아이템은 그대로 남아요.</p>
     <div class="sp-bar"><div></div></div>
@@ -290,8 +290,8 @@ html,body{touch-action:manipulation}
 </div>
 <div class="toast" id="toast"></div>
 
-<script src="config.js?v=158"></script>
-<script src="icons.js?v=158"></script>
+<script src="config.js?v=159"></script>
+<script src="icons.js?v=159"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.js"></script>
 <script>
 (function(){
@@ -473,7 +473,7 @@ html,body{touch-action:manipulation}
 
   function shopTabs(p,cur){
     var w=el("div","shoptabs");
-    [["up","고구마 상점"],["cash","캐쉬 상점"]].forEach(function(x){
+    [["up","상점"],["cash","캐쉬 상점"]].forEach(function(x){
       var b=el("button",null,x[1]);b.type="button";b.setAttribute("aria-pressed",x[0]===cur?"true":"false");
       b.addEventListener("click",function(){if(x[0]!==cur)openSheet(x[0])});w.appendChild(b);
     });
@@ -576,7 +576,7 @@ html,body{touch-action:manipulation}
   var sheetOpen=false;
   function openSheet(t){
     tab=t;sheetOpen=true;
-    var TT={up:"고구마 상점",cash:"캐쉬 상점",sh:"포인트샵",ms:"미션",rk:"랭킹",more:"더보기",cl:"클랜",me:"내정보",sk:"스킨",ev:"이벤트",fr:"친구",rl:"규정 · 안내"};$("sTitle").textContent=TT[t]||"";
+    var TT={up:"상점",cash:"캐쉬 상점",sh:"포인트샵",ms:"미션",rk:"랭킹",more:"더보기",cl:"클랜",me:"내정보",sk:"스킨",ev:"이벤트",fr:"친구",rl:"규정 · 안내"};$("sTitle").textContent=TT[t]||"";
     document.querySelectorAll(".stab button[data-t]").forEach(function(x){x.setAttribute("aria-selected",x.dataset.t===((t==="cl"||t==="me"||t==="sk"||t==="ev"||t==="fr"||t==="rl")?"more":t==="cash"?"up":t)?"true":"false")});
     $("sheet").classList.add("on");$("sheet").setAttribute("aria-hidden","false");$("scrim").classList.add("on");
     renderPanel();paintTop();paintPanel();
@@ -697,9 +697,9 @@ html,body{touch-action:manipulation}
   paintTop();
 })();
 </script>
-<script src="skins.js?v=158"></script>
-<script src="online.js?v=158"></script>
-<script src="social.js?v=158"></script>
+<script src="skins.js?v=159"></script>
+<script src="online.js?v=159"></script>
+<script src="social.js?v=159"></script>
 
 </body>
 </html>

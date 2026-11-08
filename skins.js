@@ -65,7 +65,7 @@
       {id:"skin_f_cyan",name:"번개 불꽃",tier:"paid",pal:["#06062e","#00d4ff","#f4ffff"]},
       {id:"skin_f_lime",name:"먹구름 불꽃",tier:"paid",pal:["#101018","#5a5a70","#d0d0e0"]},
       {id:"skin_f_sunset",name:"노을 불꽃",tier:"free",pal:["#4a0a2a","#ff6a3a","#ffe08a"],vert:true},
-      {id:"skin_f_ice",name:"서리 불꽃",tier:"paid",pal:["#1f3a78","#5a9aff","#e8f2ff"]},
+      {id:"skin_f_ice",name:"서리 불꽃",tier:"paid",pal:["#46646e","#cfeeec","#ffffff"]},
       {id:"skin_f_toxic",name:"독성 불꽃",tier:"paid",pal:["#1a3a00","#5ae000","#e8ff7a"]},
       {id:"skin_f_royal",name:"로열 불꽃",tier:"event",pal:["#2a0a4a","#e0a81a","#fff4c0"]},
       {id:"skin_f_prism",name:"프리즘 불꽃",tier:"event",rainbow:true}
@@ -285,7 +285,7 @@
   function tabSkin(p){
     var el=G.el;
     var from=G.skFrom||"more";
-    var b=el("button","cbtn ghost back",from==="up"?"← 고구마 상점":from==="cash"?"← 캐쉬 상점":"← 더보기");b.type="button";
+    var b=el("button","cbtn ghost back",from==="up"?"← 상점":from==="cash"?"← 캐쉬 상점":"← 더보기");b.type="button";
     b.addEventListener("click",function(){PV={};G.skFrom=null;G.openSheet(from)});p.appendChild(b);
     if(!ready){p.appendChild(el("div","muted","불러오는 중…"));return}
     var sel=equipped(),cm=combo(),previewing=Object.keys(PV).some(function(x){return PV[x]!==sel[x]});
