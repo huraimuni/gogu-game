@@ -170,7 +170,6 @@
     b.addEventListener("click",function(){if(tab==="sk")G.skFrom=null;G.openSheet(tab)});p.appendChild(b);
   }
   function tabMore(p){
-    menuItem(p,"내 스킨","스킨 바꾸기 · 자랑 이미지 공유","sk");
     menuItem(p,"이벤트","하루 한 번 무료 룰렛","ev");
     menuItem(p,U.gifts>0?"내정보 ("+U.gifts+")":"내정보",U.gifts>0?"받을 선물이 있어요":"선물함 · 닉네임 · 내 코드 · 보유 아이템","me");
     menuItem(p,U.friendIn>0?"친구 ("+U.friendIn+")":"친구",U.friendIn>0?"받은 친구 신청이 있어요":"친구 등록 · 친구 랭킹 (최대 50명)","fr");
