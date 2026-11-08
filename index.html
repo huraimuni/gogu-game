@@ -35,7 +35,7 @@ body{margin:0;background:var(--night1);color:var(--fg);font-family:var(--f-body)
   background:linear-gradient(180deg,#9aa6bb 0%,#c3cddd 100%);opacity:.9}
 .app{box-sizing:border-box;position:relative;z-index:1;max-width:480px;margin:0 auto;height:100%;display:flex;flex-direction:column;
   padding-block:8px calc(14px + env(safe-area-inset-bottom,0px))}
-.strip{margin:0 -16px;padding:7px 16px;font-size:12px;text-align:center;
+.strip{margin:0 -16px;padding:6px 16px;font-size:12px;line-height:1.45;text-align:center;
   background:linear-gradient(90deg,#2a4fd6,#7a3ad1,#d23a5c);color:#fff}
 .strip a{color:#fff;font-weight:700;text-decoration:underline}
 .top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px}
@@ -221,11 +221,11 @@ html,body{touch-action:manipulation}
 <div class="scene"><div class="glow"></div><div class="lamp"></div><div class="ground"></div></div>
 
 <div class="app">
-  <div class="strip">나인페이먼츠 광주 · 토스단말기 상담 <a href="https://rebrand.ly/ninepay" target="_blank" rel="noopener">rebrand.ly/ninepay</a></div>
+  <div class="strip"><b>나인페이먼츠</b><br>토스단말기&amp;네이버단말기 0원 상담 <a href="https://rebrand.ly/ninepay" target="_blank" rel="noopener">rebrand.ly/ninepay</a></div>
 
   <div class="top">
     <button class="sq" id="openMis" type="button"><span class="b">미션<i id="misBadge" hidden>0</i></span></button>
-    <div class="title"><b>고구마 굽기</b><small>방치형 군고구마 게임 · v1.56</small></div>
+    <div class="title"><b>고구마 굽기</b><small>방치형 군고구마 게임 · v1.57</small></div>
     <button class="sq" id="openPts" type="button"><span class="b">포인트</span></button>
   </div>
 
@@ -280,7 +280,7 @@ html,body{touch-action:manipulation}
   <div class="sp-in">
     <h2>고구마 굽기</h2>
     <div class="sp-art"><img class="f1" id="spA" alt=""><img class="f2" id="spB" alt=""></div>
-    <div class="sp-tag">방치형 군고구마 게임 · v1.56</div>
+    <div class="sp-tag">방치형 군고구마 게임 · v1.57</div>
     <p class="sp-msg">고구마를 터치해서 굽고,<br>화로를 키워 보세요.</p>
     <p class="sp-sub">3개월마다 새 시즌! 돈·레벨은 새로 시작하고<br>스킨과 아이템은 그대로 남아요.</p>
     <div class="sp-bar"><div></div></div>
@@ -290,8 +290,8 @@ html,body{touch-action:manipulation}
 </div>
 <div class="toast" id="toast"></div>
 
-<script src="config.js?v=156"></script>
-<script src="icons.js?v=156"></script>
+<script src="config.js?v=157"></script>
+<script src="icons.js?v=157"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.js"></script>
 <script>
 (function(){
@@ -697,9 +697,9 @@ html,body{touch-action:manipulation}
   paintTop();
 })();
 </script>
-<script src="skins.js?v=156"></script>
-<script src="online.js?v=156"></script>
-<script src="social.js?v=156"></script>
+<script src="skins.js?v=157"></script>
+<script src="online.js?v=157"></script>
+<script src="social.js?v=157"></script>
 
 </body>
 </html>
