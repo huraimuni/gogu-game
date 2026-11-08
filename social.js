@@ -472,7 +472,7 @@
      "② 시즌이 끝나면 돈·레벨은 처음으로 돌아가요. 늦게 시작해도 괜찮아요!",
      "③ 스킨·칭호·아이템은 그대로 남아요.",
      "④ 시즌 상위 랭커에게는 보상이 있어요. (내용은 시즌마다 공지)"].forEach(function(t){ var d = el("div", null, t); d.style.marginTop = "4px"; sc.appendChild(d); });
-    if(U.season === 0){ var pre = el("div", null, "지금은 연습용 '프리 시즌'이에요. 12월 1일에 정식 시즌 1이 시작되고, 그때 모두 같은 출발선에서 다시 시작해요."); pre.style.cssText = "margin-top:10px;font-weight:700;color:#c98a14"; sc.appendChild(pre); }
+    if(U.season === 0){ var pre = el("div", null, "지금은 '테스트 시즌'이에요. 12월 1일에 정식 시즌 1이 시작되고, 그때 모두 같은 출발선에서 다시 시작해요."); pre.style.cssText = "margin-top:10px;font-weight:700;color:#c98a14"; sc.appendChild(pre); }
     p.appendChild(sc);
     var sw = el("div", "card"); sw.appendChild(el("h4", null, "슈퍼장작이 뭐예요?"));
     ["정해진 시간 동안 수입이 7배가 되는 아이템이에요. 시간은 쌓이고, 한 번에 최대 12시간까지 모을 수 있어요.",

@@ -20,7 +20,7 @@
   function seasonEndText(season){
     var endUtc = season<=0 ? Date.UTC(2026,11,1) : Date.UTC(2026,11+3*season,1);
     var left = Math.ceil((endUtc - KST - Date.now())/86400000);
-    var name = season<=0 ? "프리 시즌" : "시즌 "+season;
+    var name = season<=0 ? "테스트 시즌" : "시즌 "+season;
     return name+" · "+(left>0?left+"일 남음":"곧 종료");
   }
 
