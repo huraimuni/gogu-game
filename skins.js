@@ -185,6 +185,13 @@
     var bw=bb[2]-bb[0]+1,bh=bb[3]-bb[1]+1,pad=2;
     var c=document.createElement("canvas");c.width=bw+pad*2;c.height=bh+pad*2;
     var x=c.getContext("2d");x.drawImage(src,bb[0],bb[1],bw,bh,pad,pad,bw,bh);
+    if(slot==="b"){   // 화로 칸은 고구마를 빼고 화로+불만 보여줌
+      var d2=x.getImageData(0,0,c.width,c.height),C2=cls[0];
+      for(var y2=0;y2<bh;y2++)for(var x2=0;x2<bw;x2++){
+        if(C2[(bb[1]+y2)*W+bb[0]+x2]===1){d2.data[((y2+pad)*c.width+x2+pad)*4+3]=0}
+      }
+      x.putImageData(d2,0,0);
+    }
     if(slot!=="b"){   // 고구마·불 칸은 해당 픽셀만 남김
       var d=x.getImageData(0,0,c.width,c.height),C=cls[0];
       for(var yy=0;yy<bh;yy++)for(var xx=0;xx<bw;xx++){
@@ -325,30 +332,31 @@
     if(!ready){p.appendChild(el("div","muted","불러오는 중…"));return}
     products(p);
   }
-  function products(p){
+  function products(p,tier){
     if(!ready)return;
+    tier=tier||"paid";var free=tier==="free";
     var el=G.el,sel=equipped();
-    p.appendChild(el("div","group","스킨 상품"));
+    p.appendChild(el("div","group",free?"무료 스킨 · 누구나 바로 사용":"스킨 상품"));
     SLOTS.forEach(function(sl){
-      var list=CAT[sl[0]].filter(function(k){return k.tier==="paid"});
+      var list=CAT[sl[0]].filter(function(k){return k.tier===tier});
       if(!list.length)return;
       var g=el("div","muted",sl[1]);g.style.margin="2px 0 4px";p.appendChild(g);
       var grid=el("div","skgrid");
       list.forEach(function(k){
-        var has=owned(k.id);
+        var has=owned(k.id),on=sel[sl[0]]===k.id;
         var c=el("button","sk"+(has?"":" lock"));c.type="button";
-        c.appendChild(el("span","tg paid",has?"보유":"유료"));
+        c.appendChild(el("span","tg "+(free?"free":"paid"),free?"무료":(has?"보유":"유료")));
         var o={p:sel.p,b:sel.b,f:sel.f};o[sl[0]]=k.id;
         var im=el("img");im.alt="";im.src=thumb(o,sl[0]);c.appendChild(im);
         c.appendChild(document.createTextNode(k.name));
-        c.appendChild(el("small",null,has?"사용하러 가기":(G.isOwner&&G.isOwner()?"대표 구매":"준비 중")));
+        c.appendChild(el("small",null,free?(on?"사용 중":"사용하기"):has?"사용하러 가기":(G.isOwner&&G.isOwner()?"대표 구매":"준비 중")));
         c.addEventListener("click",function(){skinPopup(k)});
         grid.appendChild(c);
       });
       p.appendChild(grid);
     });
-    p.appendChild(el("div","muted","유료 스킨 구매는 서비스 준비 중이에요. 곧 만나요!"));
-    p.lastChild.style.marginBottom="10px";
+    if(!free){p.appendChild(el("div","muted","유료 스킨 구매는 서비스 준비 중이에요. 곧 만나요!"));
+    p.lastChild.style.marginBottom="10px"}
   }
 
   function start(game){
@@ -361,6 +369,6 @@
     });
     G.onItems=function(){apply();if(G.currentTab()==="sk"||G.currentTab()==="cash")G.refresh()};
   }
-  window.GoguSkins={start:start,products:products,render:function(s,f){return render(s,f||0)},thumb:function(o,sl){return thumb(o,sl)},equipped:function(){return equipped()},ready:function(){return ready}};
+  window.GoguSkins={start:start,products:products,freeProducts:function(p){products(p,"free")},render:function(s,f){return render(s,f||0)},thumb:function(o,sl){return thumb(o,sl)},equipped:function(){return equipped()},ready:function(){return ready}};
   if(window.GoguGame)start(window.GoguGame);
 })();
