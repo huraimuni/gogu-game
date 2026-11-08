@@ -4,7 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <link rel="icon" href="icons/appicon_512.png">
-<link rel="apple-touch-icon" href="icons/appicon_512.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="고구마 굽기">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0e1426">
 <title>고구마 굽기</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -33,9 +38,10 @@ body{margin:0;background:var(--night1);color:var(--fg);font-family:var(--f-body)
   background:linear-gradient(180deg,#9aa6bb 0%,#c3cddd 100%);opacity:.9}
 .app{box-sizing:border-box;position:relative;z-index:1;max-width:480px;margin:0 auto;height:100%;display:flex;flex-direction:column;
   padding-block:8px calc(14px + env(safe-area-inset-bottom,0px))}
-.strip{margin:0 -16px;padding:6px 16px;font-size:12px;line-height:1.45;text-align:center;
-  background:linear-gradient(90deg,#2a4fd6,#7a3ad1,#d23a5c);color:#fff}
-.strip a{color:#fff;font-weight:700;text-decoration:underline}
+.strip{margin:0 -16px;padding:3px 16px;font-size:11.5px;line-height:1.4;text-align:center;
+  background:linear-gradient(180deg,#ffe9a3,#ffd067);color:#4a2c00;border-bottom:1px solid rgba(120,70,0,.25)}
+.strip b{font-weight:800;color:#3a2000}
+.strip a{color:#7a2f00;font-weight:800;text-decoration:underline}
 .top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px}
 .title{text-align:center;flex:1;min-width:0;overflow:hidden;white-space:nowrap;line-height:1.1}
 .title b{display:block;font:400 clamp(24px,8vw,32px) var(--f-display);letter-spacing:.02em;background:linear-gradient(180deg,#fff4c0 10%,#ffb347 55%,#ff6a2a 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 0 rgba(90,30,0,.7)) drop-shadow(0 3px 8px rgba(255,120,30,.45))}
@@ -234,11 +240,11 @@ html,body{touch-action:manipulation}
 <div class="scene"><div class="glow"></div><div class="ground"></div></div>
 
 <div class="app">
-  <div class="strip"><b>나인페이먼츠</b><br>토스단말기&amp;네이버단말기 0원 상담 <a href="https://rebrand.ly/ninepay" target="_blank" rel="noopener">rebrand.ly/ninepay</a></div>
+  <div class="strip"><b>나인페이먼츠</b> · 토스단말기&amp;네이버단말기 0원 상담 <a href="https://rebrand.ly/ninepay" target="_blank" rel="noopener">rebrand.ly/ninepay</a></div>
 
   <div class="top">
     <button class="sq" id="openMis" type="button"><span class="b">미션<i id="misBadge" hidden>0</i></span></button>
-    <div class="title"><b>고구마 굽기</b><small>방치형 군고구마 게임 · v1.76</small></div>
+    <div class="title"><b>고구마 굽기</b><small>방치형 군고구마 게임 · v1.77</small></div>
     <button class="sq" id="openPts" type="button"><span class="b">포인트</span></button>
   </div>
 
@@ -293,7 +299,7 @@ html,body{touch-action:manipulation}
   <div class="sp-in">
     <h2>고구마 굽기</h2>
     <div class="sp-art"><div class="sp-glow"></div><div class="sp-lit"><img class="f1" id="spA" alt=""><img class="f2" id="spB" alt=""></div><i class="sk" style="left:44%;--dx:-18px;animation-delay:0.5s"></i><i class="sk" style="left:52%;--dx:14px;animation-delay:0.7s"></i><i class="sk" style="left:48%;--dx:-6px;animation-delay:0.9s"></i><i class="sk" style="left:56%;--dx:22px;animation-delay:1.05s"></i><i class="sk" style="left:41%;--dx:-24px;animation-delay:1.2s"></i><i class="sk" style="left:50%;--dx:8px;animation-delay:1.35s"></i><i class="st" style="left:46%;--dx:-10px;animation-delay:1.2s"></i><i class="st" style="left:52%;--dx:8px;animation-delay:1.45s"></i><i class="st" style="left:49%;--dx:-4px;animation-delay:1.7s"></i><i class="st" style="left:55%;--dx:14px;animation-delay:1.95s"></i></div>
-    <div class="sp-tag">방치형 군고구마 게임 · v1.76</div>
+    <div class="sp-tag">방치형 군고구마 게임 · v1.77</div>
     <p class="sp-msg">고구마를 터치해서 굽고,<br>화로를 키워 보세요.</p>
     <p class="sp-sub">3개월마다 새 시즌! 돈·레벨은 새로 시작하고<br>스킨과 아이템은 그대로 남아요.</p>
     <div class="sp-bar"><div></div></div>
@@ -302,8 +308,8 @@ html,body{touch-action:manipulation}
 </div>
 <div class="toast" id="toast"></div>
 
-<script src="config.js?v=176"></script>
-<script src="icons.js?v=176"></script>
+<script src="config.js?v=177"></script>
+<script src="icons.js?v=177"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.js"></script>
 <script>
 (function(){
@@ -698,7 +704,10 @@ html,body{touch-action:manipulation}
   });
   window.addEventListener("pagehide",save);
   // 새 버전 자동 업데이트: version.json 을 캐시 없이 받아 비교 → 저장 후 새 주소로 다시 열기 (한 번만 시도, 실패하면 안내 띠)
-  var APP_VER=176,updTry=0;
+  window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();window.GoguInstallEv=e});
+  window.addEventListener("appinstalled",function(){window.GoguInstallEv=null;toast("홈 화면에 추가됐어요!")});
+  if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}
+  var APP_VER=177,updTry=0;
   function chkUpdate(){
     if(updTry>=3)return;updTry++;
     fetch("version.json?_="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){
@@ -764,9 +773,9 @@ html,body{touch-action:manipulation}
   paintTop();
 })();
 </script>
-<script src="skins.js?v=176"></script>
-<script src="online.js?v=176"></script>
-<script src="social.js?v=176"></script>
+<script src="skins.js?v=177"></script>
+<script src="online.js?v=177"></script>
+<script src="social.js?v=177"></script>
 
 </body>
 </html>

@@ -242,9 +242,29 @@
     b.appendChild(l);b.appendChild(el("i",null,"›"));
     b.addEventListener("click",function(){if(tab==="sk")G.skFrom=null;G.openSheet(tab)});p.appendChild(b);
   }
+  function addToHome(){
+    var ua=navigator.userAgent||"",ios=/iPhone|iPad|iPod/i.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1);
+    var inapp=/KAKAOTALK|NAVER\(|Instagram|FBAN|FBAV|Line\/|DaumApps|; wv\)/i.test(ua);
+    var url="https://huraimuni.github.io/gogu-game/";
+    if(window.GoguInstallEv){var ev=window.GoguInstallEv;window.GoguInstallEv=null;ev.prompt();return}
+    if(inapp){
+      G.popup({first:true,title:"홈 화면에 추가",lines:ios?["지금 화면은 카카오톡·앱 안의 화면이라 추가가 안 돼요","오른쪽 아래 ⋯ 또는 공유 버튼 › Safari로 열기","Safari에서 다시 이 메뉴를 눌러 주세요"]:["지금 화면은 카카오톡·앱 안의 화면이라 추가가 안 돼요","오른쪽 위 ⋮ › 다른 브라우저로 열기 › Chrome","Chrome에서 다시 이 메뉴를 눌러 주세요"],btn:"알겠어요"});
+      return;
+    }
+    if(ios){
+      G.popup({first:true,title:"홈 화면에 추가",lines:["① Safari 아래의 공유 버튼 (□↑) 누르기","② '홈 화면에 추가' 누르기","③ 오른쪽 위 '추가' 누르기"],msg:"Safari에서만 돼요 · Chrome이면 Safari로 열어 주세요",btn:"알겠어요"});
+      return;
+    }
+    G.popup({first:true,title:"홈 화면에 추가",lines:["① Chrome 오른쪽 위 ⋮ 누르기","② '홈 화면에 추가' 또는 '앱 설치' 누르기","③ '추가'(설치) 누르기"],msg:"Chrome이 아니면 Chrome으로 열어 주세요",btn:"알겠어요"});
+  }
   function tabMore(p){
     menuItem(p,"게임 초대","친구 초대 · 링크 공유하고 혜택 받기","iv");
     menuItem(p,"이벤트","하루 한 번 무료 룰렛","ev");
+    if(!(window.matchMedia&&matchMedia("(display-mode: standalone)").matches)&&!navigator.standalone){
+      var hb=el("button","menu");hb.type="button";
+      var hl=el("div");hl.appendChild(document.createTextNode("홈 화면에 추가"));hl.appendChild(el("small",null,"바탕화면에서 바로 열어요 · 앱처럼 전체 화면"));
+      hb.appendChild(hl);hb.appendChild(el("i",null,"›"));hb.addEventListener("click",addToHome);p.appendChild(hb);
+    }
     menuItem(p,U.gifts>0?"내정보 ("+U.gifts+")":"내정보",U.gifts>0?"받을 선물이 있어요":"선물함 · 닉네임 · 내 코드 · 보유 아이템","me");
     menuItem(p,U.friendIn>0?"친구 ("+U.friendIn+")":"친구",U.friendIn>0?"받은 친구 신청이 있어요":"친구 등록 · 친구 랭킹 (최대 50명)","fr");
     menuItem(p,"클랜","클랜 만들기 · 가입 · 클랜원 보기","cl");
