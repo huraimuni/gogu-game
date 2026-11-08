@@ -336,7 +336,7 @@
     var sv=el("button","btn","변경");sv.type="button";sv.addEventListener("click",function(){
       rpc("gogu_set_nickname",{p_name:inp.value}).then(function(n){pr.nickname=n;cache={};toast("닉네임을 바꿨어요");G.refresh()}).catch(function(e){toast(errMsg(e))});
     });r.appendChild(sv);c.appendChild(r);
-    c.appendChild(el("div","muted","30일에 한 번만 바꿀 수 있어요"));c.lastChild.style.marginTop="6px";p.appendChild(c);
+    c.appendChild(el("div","muted","닉네임은 한 번만 바꿀 수 있어요 (다음 변경은 준비 중)"));c.lastChild.style.marginTop="6px";p.appendChild(c);
 
     var c2=el("div","card");c2.appendChild(el("h4",null,"내 코드 (운영자 선물 받을 때 알려주세요)"));
     var r2=el("div","row");r2.appendChild(el("span","codebox",pr.code));
