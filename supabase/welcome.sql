@@ -55,14 +55,14 @@ insert into public.gogu_promos(id,label,codes,items,butter_min,expires_at) value
 on conflict (id) do update set label=excluded.label, codes=excluded.codes, items=excluded.items,
   butter_min=excluded.butter_min, expires_at=excluded.expires_at;
 
--- ---------- 내부 도우미: 슈퍼장작 늘리기 (한 번에 최대 3시간까지만 쌓임) ----------
+-- ---------- 내부 도우미: 슈퍼장작 늘리기 (한 번에 최대 12시간까지만 쌓임) ----------
 create or replace function public.gogu_add_butter_s(p_user uuid, p_sec int) returns void
 language plpgsql security definer set search_path = public as $$
 declare cur timestamptz; nxt timestamptz;
 begin
   if p_sec is null or p_sec < 1 then return; end if;
   select expires_at into cur from public.gogu_user_items where user_id = p_user and item_id = 'perk_butter7';
-  nxt := least(greatest(coalesce(cur, now()), now()) + make_interval(secs => p_sec), now() + interval '3 hours');
+  nxt := least(greatest(coalesce(cur, now()), now()) + make_interval(secs => p_sec), now() + interval '12 hours');
   insert into public.gogu_user_items(user_id, item_id, source, expires_at) values (p_user, 'perk_butter7', 'butter', nxt)
   on conflict (user_id, item_id) do update set expires_at = nxt;
 end $$;

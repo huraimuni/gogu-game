@@ -455,7 +455,7 @@
       ["공정한 플레이", "자동 터치(매크로) 프로그램은 사용할 수 없어요. 직접 눌러서 즐겨 주세요. 초당 자동 수입(방치)은 게임 기능이라 괜찮아요."],
       ["확인되면 이렇게 해요", "① 의심 패턴이 확인되면 랭킹·시즌 보상에서 잠시 제외되고 안내가 떠요. ② 직접 플레이했다고 이의 신청하면 확인 후 경고 1회로 풀어 드려요. ③ 경고 후 같은 시즌에 다시 확인되면 영구 제외돼요. 경고는 시즌이 바뀌면 초기화돼요."],
       ["제외되면", "랭킹과 시즌 보상에서만 빠져요. 게임은 계속 즐길 수 있고 보유 아이템도 그대로예요."],
-      ["랭킹은 이렇게 계산해요", "화력 최대 7배와 포인트샵 보너스를 뺀 기본 기록(초당 최고·터치당 최고)으로 겨뤄요. 그래서 누가 더 열심히, 직접 했는지가 그대로 드러나요."],
+      ["랭킹은 이렇게 계산해요", "화력 최대·슈퍼장작 7배와 포인트샵 보너스를 뺀 기본 기록(초당 최고·터치당 최고)으로 겨뤄요. 그래서 누가 더 열심히, 직접 했는지가 그대로 드러나요."],
       ["아이템 기간", "일부 아이템은 7일·30일 같은 기간제예요. 기간이 끝나면 기본 모습으로 돌아가고, 다시 받으면 기간이 이어져요."],
       ["문의", "커뮤니티 오픈채팅에서 운영자에게 물어보세요."]
     ];
@@ -468,6 +468,15 @@
      "④ 시즌 상위 랭커에게는 보상이 있어요. (내용은 시즌마다 공지)"].forEach(function(t){ var d = el("div", null, t); d.style.marginTop = "4px"; sc.appendChild(d); });
     if(U.season === 0){ var pre = el("div", null, "지금은 연습용 '프리 시즌'이에요. 12월 1일에 정식 시즌 1이 시작되고, 그때 모두 같은 출발선에서 다시 시작해요."); pre.style.cssText = "margin-top:10px;font-weight:700;color:#c98a14"; sc.appendChild(pre); }
     p.appendChild(sc);
+    var sw = el("div", "card"); sw.appendChild(el("h4", null, "슈퍼장작이 뭐예요?"));
+    ["정해진 시간 동안 수입이 7배가 되는 아이템이에요. 시간은 쌓이고, 한 번에 최대 12시간까지 모을 수 있어요.",
+     "받는 방법",
+     "① 출석: 하루 한 번 접속하면 10분, 7일 연속이면 1시간",
+     "② 링크 교환: 내정보의 '오늘의 슈퍼장작 링크'를 공유하면 10초, 다른 사람이 내 링크를 누르면 서로 10초씩 (횟수 제한 없음, 같은 링크는 사람당 하루 1번)",
+     "③ 친구 초대: 내 초대 링크로 새 친구가 가입하면 둘 다 30분 (최대 20명)",
+     "④ 이벤트 초대 코드를 입력하면 보너스로 받을 수 있어요",
+     "쓰는 중에는 화면의 쿠폰 버튼 자리에 남은 시간이 보여요. 랭킹은 슈퍼장작 효과를 뺀 기본 기록으로 겨뤄서 공정해요."].forEach(function(t, i){ var d = el("div", null, t); d.style.marginTop = i === 1 ? "8px" : "4px"; if(i === 1) d.style.fontWeight = "700"; sw.appendChild(d); });
+    p.appendChild(sw);
     rules.forEach(function(r){ var c = el("div", "card"); c.appendChild(el("h4", null, r[0])); c.appendChild(el("div", null, r[1])); p.appendChild(c); });
     var a = el("a", "menu"); a.href = CHAT_URL; a.target = "_blank"; a.rel = "noopener noreferrer"; a.style.textDecoration = "none";
     var l = el("div"); l.appendChild(document.createTextNode("커뮤니티 오픈채팅")); l.appendChild(el("small", null, "문의 · 이벤트 소식 · 스킨 자랑"));
