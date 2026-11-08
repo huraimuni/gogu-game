@@ -211,9 +211,9 @@
       "body .rlhub{display:none}"+
       "body .rlpin{position:absolute;left:50%;top:-14px;width:36px;height:36px;margin-left:-18px;z-index:3}"+
       "body .rlpin canvas{width:100%;height:100%;image-rendering:pixelated;display:block}"+
-      "body .rlres{text-align:center;padding:12px 8px;margin-bottom:12px;font:700 20px var(--f-body);background:var(--row);color:var(--sheet-fg);min-height:52px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px}"+
-      "body .rlres small{font:400 13px var(--f-body);color:var(--sheet-muted)}"+
-      "body .rlres.win{background:var(--pxgold);color:#2a1600;animation:rlpop .5s steps(5,end)}"+
+      "body .rlres{text-align:center;padding:12px 8px;margin-bottom:12px;font:700 20px var(--f-body);background:#1b1438;color:#fff1cf;box-shadow:0 0 0 3px #0b0719;min-height:52px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px}"+
+      "body .rlres small{font:400 13px var(--f-body);color:#b9a9de}"+
+      "body .rlres.win{background:#ffcf4a;color:#2a1600;animation:rlpop .5s steps(5,end)}"+
       "body .rlres.win small{color:#5a3a00}"+
       "body .rlres.lose{background:#3b2a78;color:#b9a9de}"+
       "@keyframes rlpop{0%{transform:scale(.6);opacity:0}100%{transform:none;opacity:1}}";
@@ -454,10 +454,19 @@
       ["공정한 플레이", "자동 터치(매크로) 프로그램은 사용할 수 없어요. 직접 눌러서 즐겨 주세요. 초당 자동 수입(방치)은 게임 기능이라 괜찮아요."],
       ["확인되면 이렇게 해요", "① 의심 패턴이 확인되면 랭킹·시즌 보상에서 잠시 제외되고 안내가 떠요. ② 직접 플레이했다고 이의 신청하면 확인 후 경고 1회로 풀어 드려요. ③ 경고 후 같은 시즌에 다시 확인되면 영구 제외돼요. 경고는 시즌이 바뀌면 초기화돼요."],
       ["제외되면", "랭킹과 시즌 보상에서만 빠져요. 게임은 계속 즐길 수 있고 보유 아이템도 그대로예요."],
-      ["시즌", "시즌은 3개월마다 시작돼요. 시즌이 끝나면 진행은 초기화되고, 스킨·칭호·아이템은 유지돼요. 랭킹은 화력 최대와 포인트샵 보너스를 뺀 초당·터치당 최고 기록이에요."],
+      ["랭킹은 이렇게 계산해요", "화력 최대 7배와 포인트샵 보너스를 뺀 기본 기록(초당 최고·터치당 최고)으로 겨뤄요. 그래서 누가 더 열심히, 직접 했는지가 그대로 드러나요."],
       ["아이템 기간", "일부 아이템은 7일·30일 같은 기간제예요. 기간이 끝나면 기본 모습으로 돌아가고, 다시 받으면 기간이 이어져요."],
       ["문의", "커뮤니티 오픈채팅에서 운영자에게 물어보세요."]
     ];
+    // 시즌 한눈에: 처음 보는 사람도 바로 이해되도록 쉬운 말로 먼저 보여준다
+    var sc = el("div", "card"); sc.appendChild(el("h4", null, "시즌이 뭐예요?"));
+    ["3개월마다 모두가 처음부터 다시 시작하는 '새 판'이에요.",
+     "① 시즌 중에는 돈과 레벨을 키우며 랭킹을 겨뤄요.",
+     "② 시즌이 끝나면 돈·레벨은 처음으로 돌아가요. 늦게 시작해도 괜찮아요!",
+     "③ 스킨·칭호·아이템은 그대로 남아요.",
+     "④ 시즌 상위 랭커에게는 보상이 있어요. (내용은 시즌마다 공지)"].forEach(function(t){ var d = el("div", null, t); d.style.marginTop = "4px"; sc.appendChild(d); });
+    if(U.season === 0){ var pre = el("div", null, "지금은 연습용 '프리 시즌'이에요. 12월 1일에 정식 시즌 1이 시작되고, 그때 모두 같은 출발선에서 다시 시작해요."); pre.style.cssText = "margin-top:10px;font-weight:700;color:#c98a14"; sc.appendChild(pre); }
+    p.appendChild(sc);
     rules.forEach(function(r){ var c = el("div", "card"); c.appendChild(el("h4", null, r[0])); c.appendChild(el("div", null, r[1])); p.appendChild(c); });
     var a = el("a", "menu"); a.href = CHAT_URL; a.target = "_blank"; a.rel = "noopener noreferrer"; a.style.textDecoration = "none";
     var l = el("div"); l.appendChild(document.createTextNode("커뮤니티 오픈채팅")); l.appendChild(el("small", null, "문의 · 이벤트 소식 · 스킨 자랑"));

@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <link rel="icon" href="icons/appicon_512.png">
 <link rel="apple-touch-icon" href="icons/appicon_512.png">
 <meta name="theme-color" content="#0e1426">
@@ -213,8 +213,8 @@ body.boost .term .f2{animation-duration:.2s}
   padding:10px 16px;border-radius:14px;font:700 14px var(--f-body);opacity:0;pointer-events:none;transition:.25s;z-index:40;max-width:90vw;text-align:center}
 .toast.on{opacity:1;transform:translate(-50%,0)}
 @media (prefers-reduced-motion:reduce){.heat .sm,.heat .em{animation:none;display:none}body.boost .heat::before{animation:none}body.boost .term .f1,body.boost .term .f2{animation:none}body.boost .term .f2{opacity:0}.sp-art .f1,.sp-art .f2{animation:none}.sp-art .f2{opacity:0}.sp-bar>div{animation:none;width:100%}.term .f1,.term .f2{animation:none}.term .f2{opacity:0}.fx,.bill{animation:none;opacity:0}.term,.sheet,.scrim{transition:none}}
+html,body{touch-action:manipulation}
 </style>
-<link rel="stylesheet" href="pixel.css?v=35">
 </head>
 <body>
 <div class="scene"><div class="glow"></div><div class="lamp"></div><div class="ground"></div></div>
@@ -224,7 +224,7 @@ body.boost .term .f2{animation-duration:.2s}
 
   <div class="top">
     <button class="sq" id="openMis" type="button"><span class="b">미션<i id="misBadge" hidden>0</i></span></button>
-    <div class="title"><b>고구마 굽기</b><small>방치형 군고구마 게임 · v1.35</small></div>
+    <div class="title"><b>고구마 굽기</b><small>방치형 군고구마 게임 · v1.37</small></div>
     <button class="sq" id="openPts" type="button"><span class="b">포인트</span></button>
   </div>
 
@@ -279,8 +279,9 @@ body.boost .term .f2{animation-duration:.2s}
   <div class="sp-in">
     <h2>고구마 굽기</h2>
     <div class="sp-art"><img class="f1" id="spA" alt=""><img class="f2" id="spB" alt=""></div>
-    <div class="sp-tag">방치형 군고구마 게임 · v1.35</div>
+    <div class="sp-tag">방치형 군고구마 게임 · v1.37</div>
     <p class="sp-msg">고구마를 터치해서 굽고,<br>화로를 키워 보세요.</p>
+    <p class="sp-sub">3개월마다 새 시즌! 돈·레벨은 새로 시작하고<br>스킨과 아이템은 그대로 남아요.</p>
     <div class="sp-bar"><div></div></div>
     <p class="sp-load" id="spLoad">불 피우는 중…</p>
     <button class="sp-go" id="spGo" type="button" hidden>시작하기</button>
