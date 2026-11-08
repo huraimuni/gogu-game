@@ -271,6 +271,19 @@
     if(window.GoguSocial)window.GoguSocial.meExtras(p);
 
     var gbox=el("div","card");gbox.appendChild(el("h4",null,"선물함"));gbox.appendChild(el("div","muted","불러오는 중…"));p.appendChild(gbox);
+    var dc=el("div","card");dc.appendChild(el("h4",null,"회원 탈퇴"));
+    dc.appendChild(el("div","muted","계정과 기록, 보유 아이템이 모두 삭제되고 되돌릴 수 없어요. 탈퇴하려면 아래에 '탈퇴'라고 입력하세요."));dc.lastChild.style.marginBottom="8px";
+    var dr=el("div","row");var di=el("input");di.placeholder="탈퇴";di.maxLength=4;dr.appendChild(di);
+    var db=el("button","btn ghost","탈퇴하기");db.type="button";db.disabled=true;
+    di.addEventListener("input",function(){db.disabled=(di.value.trim()!=="탈퇴")});
+    db.addEventListener("click",function(){
+      if(di.value.trim()!=="탈퇴")return;db.disabled=true;
+      rpc("gogu_delete_account").then(function(){
+        return sb.auth.signOut().catch(function(){});
+      }).then(function(){ U.user=null;U.profile=null;U.loaded=false;U.items=[];U.itemsExp={};U.gifts=0;U.friendIn=0;applyItems();cache={};G.refresh();toast("탈퇴했어요. 이용해 주셔서 고마워요"); })
+      .catch(function(e){db.disabled=false;toast(errMsg(e))});
+    });
+    dr.appendChild(db);dc.appendChild(dr);p.appendChild(dc);
     rpc("gogu_gifts_list").then(function(list){
       gbox.innerHTML="";gbox.appendChild(el("h4",null,"선물함"));
       if(!list||!list.length){gbox.appendChild(el("div","muted","받을 선물이 없어요"));return}

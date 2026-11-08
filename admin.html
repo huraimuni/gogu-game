@@ -103,6 +103,14 @@ button.danger{background:var(--red)}.wrap2{flex-wrap:wrap}.wrap2>*{flex:1 1 45%}
         <div id="opList" class="list" style="margin-top:10px"></div>
       </div>
       <div class="card">
+        <label for="rsCode">저장 되돌리기 (유저 코드)</label>
+        <input id="rsCode" placeholder="GOGU-ABCD-2345">
+        <div class="row"><button id="rsList" class="ghost" type="button">저장본 날짜 보기</button></div>
+        <div id="rsRes" style="margin-top:8px"></div>
+        <div id="rsDays" class="list" style="margin-top:10px"></div>
+        <div class="muted">하루에 한 번 덮어쓰기 직전 상태가 최근 7일 보관돼요. 날짜를 누르면 그 상태로 되돌려요. 유저가 게임을 다시 열면 반영돼요.</div>
+      </div>
+      <div class="card">
         <label for="rwSeason">시즌 종료 보상 (시즌 번호)</label>
         <input id="rwSeason" type="number" min="0" placeholder="예: 1">
         <div class="row"><button id="rwView" class="ghost" type="button">미리보기</button><button id="rwGo" type="button">지급하기</button></div>
@@ -294,6 +302,18 @@ button.danger{background:var(--red)}.wrap2{flex-wrap:wrap}.wrap2>*{flex:1 1 45%}
   }
   $("rwView").addEventListener("click",function(){reward(false)});
   $("rwGo").addEventListener("click",function(){reward(true)});
+  $("rsList").addEventListener("click",function(){
+    var c=$("rsCode").value.trim();if(!c){out("rsRes","코드를 넣어 주세요","bad");return}
+    rpc("gogu_admin_restore_save",{p_code:c}).then(function(r){
+      var w=$("rsDays");w.innerHTML="";
+      if(!r.days||!r.days.length){out("rsRes","보관된 저장본이 없어요","");return}
+      out("rsRes","되돌릴 날짜를 누르세요","ok");
+      r.days.forEach(function(d){var b=mk("button","ghost",d+" 상태로 되돌리기");b.type="button";b.addEventListener("click",function(){
+        if(!confirm(d+" 저장본으로 되돌릴까요?"))return;
+        rpc("gogu_admin_restore_save",{p_code:c,p_day:d}).then(function(){out("rsRes",d+" 상태로 되돌렸어요","ok")}).catch(function(e){out("rsRes","실패: "+em(e),"bad")});
+      });w.appendChild(b)});
+    }).catch(function(e){out("rsRes","실패: "+em(e),"bad")});
+  });
   $("opAdd").addEventListener("click",function(){var c=$("opcode").value.trim().toUpperCase();if(c)setOp(c,true)});
 
   sb.auth.getSession().then(function(r){init(r.data&&r.data.session)});
