@@ -179,6 +179,10 @@
     var cl=el("div");cl.appendChild(document.createTextNode("커뮤니티 가기"));cl.appendChild(el("small",null,"카카오톡 오픈채팅에서 같이 이야기해요"));
     cm.appendChild(cl);cm.appendChild(el("i",null,"›"));p.appendChild(cm);
     menuItem(p,"규정 · 안내","공정한 플레이를 위한 규칙","rl");
+    ["이용약관|terms.html","개인정보처리방침|privacy.html"].forEach(function(x){
+      var a=x.split("|"),lk=el("a","menu");lk.href=a[1];lk.target="_blank";lk.rel="noopener";lk.style.textDecoration="none";
+      var d=el("div");d.appendChild(document.createTextNode(a[0]));lk.appendChild(d);lk.appendChild(el("i",null,"›"));p.appendChild(lk);
+    });
     if(!U.ready)note(p,"서버 연결 후 이용할 수 있어요.");
     else if(!U.user)needLogin(p);
   }
