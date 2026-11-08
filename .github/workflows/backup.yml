@@ -1,0 +1,58 @@
+name: 데이터 백업 (매일)
+
+# 매일 새벽 3시 30분(한국시간)에 고구마 굽기 데이터베이스를 통째로 내려받아
+# 암호화한 뒤 이 저장소의 Actions > 해당 실행 > Artifacts 에 30일간 보관합니다.
+# 저장소가 공개라서, 암호화하지 않은 백업은 절대 올리지 않습니다.
+on:
+  schedule:
+    - cron: "30 18 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: 서버 깨우기 (일주일 무접속 정지 방지)
+        run: |
+          curl -fsS -X POST "https://cmqtdlaknlgiszaydjzo.supabase.co/rest/v1/rpc/gogu_season" \
+            -H "apikey: sb_publishable_qsDxjzHvXmnOkolVfHwQOA_BlQ9Dm6n" \
+            -H "Content-Type: application/json" -d '{}' || echo "깨우기 실패(백업은 계속)"
+
+      - name: pg_dump 설치
+        run: |
+          sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+          curl -fsS https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/pgdg.gpg
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq postgresql-client-17
+
+      - name: 백업 만들기 + 암호화
+        env:
+          DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+          PASS: ${{ secrets.BACKUP_PASSPHRASE }}
+        run: |
+          set -euo pipefail
+          test -n "$DB_URL" || { echo "SUPABASE_DB_URL 비밀값이 없어요"; exit 1; }
+          test -n "$PASS"   || { echo "BACKUP_PASSPHRASE 비밀값이 없어요"; exit 1; }
+          STAMP=$(TZ=Asia/Seoul date +%Y%m%d-%H%M)
+          pg_dump "$DB_URL" --no-owner --no-privileges --schema=public --schema=auth -f dump.sql
+          SIZE=$(stat -c %s dump.sql)
+          echo "백업 크기: $SIZE bytes"
+          test "$SIZE" -gt 20000 || { echo "백업이 비정상적으로 작아요"; exit 1; }
+          grep -q "gogu_profiles" dump.sql || { echo "게임 테이블이 없어요"; exit 1; }
+          gzip -9 dump.sql
+          gpg --batch --yes --pinentry-mode loopback --passphrase "$PASS" \
+            --symmetric --cipher-algo AES256 -o "gogu-backup-$STAMP.sql.gz.gpg" dump.sql.gz
+          rm -f dump.sql.gz
+          ls -l gogu-backup-*.gpg
+
+      - name: 암호화된 백업 보관 (30일)
+        uses: actions/upload-artifact@v4
+        with:
+          name: gogu-backup
+          path: gogu-backup-*.gpg
+          retention-days: 30
+          if-no-files-found: error
