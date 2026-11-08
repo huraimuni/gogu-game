@@ -163,7 +163,7 @@ begin
         group by p.nickname order by count(*) desc limit 10) q), '[]'::jsonb));
 end $$;
 
--- ---------- 매일 링크 교환 (붕어빵 방식): 공유 10초, 링크를 눌러 주면 서로 10초, 하루 상한 30번 ----------
+-- ---------- 매일 링크 교환 (붕어빵 방식): 공유 10초, 링크를 눌러 주면 서로 10초 (같은 링크는 사람당 하루 1번, 횟수 제한 없음) ----------
 create table if not exists public.gogu_daily(
   user_id uuid not null references auth.users(id) on delete cascade,
   day date not null,
@@ -201,7 +201,7 @@ create or replace function public.gogu_link_click(p_code text) returns jsonb
 language plpgsql security definer set search_path = public as $$
 declare
   uid uuid := auth.uid(); today date := (now() at time zone 'Asia/Seoul')::date;
-  sh public.gogu_profiles; me public.gogu_daily; he public.gogu_daily; got int := 0;
+  sh public.gogu_profiles; got int := 0;
 begin
   if uid is null then raise exception 'login required'; end if;
   perform public.gogu_ensure_profile();
@@ -216,16 +216,11 @@ begin
   end;
   insert into public.gogu_daily(user_id, day) values (uid, today) on conflict do nothing;
   insert into public.gogu_daily(user_id, day) values (sh.id, today) on conflict do nothing;
-  select * into me from public.gogu_daily where user_id = uid and day = today for update;
-  select * into he from public.gogu_daily where user_id = sh.id and day = today for update;
-  if me.gave < 30 then
-    update public.gogu_daily set gave = gave + 1 where user_id = uid and day = today;
-    perform public.gogu_add_butter_s(uid, 10); got := 10;
-  end if;
-  if he.recv < 30 then
-    update public.gogu_daily set recv = recv + 1 where user_id = sh.id and day = today;
-    perform public.gogu_add_butter_s(sh.id, 10);
-  end if;
+  -- 하루 횟수 제한은 두지 않아요 (같은 링크는 사람당 하루 1번만)
+  update public.gogu_daily set gave = gave + 1 where user_id = uid and day = today;
+  perform public.gogu_add_butter_s(uid, 10); got := 10;
+  update public.gogu_daily set recv = recv + 1 where user_id = sh.id and day = today;
+  perform public.gogu_add_butter_s(sh.id, 10);
   return jsonb_build_object('seconds', got, 'sharer', sh.nickname);
 end $$;
 
@@ -234,8 +229,7 @@ language sql stable security definer set search_path = public as $$
   select jsonb_build_object(
     'shared', coalesce((select shared from public.gogu_daily where user_id = auth.uid() and day = (now() at time zone 'Asia/Seoul')::date), false),
     'recv', coalesce((select recv from public.gogu_daily where user_id = auth.uid() and day = (now() at time zone 'Asia/Seoul')::date), 0),
-    'gave', coalesce((select gave from public.gogu_daily where user_id = auth.uid() and day = (now() at time zone 'Asia/Seoul')::date), 0),
-    'max', 30);
+    'gave', coalesce((select gave from public.gogu_daily where user_id = auth.uid() and day = (now() at time zone 'Asia/Seoul')::date), 0));
 $$;
 
 revoke all on function public.gogu_share_bonus() from public, anon;

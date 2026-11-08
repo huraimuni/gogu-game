@@ -115,7 +115,7 @@
       if(g){
         rpc("gogu_link_click",{p_code:g}).then(function(r){
           pendingSet(null,GEND);reloadItems().catch(function(){});
-          toast(r.seconds>0?r.sharer+"님 링크 덕분에 슈퍼장작 "+r.seconds+"초!":"오늘 받을 수 있는 양을 다 받았어요");
+          toast(r.sharer+"님 링크 덕분에 슈퍼장작 "+r.seconds+"초!");
         }).catch(function(e){var m=(e&&e.message)||"";if(!/fetch|network/i.test(m)){pendingSet(null,GEND);toast(m.length>40?"링크를 사용할 수 없어요":m)}});
       }
     }).then(function(){
@@ -326,7 +326,7 @@
     });r.appendChild(b1);
     var b2=el("button","cbtn ghost","링크 복사");b2.type="button";b2.addEventListener("click",function(){copy(link)});r.appendChild(b2);
     c.appendChild(r);p.appendChild(c);
-    function refresh(){rpc("gogu_daily_my").then(function(m){st.textContent=(m.shared?"오늘 공유 보상 받음 · ":"오늘 공유 보상 아직 · ")+"내 링크를 눌러 준 사람 "+m.recv+"/"+m.max+" · 내가 누른 링크 "+m.gave+"/"+m.max}).catch(function(){st.textContent=""})}
+    function refresh(){rpc("gogu_daily_my").then(function(m){st.textContent=(m.shared?"오늘 공유 보상 받음 · ":"오늘 공유 보상 아직 · ")+"내 링크를 눌러 준 사람 "+m.recv+"명 · 내가 누른 링크 "+m.gave+"개"}).catch(function(){st.textContent=""})}
     refresh();
   }
 
