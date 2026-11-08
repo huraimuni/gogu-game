@@ -225,7 +225,7 @@ html,body{touch-action:manipulation}
 
   <div class="top">
     <button class="sq" id="openMis" type="button"><span class="b">미션<i id="misBadge" hidden>0</i></span></button>
-    <div class="title"><b>고구마 굽기</b><small>방치형 군고구마 게임 · v1.41</small></div>
+    <div class="title"><b>고구마 굽기</b><small>방치형 군고구마 게임 · v1.42</small></div>
     <button class="sq" id="openPts" type="button"><span class="b">포인트</span></button>
   </div>
 
@@ -273,14 +273,14 @@ html,body{touch-action:manipulation}
   </div>
   <div class="hud"><div class="m" id="hm">0원</div><div class="r"><span class="s">초당 <span id="hs">0</span>원</span> · <span class="c">터치당 <span id="hc">1</span>원</span></div></div>
   <div class="list" id="panel"></div>
-  <div class="note"><span id="saved">자동 저장 중</span><button class="btn ghost" id="reset" type="button">처음부터</button></div>
+  <div class="note"><span id="saved">자동 저장 중</span></div>
   <div style="height:calc(10px + env(safe-area-inset-bottom,0px))"></div>
 </section>
 <div class="splash" id="splash" role="dialog" aria-label="안내">
   <div class="sp-in">
     <h2>고구마 굽기</h2>
     <div class="sp-art"><img class="f1" id="spA" alt=""><img class="f2" id="spB" alt=""></div>
-    <div class="sp-tag">방치형 군고구마 게임 · v1.41</div>
+    <div class="sp-tag">방치형 군고구마 게임 · v1.42</div>
     <p class="sp-msg">고구마를 터치해서 굽고,<br>화로를 키워 보세요.</p>
     <p class="sp-sub">3개월마다 새 시즌! 돈·레벨은 새로 시작하고<br>스킨과 아이템은 그대로 남아요.</p>
     <div class="sp-bar"><div></div></div>
@@ -596,13 +596,6 @@ html,body{touch-action:manipulation}
     if(S.coupons<1||boosting())return;
     S.coupons--;S.boosts++;S.boostEnd=Date.now()+20000;paintTop();save();
   });
-  var rsArmed=false;
-  $("reset").addEventListener("click",function(){
-    var b=$("reset");
-    if(!rsArmed){rsArmed=true;b.textContent="한 번 더 누르면 초기화";setTimeout(function(){rsArmed=false;b.textContent="처음부터"},2500);return}
-    var keep=S,n0=fresh();n0.pts=keep.pts||0;n0.done=keep.done||{};n0.shop=keep.shop||{};n0.skin=keep.skin;S=n0;rsArmed=false;b.textContent="처음부터";renderPanel();paintTop();paintPanel();save();toast("돈·레벨만 처음부터 다시 시작해요 (포인트·보너스는 그대로)");
-  });
-
   // 시간 기준 정산: 화면을 꺼두거나 다른 탭에 있어도 지난 시간만큼 초당 수입이 쌓인다 (최대 8시간)
   var lastT=Date.now();
   function settle(now){

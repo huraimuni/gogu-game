@@ -12,42 +12,42 @@
       {id:"skin_p_pumpkin",name:"호박고구마",tier:"free",pal:["#a8501c","#f08a24","#ffd06a"]},
       {id:"skin_p_chestnut",name:"밤고구마",tier:"paid",pal:["#8a6a2a","#e0b55a","#fff0b8"]},
       {id:"skin_p_violet",name:"자색고구마",tier:"paid",pal:["#2a1050","#7a3fd0","#d9b8ff"]},
-      {id:"skin_p_gold",name:"황금고구마",tier:"paid",pal:["#8a5a00","#ffc21a","#fff7b0"]},
-      {id:"skin_p_snow",name:"눈꽃고구마",tier:"event",pal:["#5a7aa8","#b8d4f0","#ffffff"]},
-      {id:"skin_p_ember",name:"불타는 고구마",tier:"event",pal:["#4a0a00","#e0321a","#ffd23a"]},
+      {id:"skin_p_gold",name:"황금고구마",tier:"paid",pal:["#8a5a00","#ffc21a","#fff7b0"],fx:"sparkle"},
+      {id:"skin_p_snow",name:"눈꽃고구마",tier:"event",pal:["#5a7aa8","#b8d4f0","#ffffff"],fx:"snow"},
+      {id:"skin_p_ember",name:"불타는 고구마",tier:"event",pal:["#4a0a00","#e0321a","#ffd23a"],vert:true},
       {id:"skin_p_rainbow",name:"무지개고구마",tier:"event",rainbow:true},
-      {id:"skin_p_sakura",name:"벚꽃고구마",tier:"paid",pal:["#6a2a4a","#f28ab8","#fff0f6"]},
-      {id:"skin_p_emerald",name:"에메랄드고구마",tier:"paid",pal:["#04301c","#1fbf6a","#c8ffe0"]},
-      {id:"skin_p_ruby",name:"루비고구마",tier:"paid",pal:["#3a0010","#d01040","#ff9ab8"]},
-      {id:"skin_p_sapphire",name:"사파이어고구마",tier:"paid",pal:["#06143a","#2a6af0","#b0d0ff"]},
-      {id:"skin_p_neon",name:"네온고구마",tier:"paid",pal:["#2a0a4a","#ff2ad0","#7affff"]},
-      {id:"skin_p_galaxy",name:"은하고구마",tier:"paid",pal:["#0a0630","#5a3ad0","#e0a8ff"]},
-      {id:"skin_p_candy",name:"사탕고구마",tier:"paid",pal:["#7a1a3a","#ff6a9a","#fff0a0"]},
-      {id:"skin_p_diamond",name:"다이아고구마",tier:"paid",pal:["#4a6a8a","#a8e4ff","#ffffff"]},
-      {id:"skin_p_lava",name:"용암고구마",tier:"event",pal:["#200000","#ff4a00","#ffe040"]},
-      {id:"skin_p_aurora",name:"오로라고구마",tier:"event",pal:["#062a3a","#2adca0","#d8a8ff"]}
+      {id:"skin_p_sakura",name:"벚꽃고구마",tier:"paid",pal:["#6a2a4a","#f28ab8","#fff0f6"],fx:"petals"},
+      {id:"skin_p_emerald",name:"에메랄드고구마",tier:"paid",pal:["#04301c","#1fbf6a","#c8ffe0"],fx:"sparkle"},
+      {id:"skin_p_ruby",name:"루비고구마",tier:"paid",pal:["#3a0010","#d01040","#ff9ab8"],fx:"sparkle"},
+      {id:"skin_p_sapphire",name:"사파이어고구마",tier:"paid",pal:["#06143a","#2a6af0","#b0d0ff"],fx:"sparkle"},
+      {id:"skin_p_neon",name:"네온고구마",tier:"paid",pal:["#2e0060","#ff20d0","#40ffff"],post:3},
+      {id:"skin_p_galaxy",name:"은하고구마",tier:"paid",pal:["#050520","#2a1a8a","#8a6aff"],fx:"stars"},
+      {id:"skin_p_candy",name:"사탕고구마",tier:"paid",pal:["#d01a50","#ff7aa8","#fff4f8"],fx:"stripes"},
+      {id:"skin_p_diamond",name:"다이아고구마",tier:"paid",pal:["#3a5a7a","#a8e4ff","#ffffff"],fx:"facet"},
+      {id:"skin_p_lava",name:"용암고구마",tier:"event",pal:["#1a0000","#7a1000","#ffb020"],fx:"cracks"},
+      {id:"skin_p_aurora",name:"오로라고구마",tier:"event",pal:["#062a3a","#2adca0","#d8a8ff"],fx:"aurora"}
     ],
     b:[
       {id:"skin_b_default",name:"기본 화로",tier:"free"},
       {id:"skin_b_silver",name:"은빛 화로",tier:"free",pal:["#3c424c","#a9b2bf","#f2f5fa"]},
       {id:"skin_b_copper",name:"구리 화로",tier:"free",pal:["#3a1a0c","#b4622e","#f2b98a"]},
-      {id:"skin_b_gold",name:"황금 화로",tier:"paid",pal:["#4a3000","#d9a21a","#fff1a0"]},
+      {id:"skin_b_gold",name:"황금 화로",tier:"paid",pal:["#4a3000","#d9a21a","#fff1a0"],fx:"sparkle"},
       {id:"skin_b_rose",name:"로즈골드 화로",tier:"paid",pal:["#4a2428","#d98a86","#ffe0d8"]},
       {id:"skin_b_ruby",name:"루비 화로",tier:"paid",pal:["#2e0410","#b8143a","#ff9ab0"]},
       {id:"skin_b_sapphire",name:"사파이어 화로",tier:"paid",pal:["#06143a","#1f56c8","#9ac4ff"]},
       {id:"skin_b_amethyst",name:"자수정 화로",tier:"paid",pal:["#1e0a38","#7a3cc0","#dcb8ff"]},
       {id:"skin_b_obsidian",name:"흑요석 화로",tier:"event",pal:["#050508","#262030","#6a5a8a"]},
-      {id:"skin_b_ice",name:"얼음 화로",tier:"event",pal:["#2a5a80","#9adcf4","#f4ffff"]},
+      {id:"skin_b_ice",name:"얼음 화로",tier:"event",pal:["#2a5a80","#9adcf4","#f4ffff"],fx:"snow"},
       {id:"skin_b_jade",name:"비취 화로",tier:"event",pal:["#06301e","#22a070","#b0ffd8"]},
-      {id:"skin_b_neon",name:"네온 화로",tier:"paid",pal:["#1a0a3a","#ff2ad0","#7affff"]},
-      {id:"skin_b_diamond",name:"다이아 화로",tier:"paid",pal:["#3a5a7a","#a0e0ff","#ffffff"]},
-      {id:"skin_b_lava",name:"용암 화로",tier:"paid",pal:["#1a0000","#d03000","#ffc040"]},
-      {id:"skin_b_sakura",name:"벚꽃 화로",tier:"paid",pal:["#5a2a3e","#f4a0c4","#fff4f8"]},
+      {id:"skin_b_neon",name:"네온 화로",tier:"paid",pal:["#2e0060","#ff20d0","#40ffff"],post:3},
+      {id:"skin_b_diamond",name:"다이아 화로",tier:"paid",pal:["#3a5a7a","#a8e4ff","#ffffff"],fx:"facet"},
+      {id:"skin_b_lava",name:"용암 화로",tier:"paid",pal:["#1a0000","#7a1000","#ffb020"],fx:"cracks"},
+      {id:"skin_b_sakura",name:"벚꽃 화로",tier:"paid",pal:["#5a2a3e","#f4a0c4","#fff4f8"],fx:"petals"},
       {id:"skin_b_emerald",name:"에메랄드 화로",tier:"paid",pal:["#03281a","#18b060","#b8ffd8"]},
-      {id:"skin_b_galaxy",name:"은하 화로",tier:"paid",pal:["#08042a","#4a2ac0","#d8a0ff"]},
-      {id:"skin_b_candy",name:"사탕 화로",tier:"paid",pal:["#6a1a3a","#ff7aa8","#ffe8a0"]},
+      {id:"skin_b_galaxy",name:"은하 화로",tier:"paid",pal:["#050520","#2a1a8a","#8a6aff"],fx:"stars"},
+      {id:"skin_b_candy",name:"사탕 화로",tier:"paid",pal:["#d01a50","#ff7aa8","#fff4f8"],fx:"stripes"},
       {id:"skin_b_bronze",name:"청동 화로",tier:"paid",pal:["#2a1a08","#8a6a3a","#e0c890"]},
-      {id:"skin_b_aurora",name:"오로라 화로",tier:"event",pal:["#042030","#20c8a8","#c8a0ff"]},
+      {id:"skin_b_aurora",name:"오로라 화로",tier:"event",pal:["#042030","#20c8a8","#c8a0ff"],fx:"aurora"},
       {id:"skin_b_prism",name:"프리즘 화로",tier:"event",rainbow:true}
     ],
     f:[
@@ -55,19 +55,16 @@
       {id:"skin_f_blue",name:"푸른 불꽃",tier:"free",pal:["#0a1a6a","#2a7aff","#bfe6ff"]},
       {id:"skin_f_purple",name:"보라 불꽃",tier:"paid",pal:["#2a0a5a","#9a3cf0","#f0c8ff"]},
       {id:"skin_f_pink",name:"분홍 불꽃",tier:"paid",pal:["#6a0a3a","#ff4a9a","#ffd0ea"]},
-      {id:"skin_f_white",name:"백색 불꽃",tier:"paid",pal:["#6a7a90","#e8f0ff","#ffffff"]},
+      {id:"skin_f_white",name:"백색 불꽃",tier:"paid",pal:["#6a7a90","#e8f0ff","#ffffff"],fx:"sparkle"},
       {id:"skin_f_gold",name:"황금 불꽃",tier:"paid",pal:["#7a4a00","#ffc21a","#fffbd0"]},
       {id:"skin_f_teal",name:"청록 불꽃",tier:"paid",pal:["#04403a","#14c8b0","#c8fff4"]},
       {id:"skin_f_green",name:"초록 불꽃",tier:"event",pal:["#063a10","#2ad04a","#d0ffc0"]},
       {id:"skin_f_crimson",name:"진홍 불꽃",tier:"event",pal:["#2a0004","#c8101c","#ff8a7a"]},
       {id:"skin_f_rainbow",name:"무지개 불꽃",tier:"event",rainbow:true},
-      {id:"skin_f_cyan",name:"시안 불꽃",tier:"paid",pal:["#02343e","#12d0e8","#d0ffff"]},
-      {id:"skin_f_lime",name:"라임 불꽃",tier:"paid",pal:["#2a4a00","#9aee14","#f4ffb0"]},
-      {id:"skin_f_magenta",name:"마젠타 불꽃",tier:"paid",pal:["#4a003a","#f01ac8","#ffc0f0"]},
-      {id:"skin_f_sunset",name:"노을 불꽃",tier:"paid",pal:["#4a0a2a","#ff6a3a","#ffe08a"]},
-      {id:"skin_f_ice",name:"빙결 불꽃",tier:"paid",pal:["#2a4a7a","#8ad0ff","#ffffff"]},
-      {id:"skin_f_plasma",name:"플라즈마 불꽃",tier:"paid",pal:["#1a0a5a","#7a4aff","#d0f0ff"]},
-      {id:"skin_f_ghost",name:"유령 불꽃",tier:"paid",pal:["#102a2a","#5ae8c8","#f0fff8"]},
+      {id:"skin_f_cyan",name:"번개 불꽃",tier:"paid",pal:["#0a0a40","#ffe83a","#ffffff"],fx:"sparkle"},
+      {id:"skin_f_lime",name:"먹구름 불꽃",tier:"paid",pal:["#101018","#5a5a70","#d0d0e0"]},
+      {id:"skin_f_sunset",name:"노을 불꽃",tier:"paid",pal:["#4a0a2a","#ff6a3a","#ffe08a"],vert:true},
+      {id:"skin_f_ice",name:"서리 불꽃",tier:"paid",pal:["#2a4a7a","#8ad0ff","#ffffff"],fx:"snow"},
       {id:"skin_f_toxic",name:"독성 불꽃",tier:"paid",pal:["#1a3a00","#5ae000","#e8ff7a"]},
       {id:"skin_f_royal",name:"로열 불꽃",tier:"event",pal:["#2a0a4a","#e0a81a","#fff4c0"]},
       {id:"skin_f_prism",name:"프리즘 불꽃",tier:"event",rainbow:true}
@@ -89,7 +86,7 @@
     return [r*255,g*255,b*255];
   }
 
-  var W=0,H=0,frames=[],cls=[],lum=[],range={},ready=false,cache={};
+  var W=0,H=0,frames=[],cls=[],lum=[],range={},ready=false,cache={},BB={1:[999,999,-1,-1],2:[999,999,-1,-1],3:[999,999,-1,-1]},rcache={},canv={};
   var D=window.GOGU_DEBUG_SKINS={};
 
   // 원본 2프레임을 읽고 픽셀을 고구마(p) / 불(f) / 화로(b) 로 분류
@@ -121,6 +118,7 @@
         else k=2;                                // 화로 (김·연기 같은 흰색도 여기 → 아래에서 보호)
         if(k===2&&y<12&&sat<.2)k=0;              // 김은 그대로 둔다
         C[i]=k;
+        if(k){var bb=BB[k];if(xx<bb[0])bb[0]=xx;if(y<bb[1])bb[1]=y;if(xx>bb[2])bb[2]=xx;if(y>bb[3])bb[3]=y}
         var l=.3*r+.59*g+.11*b;L[i]=l;
         var key=k===1?"p":k===2?"b":k===3?"f":null;
         if(key){if(l<mm[key][0])mm[key][0]=l;if(l>mm[key][1])mm[key][1]=l}
@@ -128,6 +126,25 @@
       cls[fi]=C;lum[fi]=L;
     });
     range=mm;ready=true;done();
+  }
+
+
+  // 스킨마다 다른 무늬: 별(은하), 줄무늬(사탕), 면(다이아), 균열(용암), 오로라 …
+  function hs(x,y){var h=(Math.imul(x,374761393)+Math.imul(y,668265263))|0;h=Math.imul(h^(h>>>13),1274126177);return ((h^(h>>>16))>>>0)%1000/1000}
+  function mix(c,w,a){return [c[0]+(w[0]-c[0])*a,c[1]+(w[1]-c[1])*a,c[2]+(w[2]-c[2])*a]}
+  function fxp(n,c,x,y,t){
+    var h=hs(x,y),w;
+    switch(n){
+      case "stars": return h<.05?[255,255,255]:h<.08?mix(c,[170,210,255],.7):c;
+      case "sparkle": return h<.03?mix(c,[255,255,255],.92):c;
+      case "snow": return h<.06?[255,255,255]:c;
+      case "petals": return h<.06?[255,246,250]:c;
+      case "stripes": return (((x+y)>>2)&1)?mix(c,[255,255,255],.6):c;
+      case "facet": return h<.02?[255,255,255]:((((x>>2)+(y>>2))&1)?mix(c,[255,255,255],.24):mix(c,[0,0,0],.14));
+      case "cracks": w=hs(x>>1,y>>1);return w<.17?[255,170+Math.round(w*300),40]:mix(c,[0,0,0],.3);
+      case "aurora": w=Math.sin(x*.17+y*.08)*.5+.5;var b=mix([40,235,150],[190,110,255],w),sh=.4+.6*t;return [b[0]*sh,b[1]*sh,b[2]*sh];
+    }
+    return c;
   }
 
   function render(sel,fi){
@@ -142,11 +159,29 @@
       var r=rg[k],t=(L[i]-r[0])/Math.max(.001,r[1]-r[0]);t=t<0?0:t>1?1:t;
       var col;
       if(sk.rainbow){var x=i%W;col=hsv2rgb(((x/W)*1.2+.0)%1,.75-.25*t,.35+.65*t)}
-      else col=grad(sk.pal,t);
+      else{
+        if(sk.vert){var bb=BB[k],vf=((i/W|0)-bb[1])/Math.max(1,bb[3]-bb[1]);t=Math.max(0,Math.min(1,.35*t+.65*(1-vf)))}
+        if(sk.post)t=Math.round(t*(sk.post-1))/(sk.post-1);
+        col=grad(sk.pal,t);
+        if(sk.fx)col=fxp(sk.fx,col,i%W,(i/W)|0,t);
+      }
       px[i*4]=col[0];px[i*4+1]=col[1];px[i*4+2]=col[2];
     }
     var c=document.createElement("canvas");c.width=W;c.height=H;c.getContext("2d").putImageData(out,0,0);
+    canv[key]=c;
     return (cache[key]=c.toDataURL("image/png"));
+  }
+
+  // 목록용 작은 그림: 고구마/화로/불 중 해당 부분만 잘라서 크게 보여준다
+  function thumb(o,slot){
+    var key="T|"+o.p+"|"+o.b+"|"+o.f+"|"+slot;if(rcache[key])return rcache[key];
+    render(o,0);
+    var src=canv[o.p+"|"+o.b+"|"+o.f+"|0"];
+    var k=slot==="p"?1:slot==="b"?2:3,bb=BB[k];
+    var bw=bb[2]-bb[0]+1,bh=bb[3]-bb[1]+1,side=Math.max(bw,bh)+4;
+    var c=document.createElement("canvas");c.width=c.height=side;
+    c.getContext("2d").drawImage(src,bb[0],bb[1],bw,bh,Math.floor((side-bw)/2),Math.floor((side-bh)/2),bw,bh);
+    return (rcache[key]=c.toDataURL("image/png"));
   }
 
   function owned(id){
@@ -210,7 +245,7 @@
         var c=el("button","sk"+(has?"":" lock"));c.type="button";c.setAttribute("aria-pressed",on?"true":"false");
         var t=el("span","tg "+k.tier,TIER[k.tier]);c.appendChild(t);
         var o={p:sel.p,b:sel.b,f:sel.f};o[sl[0]]=k.id;
-        var im=el("img");im.alt="";im.src=render(o,0);c.appendChild(im);
+        var im=el("img");im.alt="";im.src=thumb(o,sl[0]);c.appendChild(im);
         c.appendChild(document.createTextNode(k.name));
         var ex=G.itemsExp&&G.itemsExp[k.id],dl=ex?Math.max(1,Math.ceil((new Date(ex)-Date.now())/86400000)):0;
         c.appendChild(el("small",null,on?"사용 중":has?(dl?dl+"일 남음":"사용하기"):(k.tier==="paid"?(G.isOwner&&G.isOwner()?"대표 구매":"준비 중"):"신청하기")));
@@ -257,7 +292,7 @@
         var c=el("button","sk"+(has?"":" lock"));c.type="button";
         c.appendChild(el("span","tg paid",has?"보유":"유료"));
         var o={p:sel.p,b:sel.b,f:sel.f};o[sl[0]]=k.id;
-        var im=el("img");im.alt="";im.src=render(o,0);c.appendChild(im);
+        var im=el("img");im.alt="";im.src=thumb(o,sl[0]);c.appendChild(im);
         c.appendChild(document.createTextNode(k.name));
         c.appendChild(el("small",null,has?"사용하러 가기":(G.isOwner&&G.isOwner()?"대표 구매":"준비 중")));
         c.addEventListener("click",function(){
@@ -282,6 +317,6 @@
     });
     G.onItems=function(){apply();if(G.currentTab()==="sk"||G.currentTab()==="cash")G.refresh()};
   }
-  window.GoguSkins={start:start,products:products,render:function(s,f){return render(s,f||0)},equipped:function(){return equipped()},ready:function(){return ready}};
+  window.GoguSkins={start:start,products:products,render:function(s,f){return render(s,f||0)},thumb:function(o,sl){return thumb(o,sl)},equipped:function(){return equipped()},ready:function(){return ready}};
   if(window.GoguGame)start(window.GoguGame);
 })();
