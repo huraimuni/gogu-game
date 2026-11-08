@@ -473,12 +473,18 @@
     var sw = el("div", "card"); sw.appendChild(el("h4", null, "슈퍼장작이 뭐예요?"));
     ["슈퍼장작은 수입이 7배가 되는 효과예요. 두 가지가 있어요.",
      "① 슈퍼장작 쿠폰 (화면 왼쪽 아래 버튼)",
-     "버튼을 누를 때마다 20초 동안 7배! 숫자 뱃지가 남은 쿠폰 개수예요. 10분마다 1개씩 충전돼요 (최대 10개). 내 링크를 눌러 준 횟수만큼 쿠폰이 더 쌓이고, 며칠이 지나도 보관돼요.",
+     "버튼을 누를 때마다 20초 동안 7배! 숫자 뱃지가 남은 쿠폰 개수예요. 화면을 켜 두면 10분마다 1개씩 충전돼요 (최대 10개, 0개가 되면 버튼 아래에 남은 충전 시간이 보여요). 화면을 꺼 두거나 앱을 닫아 둔 동안에는 시간이 얼마나 지나도 1개만 충전돼요. 내 링크를 눌러 준 횟수만큼 쿠폰이 더 쌓이고, 며칠이 지나도 보관돼요. 슈퍼장작 타임이 켜져 있어도 쿠폰을 쓸 수 있고, 끝나는 시각부터 이어서 연장돼요.",
      "② 슈퍼장작 타임",
-     "정해진 시간 동안 자동으로 7배가 돼요. 시간은 쌓이고 한 번에 최대 12시간까지 모을 수 있어요.",
+     "정해진 시간 동안 자동으로 7배가 돼요. 시간은 쌓이고 한 번에 최대 12시간까지 모을 수 있어요. 화면을 닫아 둔 동안에도 시간이 흐르고, 그 구간도 7배로 정산돼요 (자리 비움 최대 시간 안에서).",
      "받는 방법: 출석(하루 10분, 7일 연속 1시간) · 링크 공유(10초) · 친구 초대(둘 다 30분, 최대 20명) · 이벤트 초대 코드",
      "랭킹은 슈퍼장작 효과를 뺀 기본 기록으로 겨뤄서 공정해요."].forEach(function(t, i){ var d = el("div", null, t); d.style.marginTop = (i === 1 || i === 3) ? "8px" : "4px"; if(i === 1 || i === 3) d.style.fontWeight = "700"; sw.appendChild(d); });
     p.appendChild(sw);
+    var kc = el("div", "card"); kc.appendChild(el("h4", null, "스킨은 어떻게 얻나요?"));
+    ["스킨은 고구마 · 화로 · 불 · 배경 네 칸을 따로 골라 조합해요.",
+     "무료 스킨은 누구나 바로 쓸 수 있어요. (상점 탭 아래와 더보기 › 스킨에서 고를 수 있어요)",
+     "이벤트 스킨은 룰렛, 친구 3명 초대, 이벤트 코드로 받아요. 유료 스킨은 룰렛에서 랜덤으로 받을 수 있고, 구매는 준비 중이에요.",
+     "룰렛의 '랜덤' 스킨은 아직 없는 스킨 중에서 무작위로 지급돼요. 기간제는 기간이 끝나면 기본 모습으로 돌아가요."].forEach(function(t){ var d = el("div", null, t); d.style.marginTop = "4px"; kc.appendChild(d); });
+    p.appendChild(kc);
     rules.forEach(function(r){ var c = el("div", "card"); c.appendChild(el("h4", null, r[0])); c.appendChild(el("div", null, r[1])); p.appendChild(c); });
     var a = el("a", "menu"); a.href = CHAT_URL; a.target = "_blank"; a.rel = "noopener noreferrer"; a.style.textDecoration = "none";
     var l = el("div"); l.appendChild(document.createTextNode("커뮤니티 오픈채팅")); l.appendChild(el("small", null, "문의 · 이벤트 소식 · 스킨 자랑"));
