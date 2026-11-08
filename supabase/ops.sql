@@ -718,6 +718,7 @@ begin
     if skin.id is null then
       -- 아직 없는 스킨을 먼저 고르고, 다 가졌으면 무작위 (선정 스킨이 없으면 유료 스킨 중에서)
       select * into skin from public.gogu_items where kind = 'skin' and tier = (case when pr.kind = 'event_skin' then 'event' else 'paid' end)
+        and id <> 'skin_b_bungeo'
         order by public.gogu_has_item(uid, id), random() limit 1;
     end if;
     if skin.id is null then
