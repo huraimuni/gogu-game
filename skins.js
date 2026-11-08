@@ -62,7 +62,7 @@
       {id:"skin_f_green",name:"초록 불꽃",tier:"event",pal:["#063a10","#2ad04a","#d0ffc0"]},
       {id:"skin_f_crimson",name:"진홍 불꽃",tier:"event",pal:["#2a0004","#c8101c","#ff8a7a"]},
       {id:"skin_f_rainbow",name:"무지개 불꽃",tier:"event",rainbow:true},
-      {id:"skin_f_cyan",name:"번개 불꽃",tier:"paid",pal:["#0a0a40","#ffe83a","#ffffff"]},
+      {id:"skin_f_cyan",name:"번개 불꽃",tier:"paid",pal:["#06062e","#00d4ff","#f4ffff"]},
       {id:"skin_f_lime",name:"먹구름 불꽃",tier:"paid",pal:["#101018","#5a5a70","#d0d0e0"]},
       {id:"skin_f_sunset",name:"노을 불꽃",tier:"free",pal:["#4a0a2a","#ff6a3a","#ffe08a"],vert:true},
       {id:"skin_f_ice",name:"서리 불꽃",tier:"paid",pal:["#1f3a78","#5a9aff","#e8f2ff"]},
