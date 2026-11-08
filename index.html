@@ -238,7 +238,7 @@ html,body{touch-action:manipulation}
 
   <div class="top">
     <button class="sq" id="openMis" type="button"><span class="b">미션<i id="misBadge" hidden>0</i></span></button>
-    <div class="title"><b>고구마 굽기</b><small>방치형 군고구마 게임 · v1.75</small></div>
+    <div class="title"><b>고구마 굽기</b><small>방치형 군고구마 게임 · v1.76</small></div>
     <button class="sq" id="openPts" type="button"><span class="b">포인트</span></button>
   </div>
 
@@ -293,7 +293,7 @@ html,body{touch-action:manipulation}
   <div class="sp-in">
     <h2>고구마 굽기</h2>
     <div class="sp-art"><div class="sp-glow"></div><div class="sp-lit"><img class="f1" id="spA" alt=""><img class="f2" id="spB" alt=""></div><i class="sk" style="left:44%;--dx:-18px;animation-delay:0.5s"></i><i class="sk" style="left:52%;--dx:14px;animation-delay:0.7s"></i><i class="sk" style="left:48%;--dx:-6px;animation-delay:0.9s"></i><i class="sk" style="left:56%;--dx:22px;animation-delay:1.05s"></i><i class="sk" style="left:41%;--dx:-24px;animation-delay:1.2s"></i><i class="sk" style="left:50%;--dx:8px;animation-delay:1.35s"></i><i class="st" style="left:46%;--dx:-10px;animation-delay:1.2s"></i><i class="st" style="left:52%;--dx:8px;animation-delay:1.45s"></i><i class="st" style="left:49%;--dx:-4px;animation-delay:1.7s"></i><i class="st" style="left:55%;--dx:14px;animation-delay:1.95s"></i></div>
-    <div class="sp-tag">방치형 군고구마 게임 · v1.75</div>
+    <div class="sp-tag">방치형 군고구마 게임 · v1.76</div>
     <p class="sp-msg">고구마를 터치해서 굽고,<br>화로를 키워 보세요.</p>
     <p class="sp-sub">3개월마다 새 시즌! 돈·레벨은 새로 시작하고<br>스킨과 아이템은 그대로 남아요.</p>
     <div class="sp-bar"><div></div></div>
@@ -302,8 +302,8 @@ html,body{touch-action:manipulation}
 </div>
 <div class="toast" id="toast"></div>
 
-<script src="config.js?v=175"></script>
-<script src="icons.js?v=175"></script>
+<script src="config.js?v=176"></script>
+<script src="icons.js?v=176"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.js"></script>
 <script>
 (function(){
@@ -697,6 +697,27 @@ html,body{touch-action:manipulation}
     }
   });
   window.addEventListener("pagehide",save);
+  // 새 버전 자동 업데이트: version.json 을 캐시 없이 받아 비교 → 저장 후 새 주소로 다시 열기 (한 번만 시도, 실패하면 안내 띠)
+  var APP_VER=176,updTry=0;
+  function chkUpdate(){
+    if(updTry>=3)return;updTry++;
+    fetch("version.json?_="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){
+      if(!j||!(Number(j.v)>APP_VER))return;
+      var last=0;try{last=Number(sessionStorage.getItem("gogu-upd"))||0}catch(e){}
+      if(last!==Number(j.v)){
+        try{sessionStorage.setItem("gogu-upd",String(j.v))}catch(e){}
+        try{save()}catch(e){}
+        setTimeout(function(){location.replace(location.pathname+"?u="+j.v)},250);
+      }else if(!$("updBar")){
+        var b=document.createElement("button");b.id="updBar";b.type="button";b.textContent="새 버전이 있어요 · 눌러서 업데이트";
+        b.style.cssText="position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:200;border:0;border-radius:12px;padding:12px;font:700 15px sans-serif;background:#ffb43a;color:#3a2200";
+        b.addEventListener("click",function(){try{save()}catch(e){}location.replace(location.pathname+"?u="+j.v+"&t="+Date.now())});
+        document.body.appendChild(b);
+      }
+    }).catch(function(){});
+  }
+  chkUpdate();
+  document.addEventListener("visibilitychange",function(){if(!document.hidden){updTry=0;chkUpdate()}});
   var tf=document.querySelectorAll("#term img");
   if($("spA")){$("spA").src=tf[0].src;$("spB").src=tf[1].src}
   var spDone=false;
@@ -743,9 +764,9 @@ html,body{touch-action:manipulation}
   paintTop();
 })();
 </script>
-<script src="skins.js?v=175"></script>
-<script src="online.js?v=175"></script>
-<script src="social.js?v=175"></script>
+<script src="skins.js?v=176"></script>
+<script src="online.js?v=176"></script>
+<script src="social.js?v=176"></script>
 
 </body>
 </html>
