@@ -691,7 +691,7 @@ end $$;
 -- ============================================================
 create or replace function public.gogu_roulette_odds() returns table(label text, pct numeric)
 language sql stable security definer set search_path = public as $$
-  select label, round(weight * 100.0 / sum(weight) over (), 1) from public.gogu_roulette_prizes order by weight desc, id;
+  select label, round(weight * 100.0 / sum(weight) over (), 2) from public.gogu_roulette_prizes order by weight desc, id;
 $$;
 
 create or replace function public.gogu_roulette_spin() returns jsonb

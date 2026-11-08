@@ -341,8 +341,14 @@
       rows = list; odds = true; slots = wheelSlots(list); wheel.innerHTML = "";
       list.forEach(function(r){
         var row = el("div", "row"); row.style.justifyContent = "space-between";
-        row.appendChild(el("span", null, r.label)); row.appendChild(el("span", "muted", r.pct + "%")); oc.appendChild(row);
+        row.appendChild(el("span", null, r.label)); row.appendChild(el("span", "muted", Number(r.pct) + "%")); oc.appendChild(row);
       });
+      var nt = el("div", "muted"); nt.style.cssText = "margin-top:8px;font-size:12px;line-height:1.6;word-break:keep-all";
+      nt.textContent = "· 위 확률은 한 번 돌릴 때 적용되는 실제 확률이에요 (소수 둘째 자리에서 반올림해 합이 100%와 조금 다를 수 있어요).\n" +
+        "· 스킨은 '무작위' 칸이면 아직 없는 스킨을 먼저, 모두 가졌으면 그중에서 무작위로 지급돼요. '선정 스킨'은 이번 기간에 정해 둔 스킨 한 가지예요.\n" +
+        "· 스킨 칸의 기간(7·30·90일·영구)은 위 표의 칸별 확률 그대로예요. 지급할 스킨이 없으면 포인트 30으로 대신 지급돼요.\n" +
+        "· 하루 한 번만 돌릴 수 있고, 돈이 들지 않아요. 확률을 바꾸면 이 표에 바로 반영돼요.";
+      nt.style.whiteSpace = "pre-line"; oc.appendChild(nt);
       build();
     }).catch(function(e){ oc.appendChild(el("div", "muted", "확률표를 불러오지 못했어요: " + rawMsg(e))); });
     build();   // 확률표를 기다리지 않고 기본 돌림판을 먼저 그린다
