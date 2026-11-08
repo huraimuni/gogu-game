@@ -128,7 +128,7 @@ body.boost .term .f2{animation-duration:.2s}
 .sp-go:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
 .scrim{position:fixed;inset:0;background:rgba(5,8,16,.55);z-index:30;opacity:0;pointer-events:none;transition:opacity .2s}
 .scrim.on{opacity:1;pointer-events:auto}
-.sheet{position:fixed;left:0;right:0;bottom:0;margin:0 auto;max-width:480px;height:74%;z-index:31;background:var(--sheet);color:var(--sheet-fg);
+.sheet{position:fixed;left:0;right:0;bottom:0;margin:0 auto;max-width:480px;height:calc(100% - 12px);height:calc(100dvh - 12px);z-index:31;background:var(--sheet);color:var(--sheet-fg);
   border-radius:26px 26px 0 0;transform:translateY(105%);transition:transform .25s;display:flex;flex-direction:column;
   padding:12px max(16px,env(safe-area-inset-left,0px)) 0 max(16px,env(safe-area-inset-right,0px))}
 .sheet.on{transform:translateY(0)}
@@ -223,7 +223,7 @@ body.boost .term .f2{animation-duration:.2s}
 
   <div class="top">
     <button class="sq" id="openMis" type="button"><span class="b">미션<i id="misBadge" hidden>0</i></span></button>
-    <div class="title"><b>고구마 굽기</b><small>방치형 군고구마 게임 · v1.31</small></div>
+    <div class="title"><b>고구마 굽기</b><small>방치형 군고구마 게임 · v1.32</small></div>
     <button class="sq" id="openPts" type="button"><span class="b">포인트</span></button>
   </div>
 
@@ -278,7 +278,7 @@ body.boost .term .f2{animation-duration:.2s}
   <div class="sp-in">
     <h2>고구마 굽기</h2>
     <div class="sp-art"><img class="f1" id="spA" alt=""><img class="f2" id="spB" alt=""></div>
-    <div class="sp-tag">방치형 군고구마 게임 · v1.31</div>
+    <div class="sp-tag">방치형 군고구마 게임 · v1.32</div>
     <p class="sp-msg">고구마를 터치해서 굽고,<br>화로를 키워 보세요.</p>
     <div class="sp-bar"><div></div></div>
     <p class="sp-load" id="spLoad">불 피우는 중…</p>

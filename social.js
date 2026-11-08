@@ -246,7 +246,7 @@
     }).catch(function(){});
     var oc = el("div", "card"); oc.appendChild(el("h4", null, "당첨 확률")); p.appendChild(oc);
 
-    var rows = null, slots = null, rot = 0;
+    var rows = null, slots = ["포인트 10", "포인트 5", "포인트 30", "화력 최대 쿠폰 1장", "포인트 100", "화력 최대 쿠폰 3장", "이벤트 스킨", "유료 스킨", "선정 스킨"], rot = 0, odds = false;
     function build(){
       var n = slots.length, seg = 360 / n, grad = [];
       slots.forEach(function(lab, i){
@@ -260,7 +260,6 @@
     }
     btn.addEventListener("click", function(){
       if(!U.user){ toast("로그인하면 참여할 수 있어요"); login(); return; }
-      if(!rows) return;
       btn.disabled = true; res.className = "rlres"; res.textContent = "룰렛이 돌아가요…";
       rpc("gogu_roulette_spin").then(function(r){
         return rpc("gogu_gift_claim", { p_id: r.gift_id }).then(function(cl){
@@ -283,13 +282,14 @@
       }).catch(function(e){ res.className = "rlres"; res.textContent = "룰렛을 돌려 보세요!"; btn.disabled = false; toast(errMsg(e)); });
     });
     rpc("gogu_roulette_odds").then(function(list){
-      rows = list; slots = wheelSlots(list);
+      rows = list; odds = true; slots = wheelSlots(list); wheel.innerHTML = "";
       list.forEach(function(r){
         var row = el("div", "row"); row.style.justifyContent = "space-between";
         row.appendChild(el("span", null, r.label)); row.appendChild(el("span", "muted", r.pct + "%")); oc.appendChild(row);
       });
       build();
-    }).catch(function(){ oc.appendChild(el("div", "muted", "불러오지 못했어요")); });
+    }).catch(function(){ oc.appendChild(el("div", "muted", "확률표를 불러오지 못했어요")); });
+    build();   // 확률표를 기다리지 않고 기본 돌림판을 먼저 그린다
     O.note(p, "무료 이벤트예요. 돈으로 사거나 팔 수 없고, 당첨 스킨은 기간제로 지급되고, 아주 드물게 영구 스킨도 나와요. 기간이 끝나면 기본 모습으로 돌아가요.");
     if(!U.user) O.needLogin(p);
   }
