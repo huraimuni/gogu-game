@@ -410,7 +410,29 @@ body.boost .term .f2{animation-duration:.2s}
     st.appendChild(b);
     b.addEventListener("animationend",function(){b.remove()});
   }
-  $("term").addEventListener("pointerdown",function(e){e.preventDefault();tap(e)});
+  // 고구마·화로 그림이 있는 곳만 터치로 인정 (투명한 빈 곳은 무시)
+  var hitMask=null;
+  function buildMask(){
+    var im=document.querySelector("#term .f1");
+    if(!im||!im.complete||!im.naturalWidth)return null;
+    try{
+      var w=im.naturalWidth,h=im.naturalHeight,c=document.createElement("canvas");c.width=w;c.height=h;
+      var x=c.getContext("2d",{willReadFrequently:true});x.drawImage(im,0,0);
+      var d=x.getImageData(0,0,w,h).data,m=new Uint8Array(w*h);
+      for(var i=0;i<w*h;i++)m[i]=d[i*4+3]>40?1:0;
+      return {w:w,h:h,m:m};
+    }catch(e){return null}
+  }
+  window.GoguHit=function(e){
+    if(!e||e.clientX==null)return true;
+    if(!hitMask)hitMask=buildMask();
+    if(!hitMask)return true;
+    var im=document.querySelector("#term .f1"),rc=im.getBoundingClientRect();
+    var u=Math.floor((e.clientX-rc.left)/rc.width*hitMask.w),v=Math.floor((e.clientY-rc.top)/rc.height*hitMask.h);
+    if(u<0||v<0||u>=hitMask.w||v>=hitMask.h)return false;
+    return hitMask.m[v*hitMask.w+u]===1;
+  };
+  $("term").addEventListener("pointerdown",function(e){e.preventDefault();if(window.GoguHit(e))tap(e)});
   $("term").addEventListener("click",function(e){if(e.detail===0)tap(null)});
 
   function buy(u){

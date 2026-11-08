@@ -17,7 +17,8 @@
   var taps = [];
   var term = document.getElementById("term");
   if(term){
-    term.addEventListener("pointerdown", function(){
+    term.addEventListener("pointerdown", function(e){
+      if(window.GoguHit && !window.GoguHit(e)) return;
       if(taps.length < 3000) taps.push(performance.now());
     }, true);
   }
