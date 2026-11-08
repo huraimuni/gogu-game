@@ -103,6 +103,14 @@ button.danger{background:var(--red)}.wrap2{flex-wrap:wrap}.wrap2>*{flex:1 1 45%}
         <div id="opList" class="list" style="margin-top:10px"></div>
       </div>
       <div class="card">
+        <label for="rwSeason">시즌 종료 보상 (시즌 번호)</label>
+        <input id="rwSeason" type="number" min="0" placeholder="예: 1">
+        <div class="row"><button id="rwView" class="ghost" type="button">미리보기</button><button id="rwGo" type="button">지급하기</button></div>
+        <div id="rwRes" style="margin-top:8px"></div>
+        <div id="rwList" class="list" style="margin-top:10px"></div>
+        <div class="muted">초당·터치당 각각 1~3위에게 시즌 칭호(영구, 계속 쌓임)와 30일 아이템 선물(오프라인 24시간, 쿠폰 +5, 1위는 황금 스킨 추가)을 줘요. 매크로 의심·제외 계정은 빠져요. 끝난 시즌만, 시즌당 한 번만 지급돼요. 꼭 미리보기로 확인하세요.</div>
+      </div>
+      <div class="card">
         <label for="featSel">룰렛 영구 당첨 스킨 (이번 기간 선정)</label>
         <select id="featSel"></select>
         <div class="row"><button id="featSave" type="button">선정하기</button><button id="featClear" class="ghost" type="button">선정 해제</button></div>
@@ -275,6 +283,17 @@ button.danger{background:var(--red)}.wrap2{flex-wrap:wrap}.wrap2>*{flex:1 1 45%}
   }
   $("featSave").addEventListener("click",function(){rpc("gogu_admin_set_featured",{p_item:$("featSel").value}).then(function(n){out("featRes","선정했어요: "+n,"ok")}).catch(function(e){out("featRes","실패: "+em(e),"bad")})});
   $("featClear").addEventListener("click",function(){rpc("gogu_admin_set_featured",{p_item:null}).then(function(){out("featRes","선정을 해제했어요 (무작위)","ok")}).catch(function(e){out("featRes","실패: "+em(e),"bad")})});
+  function reward(commit){
+    var s=parseInt($("rwSeason").value,10);if(isNaN(s)){out("rwRes","시즌 번호를 넣어 주세요","bad");return}
+    if(commit&&!confirm("시즌 "+s+" 보상을 지급할까요? 되돌릴 수 없어요."))return;
+    rpc("gogu_admin_season_reward",{p_season:s,p_commit:commit}).then(function(r){
+      var w=$("rwList");w.innerHTML="";
+      (r.winners||[]).forEach(function(x){var d=mk("div");d.appendChild(mk("span",null,x.kind+" "+x.rank+"위 · "+x.nickname+" · "+Math.round(x.value).toLocaleString()));w.appendChild(d)});
+      out("rwRes",commit?("지급했어요 (선물 "+r.gifts+"건, 칭호 "+(r.winners||[]).length+"개)"):((r.winners||[]).length?"미리보기예요. 아직 지급하지 않았어요":"이 시즌에 대상자가 없어요"),"ok");
+    }).catch(function(e){out("rwRes","실패: "+em(e),"bad")});
+  }
+  $("rwView").addEventListener("click",function(){reward(false)});
+  $("rwGo").addEventListener("click",function(){reward(true)});
   $("opAdd").addEventListener("click",function(){var c=$("opcode").value.trim().toUpperCase();if(c)setOp(c,true)});
 
   sb.auth.getSession().then(function(r){init(r.data&&r.data.session)});
