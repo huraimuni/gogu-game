@@ -265,9 +265,8 @@
   }
   // 돌림판 칸: 스킨 상품은 종류별로 한 칸으로 묶어서 보여준다
   function slotKey(label, kind){
-    if(kind === "featured_skin" || (!kind && label.indexOf("선정 스킨") >= 0)) return "선정 스킨";
-    if(kind === "paid_skin" || (!kind && label.indexOf("유료 스킨") >= 0)) return "유료 스킨";
-    if(kind === "event_skin" || (!kind && label.indexOf("이벤트 스킨") >= 0)) return "이벤트 스킨";
+    if(kind === "paid_skin" || kind === "featured_skin" || (!kind && label.indexOf("유료 스킨") >= 0)) return "랜덤 유료 스킨";
+    if(kind === "event_skin" || (!kind && label.indexOf("이벤트 스킨") >= 0)) return "랜덤 이벤트 스킨";
     return label;
   }
   function wheelSlots(rows){
@@ -292,17 +291,14 @@
     var btn = el("button", "btn", U.spun ? "내일 또 도전하세요" : "룰렛 돌리기"); btn.type = "button"; btn.style.width = "100%";
     btn.disabled = true; c.appendChild(btn); p.appendChild(c);
     var fb = el("div", "muted"); fb.style.cssText = "text-align:center;margin:-4px 0 10px"; c.appendChild(fb);
-    rpc("gogu_featured").then(function(f){
-      if(f && f.length) fb.textContent = "이번 기간 선정 스킨(영구 당첨): " + f[0].name;
-    }).catch(function(){});
     var oc = el("div", "card"); oc.appendChild(el("h4", null, "당첨 확률")); p.appendChild(oc);
 
-    var rows = null, slots = ["포인트 10", "포인트 5", "포인트 30", "슈퍼장작 쿠폰 1장", "포인트 100", "슈퍼장작 쿠폰 3장", "이벤트 스킨", "유료 스킨", "선정 스킨"], rot = 0, odds = false;
+    var rows = null, slots = ["포인트 10", "포인트 5", "포인트 30", "슈퍼장작 쿠폰 1장", "포인트 100", "슈퍼장작 쿠폰 3장", "랜덤 이벤트 스킨", "랜덤 유료 스킨"], rot = 0, odds = false;
     function build(){
       var n = slots.length, seg = 360 / n;
       wheel.appendChild(drawPxWheel(n));
       slots.forEach(function(lab, i){
-        var SUB = {"유료 스킨": "\n(7·30·90일)", "이벤트 스킨": "\n(7일~영구)", "선정 스킨": "\n(영구)"};
+        var SUB = {"랜덤 유료 스킨": "\n(7일~영구)", "랜덤 이벤트 스킨": "\n(7·30일)"};
         var t = el("span", null, lab.replace("슈퍼장작 ", "장작 ") + (SUB[lab] || ""));
         var th = i * seg + seg / 2 - 90, left = ((th % 360) + 360) % 360;
         if(left > 90 && left < 270){   // 왼쪽 칸은 글자가 뒤집히지 않게 반대쪽에서 시작
@@ -345,7 +341,7 @@
       });
       var nt = el("div", "muted"); nt.style.cssText = "margin-top:8px;font-size:12px;line-height:1.6;word-break:keep-all";
       nt.textContent = "· 위 확률은 한 번 돌릴 때 적용되는 실제 확률이에요 (소수 둘째 자리에서 반올림해 합이 100%와 조금 다를 수 있어요).\n" +
-        "· 스킨은 '무작위' 칸이면 아직 없는 스킨을 먼저, 모두 가졌으면 그중에서 무작위로 지급돼요. '선정 스킨'은 이번 기간에 정해 둔 스킨 한 가지예요.\n" +
+        "· '랜덤 스킨' 칸에 당첨되면 아직 없는 스킨 중에서 무작위로 지급돼요. 모두 가지고 있으면 그중에서 무작위로 지급돼요.\n" +
         "· 스킨 칸의 기간(7·30·90일·영구)은 위 표의 칸별 확률 그대로예요. 지급할 스킨이 없으면 포인트 30으로 대신 지급돼요.\n" +
         "· 하루 한 번만 돌릴 수 있고, 돈이 들지 않아요. 확률을 바꾸면 이 표에 바로 반영돼요.";
       nt.style.whiteSpace = "pre-line"; oc.appendChild(nt);
