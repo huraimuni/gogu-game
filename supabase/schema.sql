@@ -88,7 +88,7 @@ on conflict (id) do update set kind=excluded.kind, base=excluded.base, gain=excl
 -- 아이템 목록 (외형은 그림이 준비되면 효과가 붙습니다)
 -- 스킨 분류: tier = 무료(free) / 유료(paid) / 이벤트(event), slot = 고구마(potato) / 화로(brazier) / 불(fire)
 alter table public.gogu_items add column if not exists tier text check (tier in ('free','paid','event'));
-alter table public.gogu_items add column if not exists slot text check (slot in ('potato','brazier','fire'));
+alter table public.gogu_items add column if not exists slot text check (slot in ('potato','brazier','fire','background'));
 
 insert into public.gogu_items(id,name,kind,descr,tier,slot) values
  ('skin_p_chestnut','밤고구마','skin','고구마 외형','paid','potato'),

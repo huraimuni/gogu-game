@@ -3,7 +3,7 @@
 (function(){
   "use strict";
   var G=null;
-  var SLOTS=[["p","고구마"],["b","화로"],["f","불"]];
+  var SLOTS=[["p","고구마"],["b","화로"],["f","불"],["g","배경"]];
   var TIER={free:"무료",paid:"유료",event:"이벤트"};
   // 팔레트: [어두운색, 중간색, 밝은색] / rainbow:true 면 가로 위치에 따라 색이 변함
   var CAT={
@@ -69,10 +69,27 @@
       {id:"skin_f_toxic",name:"독성 불꽃",tier:"paid",pal:["#1a3a00","#5ae000","#e8ff7a"]},
       {id:"skin_f_royal",name:"로열 불꽃",tier:"event",pal:["#2a0a4a","#e0a81a","#fff4c0"]},
       {id:"skin_f_prism",name:"프리즘 불꽃",tier:"event",rainbow:true}
+    ],
+    // 배경: img = CSS background-image, size = background-size (패턴 반복 크기). 그림 대신 CSS로 그려요.
+    g:[
+      {id:"skin_g_default",name:"기본 밤하늘",tier:"free",img:"linear-gradient(180deg,#080c16 0%,#141c30 62%,#222c44 100%)"},
+      {id:"skin_g_forest",name:"숲 초록",tier:"free",img:"linear-gradient(180deg,#07150f 0%,#0f2a1e 62%,#1d4030 100%)"},
+      {id:"skin_g_dusk",name:"노을 보라",tier:"free",img:"linear-gradient(180deg,#160a24 0%,#2a1236 62%,#4a2650 100%)"},
+      {id:"skin_g_sea",name:"바다 파랑",tier:"free",img:"linear-gradient(180deg,#06141f 0%,#0b2540 62%,#18527a 100%)"},
+      {id:"skin_g_ink",name:"먹색",tier:"free",img:"linear-gradient(180deg,#050507 0%,#0f0f14 62%,#1c1c24 100%)"},
+      {id:"skin_g_wine",name:"와인",tier:"free",img:"linear-gradient(180deg,#14060c 0%,#2a0c18 62%,#4a1c30 100%)"},
+      {id:"skin_g_ochre",name:"황토",tier:"free",img:"linear-gradient(180deg,#140e06 0%,#2e2010 62%,#54401f 100%)"},
+      {id:"skin_g_stars",name:"별빛 밤",tier:"event",img:"radial-gradient(1.5px 1.5px at 20px 30px,#fff 60%,transparent 62%),radial-gradient(1px 1px at 85px 75px,#cfe8ff 60%,transparent 62%),radial-gradient(1.5px 1.5px at 135px 18px,#fff 60%,transparent 62%),radial-gradient(1px 1px at 50px 100px,#ffe9b0 60%,transparent 62%),linear-gradient(180deg,#050920 0%,#10194a 70%,#1f2a62 100%)",size:"160px 120px,160px 120px,160px 120px,160px 120px,auto"},
+      {id:"skin_g_snow",name:"눈 내리는 밤",tier:"event",img:"radial-gradient(3px 3px at 14px 22px,#fff 55%,transparent 60%),radial-gradient(2px 2px at 60px 70px,#fff 55%,transparent 60%),radial-gradient(3px 3px at 100px 12px,#e8f2ff 55%,transparent 60%),radial-gradient(2px 2px at 36px 108px,#fff 55%,transparent 60%),linear-gradient(180deg,#0a1422 0%,#1c2c44 70%,#34496a 100%)",size:"120px 130px,120px 130px,120px 130px,120px 130px,auto"},
+      {id:"skin_g_check",name:"체크 노을",tier:"event",img:"linear-gradient(45deg,rgba(255,255,255,.06) 25%,transparent 25%,transparent 75%,rgba(255,255,255,.06) 75%),linear-gradient(45deg,rgba(255,255,255,.06) 25%,transparent 25%,transparent 75%,rgba(255,255,255,.06) 75%),linear-gradient(180deg,#2a0f2e 0%,#5a1f3a 65%,#8a3a3a 100%)",size:"36px 36px,36px 36px,auto"},
+      {id:"skin_g_neon",name:"네온 그리드",tier:"paid",img:"linear-gradient(rgba(0,255,255,.22) 1px,transparent 1px),linear-gradient(90deg,rgba(255,0,200,.22) 1px,transparent 1px),linear-gradient(180deg,#07031a 0%,#150a3a 70%,#2a0f5a 100%)",size:"32px 32px,32px 32px,auto"},
+      {id:"skin_g_aurora",name:"오로라",tier:"paid",img:"radial-gradient(ellipse at 30% 25%,rgba(42,220,160,.55) 0%,transparent 55%),radial-gradient(ellipse at 75% 35%,rgba(180,110,255,.5) 0%,transparent 55%),linear-gradient(180deg,#04101c 0%,#0a2a3a 70%,#123a4a 100%)"},
+      {id:"skin_g_galaxy",name:"은하수",tier:"paid",img:"radial-gradient(1.5px 1.5px at 30px 40px,#fff 60%,transparent 62%),radial-gradient(1px 1px at 110px 90px,#ffd 60%,transparent 62%),radial-gradient(ellipse at 60% 40%,rgba(138,106,255,.5) 0%,transparent 60%),radial-gradient(ellipse at 20% 70%,rgba(255,80,200,.28) 0%,transparent 55%),linear-gradient(180deg,#03031a 0%,#0c0a3a 100%)",size:"150px 120px,150px 120px,auto,auto,auto"},
+      {id:"skin_g_sakura",name:"벚꽃",tier:"paid",img:"radial-gradient(4px 3px at 18px 26px,rgba(255,190,215,.9) 55%,transparent 60%),radial-gradient(3px 3px at 74px 70px,rgba(255,215,230,.85) 55%,transparent 60%),radial-gradient(4px 3px at 120px 20px,rgba(255,170,200,.9) 55%,transparent 60%),radial-gradient(3px 3px at 44px 104px,rgba(255,200,220,.85) 55%,transparent 60%),linear-gradient(180deg,#1c0a14 0%,#3a1426 70%,#5a2640 100%)",size:"140px 130px,140px 130px,140px 130px,140px 130px,auto"}
     ]
   };
   var BY={};SLOTS.forEach(function(s){CAT[s[0]].forEach(function(k){k.slot=s[0];BY[k.id]=k})});
-  var DEF={p:"skin_p_default",b:"skin_b_default",f:"skin_f_default"};
+  var DEF={p:"skin_p_default",b:"skin_b_default",f:"skin_f_default",g:"skin_g_default"};
   window.GOGU_SKINS={CAT:CAT,SLOTS:SLOTS,TIER:TIER};
 
   function hex(h){return [parseInt(h.substr(1,2),16),parseInt(h.substr(3,2),16),parseInt(h.substr(5,2),16)]}
@@ -217,6 +234,23 @@
     var sel=equipped();
     G.setArt(render(sel,0),render(sel,1));
     glowFor(BY[sel.f]);
+    setBg(BY[sel.g]);
+  }
+  // 장면 배경 적용 (기본은 원래 CSS 그대로)
+  function bgCss(k,el){
+    if(!k||!k.img||k.id===DEF.g){el.style.backgroundImage="";el.style.backgroundSize="";return}
+    el.style.backgroundImage=k.img;el.style.backgroundSize=k.size||"auto";
+  }
+  function setBg(k){var sc=document.querySelector(".scene");if(sc)bgCss(k,sc)}
+  // 목록 칸 그림: 고구마·화로·불은 스프라이트, 배경은 색 견본
+  function thumbEl(el,o,slot,k){
+    if(slot==="g"){var d=el("div","bgsw");d.style.backgroundImage=k.img;d.style.backgroundSize=k.size||"auto";return d}
+    var im=el("img");im.alt="";im.src=thumb(o,slot);return im;
+  }
+  // 큰 미리보기: 내 조합 위에 배경을 깔아서 보여줌
+  function previewNode(el,cm,cls){
+    var w=el("div","pvwrap"+(cls?" "+cls:"")),im=el("img");im.alt="";im.src=render(cm,0);
+    bgCss(BY[cm.g],w);w.appendChild(im);return w;
   }
   // 화력 최대 때의 불빛·불씨 색을 장착한 불 스킨에 맞춘다
   function glowFor(k){
@@ -250,13 +284,17 @@
       ".skbox img{width:min(220px,70vw);aspect-ratio:1;image-rendering:pixelated;background:var(--row);border-radius:16px;display:block;margin:6px auto}"+
       ".sknm{font:700 12px var(--f-body);color:var(--sheet-muted);text-align:center}"+
       ".skmsg{margin:10px 0 12px;font-size:14px}.skrow{display:flex;gap:8px;justify-content:center}.skrow .cbtn{flex:1}.skrow .cbtn:disabled{opacity:.5}"+
+      ".bgsw{height:68px;border-radius:10px;margin:12px auto 6px;border:1px solid rgba(0,0,0,.18);background-color:#0c1020}"+
+      ".pvwrap{display:flex;justify-content:center;border-radius:16px;padding:10px;background-color:#0c1020;margin:6px auto}"+
+      ".pvwrap img{width:min(220px,70vw);aspect-ratio:1;image-rendering:pixelated;background:none!important;border-radius:0;margin:0}"+
+      ".skprev.pvwrap img{width:120px;height:120px}"+
       ".sk small{display:block;font-weight:500;color:var(--sheet-muted);margin-top:2px}";
     document.head.appendChild(s);
   }
 
   /* ---------- 미리보기 팝업: 누르면 내 조합으로 어떻게 보이는지 먼저 보여준다 ---------- */
   var PV={};   // 미리보기로 고른 스킨 (칸 → id). 장착하지 않아도 위쪽 큰 그림에 반영돼요
-  function combo(extra){var e=equipped(),o={p:e.p,b:e.b,f:e.f},k;for(k in PV)o[k]=PV[k];if(extra)for(k in extra)o[k]=extra[k];return o}
+  function combo(extra){var e=equipped(),o={p:e.p,b:e.b,f:e.f,g:e.g},k;for(k in PV)o[k]=PV[k];if(extra)for(k in extra)o[k]=extra[k];return o}
   function comboNames(o){return SLOTS.map(function(sl){var k=BY[o[sl[0]]];return sl[1]+" "+(k?k.name:"")}).join(" · ")}
   function closePop(){var x=document.getElementById("skpop");if(x)x.parentNode.removeChild(x)}
   function equip(k){var s=G.state();s.skin=Object.assign({},s.skin||{});s.skin[k.slot]=k.id;delete PV[k.slot];G.save();apply();G.refresh()}
@@ -267,7 +305,7 @@
     ov.addEventListener("click",function(e){if(e.target===ov){closePop();G.refresh()}});
     var bx=el("div","skbox");ov.appendChild(bx);
     var h=el("div","skh");h.appendChild(el("b",null,k.name));h.appendChild(el("span","tg "+k.tier,TIER[k.tier]));bx.appendChild(h);
-    var im=el("img");im.alt="";im.src=render(combo(),0);bx.appendChild(im);
+    bx.appendChild(previewNode(el,combo(),"skpvbig"));
     bx.appendChild(el("div","sknm","내 조합: "+comboNames(combo())));
     var msg,btns=[];
     if(on){msg="지금 사용 중인 스킨이에요.";btns.push(["사용 중",null,true])}
@@ -296,7 +334,7 @@
     b.addEventListener("click",function(){PV={};G.skFrom=null;G.openSheet(from)});p.appendChild(b);
     if(!ready){p.appendChild(el("div","muted","불러오는 중…"));return}
     var sel=equipped(),cm=combo(),previewing=Object.keys(PV).some(function(x){return PV[x]!==sel[x]});
-    var pv=el("div","skprev"),pi=el("img");pi.alt="";pi.src=render(cm,0);pv.appendChild(pi);p.appendChild(pv);
+    var pv=previewNode(el,cm,"skprev");p.appendChild(pv);
     var pn=el("div","sknm",(previewing?"미리보기 중 · ":"내 조합 · ")+comboNames(cm));pn.style.marginBottom="8px";p.appendChild(pn);
     if(previewing){var pr=el("button","cbtn ghost","미리보기 끝내기");pr.type="button";pr.style.marginBottom="8px";pr.addEventListener("click",function(){PV={};G.refresh()});p.appendChild(pr)}
     SLOTS.forEach(function(sl){
@@ -307,7 +345,7 @@
         var c=el("button","sk"+(has?"":" lock"));c.type="button";c.setAttribute("aria-pressed",on?"true":"false");
         var t=el("span","tg "+k.tier,TIER[k.tier]);c.appendChild(t);
         var o={p:sel.p,b:sel.b,f:sel.f};o[sl[0]]=k.id;
-        var im=el("img");im.alt="";im.src=thumb(o,sl[0]);c.appendChild(im);
+        c.appendChild(thumbEl(el,o,sl[0],k));
         c.appendChild(document.createTextNode(k.name));
         var ex=G.itemsExp&&G.itemsExp[k.id],dl=ex?Math.max(1,Math.ceil((new Date(ex)-Date.now())/86400000)):0;
         c.appendChild(el("small",null,on?"사용 중":has?(dl?dl+"일 남음":"사용하기"):(k.only?"초대 전용":k.tier==="paid"?(G.isOwner&&G.isOwner()?"대표 구매":"준비 중"):"신청하기")));
@@ -347,7 +385,7 @@
         var c=el("button","sk"+(has?"":" lock"));c.type="button";
         c.appendChild(el("span","tg "+(free?"free":"paid"),free?"무료":(has?"보유":"유료")));
         var o={p:sel.p,b:sel.b,f:sel.f};o[sl[0]]=k.id;
-        var im=el("img");im.alt="";im.src=thumb(o,sl[0]);c.appendChild(im);
+        c.appendChild(thumbEl(el,o,sl[0],k));
         c.appendChild(document.createTextNode(k.name));
         c.appendChild(el("small",null,free?(on?"사용 중":"사용하기"):has?"사용하러 가기":(G.isOwner&&G.isOwner()?"대표 구매":"준비 중")));
         c.addEventListener("click",function(){skinPopup(k)});
