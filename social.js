@@ -475,13 +475,13 @@
     if(U.season === 0){ var pre = el("div", null, "지금은 '테스트 시즌'이에요. 12월 1일에 정식 시즌 1이 시작되고, 그때 모두 같은 출발선에서 다시 시작해요."); pre.style.cssText = "margin-top:10px;font-weight:700;color:#c98a14"; sc.appendChild(pre); }
     p.appendChild(sc);
     var sw = el("div", "card"); sw.appendChild(el("h4", null, "슈퍼장작이 뭐예요?"));
-    ["정해진 시간 동안 수입이 7배가 되는 아이템이에요. 시간은 쌓이고, 한 번에 최대 12시간까지 모을 수 있어요.",
-     "받는 방법",
-     "① 출석: 하루 한 번 접속하면 10분, 7일 연속이면 1시간",
-     "② 링크 교환: 내정보의 '오늘의 슈퍼장작 링크'를 공유하면 10초, 다른 사람이 내 링크를 누르면 서로 10초씩 (횟수 제한 없음, 같은 링크는 사람당 하루 1번)",
-     "③ 친구 초대: 내 초대 링크로 새 친구가 가입하면 둘 다 30분 (최대 20명)",
-     "④ 이벤트 초대 코드를 입력하면 보너스로 받을 수 있어요",
-     "쓰는 중에는 화면의 쿠폰 버튼 자리에 남은 시간이 보여요. 랭킹은 슈퍼장작 효과를 뺀 기본 기록으로 겨뤄서 공정해요."].forEach(function(t, i){ var d = el("div", null, t); d.style.marginTop = i === 1 ? "8px" : "4px"; if(i === 1) d.style.fontWeight = "700"; sw.appendChild(d); });
+    ["슈퍼장작은 수입이 7배가 되는 효과예요. 두 가지가 있어요.",
+     "① 슈퍼장작 쿠폰 (화면 왼쪽 아래 버튼)",
+     "버튼을 누를 때마다 20초 동안 7배! 숫자 뱃지가 남은 쿠폰 개수예요. 10분마다 1개씩 충전돼요 (최대 10개). 내 링크를 눌러 준 횟수만큼 쿠폰이 더 쌓이고, 며칠이 지나도 보관돼요.",
+     "② 슈퍼장작 타임",
+     "정해진 시간 동안 자동으로 7배가 돼요. 시간은 쌓이고 한 번에 최대 12시간까지 모을 수 있어요.",
+     "받는 방법: 출석(하루 10분, 7일 연속 1시간) · 링크 공유(10초) · 친구 초대(둘 다 30분, 최대 20명) · 이벤트 초대 코드",
+     "랭킹은 슈퍼장작 효과를 뺀 기본 기록으로 겨뤄서 공정해요."].forEach(function(t, i){ var d = el("div", null, t); d.style.marginTop = (i === 1 || i === 3) ? "8px" : "4px"; if(i === 1 || i === 3) d.style.fontWeight = "700"; sw.appendChild(d); });
     p.appendChild(sw);
     rules.forEach(function(r){ var c = el("div", "card"); c.appendChild(el("h4", null, r[0])); c.appendChild(el("div", null, r[1])); p.appendChild(c); });
     var a = el("a", "menu"); a.href = CHAT_URL; a.target = "_blank"; a.rel = "noopener noreferrer"; a.style.textDecoration = "none";

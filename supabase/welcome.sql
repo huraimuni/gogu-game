@@ -9,7 +9,7 @@
 
 -- ---------- 아이템 ----------
 insert into public.gogu_items(id,name,kind,descr,tier,slot) values
- ('perk_butter7','슈퍼장작','perk','정해진 시간 동안 수입이 7배가 돼요',null,null),
+ ('perk_butter7','슈퍼장작 타임','perk','정해진 시간 동안 수입이 7배가 돼요',null,null),
  ('skin_b_bungeo','붕어빵 화로','skin','화로 외형 (붕어빵 초대 전용)','event','brazier')
 on conflict (id) do update set name=excluded.name, kind=excluded.kind, descr=excluded.descr, tier=excluded.tier, slot=excluded.slot;
 

@@ -97,9 +97,9 @@
       pendingSet(null);
       reloadItems().catch(function(){});
       if(r.kind==="promo"){
-        G.popup({first:true,title:r.label+" 선물 도착!",lines:(r.items||[]).map(function(n){return "· "+n+" (영구)"}).concat(["· 슈퍼장작 "+butterText(r.minutes)]),msg:"더보기 › 스킨에서 바꿔 보세요",btn:"좋아요"});
+        G.popup({first:true,title:r.label+" 선물 도착!",lines:(r.items||[]).map(function(n){return "· "+n+" (영구)"}).concat(["· 슈퍼장작 타임 "+butterText(r.minutes)]),msg:"더보기 › 스킨에서 바꿔 보세요",btn:"좋아요"});
       }else{
-        G.popup({first:true,title:"초대 완료!",lines:[r.inviter+"님 덕분에 시작해요","슈퍼장작 "+butterText(r.minutes)+" 적용됐어요"],btn:"좋아요"});
+        G.popup({first:true,title:"초대 완료!",lines:[r.inviter+"님 덕분에 시작해요","슈퍼장작 타임 "+butterText(r.minutes)+" 적용됐어요"],btn:"좋아요"});
       }
       return r;
     });
@@ -119,14 +119,14 @@
     rpc("gogu_checkin").then(function(r){
       if(r&&r.claimed){
         reloadItems().catch(function(){});
-        G.popup({title:"출석 보상",lines:["연속 "+r.streak+"일째예요"],value:"슈퍼장작 "+butterText(r.minutes),msg:(r.streak%7===0?"7일 연속 달성! 보너스예요":"내일도 오면 이어져요 (7일 연속이면 1시간)"),btn:"받았어요"});
+        G.popup({title:"출석 보상",lines:["연속 "+r.streak+"일째예요"],value:"슈퍼장작 타임 "+butterText(r.minutes),msg:(r.streak%7===0?"7일 연속 달성! 보너스예요":"내일도 오면 이어져요 (7일 연속이면 1시간)"),btn:"받았어요"});
       }
     }).catch(function(){}).then(function(){
       var g=pendingGet(GEND);
       if(g){
         rpc("gogu_link_click",{p_code:g}).then(function(r){
           pendingSet(null,GEND);reloadItems().catch(function(){});
-          toast(r.sharer+"님 링크 덕분에 슈퍼장작 "+r.seconds+"초!");
+          toast(r.sharer+"님 링크 덕분에 슈퍼장작 타임 "+r.seconds+"초!");
         }).catch(function(e){var m=(e&&e.message)||"";if(!/fetch|network/i.test(m)){pendingSet(null,GEND);toast(m.length>40?"링크를 사용할 수 없어요":m)}});
       }
     }).then(function(){
@@ -243,6 +243,7 @@
     b.addEventListener("click",function(){if(tab==="sk")G.skFrom=null;G.openSheet(tab)});p.appendChild(b);
   }
   function tabMore(p){
+    menuItem(p,"게임 초대","친구 초대 · 링크 공유하고 혜택 받기","iv");
     menuItem(p,"이벤트","하루 한 번 무료 룰렛","ev");
     menuItem(p,U.gifts>0?"내정보 ("+U.gifts+")":"내정보",U.gifts>0?"받을 선물이 있어요":"선물함 · 닉네임 · 내 코드 · 보유 아이템","me");
     menuItem(p,U.friendIn>0?"친구 ("+U.friendIn+")":"친구",U.friendIn>0?"받은 친구 신청이 있어요":"친구 등록 · 친구 랭킹 (최대 50명)","fr");
@@ -317,19 +318,19 @@
     G.save();sync(true);
   }
 
-  /* ---------- 오늘의 슈퍼장작 링크 (매일 링크 교환) ---------- */
+  /* ---------- 오늘의 링크 (매일 링크 교환) ---------- */
   function dailyCard(p,pr){
     var link=location.origin+location.pathname+"?gift="+pr.code;
-    var c=el("div","card"),h=el("h4");h.appendChild(logImg(22));h.appendChild(document.createTextNode("오늘의 슈퍼장작 링크"));c.appendChild(h);
-    c.appendChild(el("div","muted","링크를 공유하면 슈퍼장작 10초! 누군가 내 링크를 누르면 눌러 준 사람은 슈퍼장작 10초, 나는 슈퍼장작 쿠폰 1장을 받아요. 쿠폰은 며칠이 지나도 보관돼요."));
+    var c=el("div","card"),h=el("h4");h.appendChild(logImg(22));h.appendChild(document.createTextNode("오늘의 링크"));c.appendChild(h);
+    c.appendChild(el("div","muted","링크를 공유하면 슈퍼장작 타임 10초! 누군가 내 링크를 누르면 눌러 준 사람은 슈퍼장작 타임 10초, 나는 슈퍼장작 쿠폰 1장을 받아요. 쿠폰은 며칠이 지나도 보관돼요."));
     var st=el("div","muted","불러오는 중…");st.style.margin="6px 0";c.appendChild(st);
     var r=el("div","row");
     var b1=el("button","btn","공유하고 10초 받기");b1.type="button";
     b1.addEventListener("click",function(){
-      var t="고구마 굽기 오늘의 슈퍼장작 링크! 눌러 주시면 서로 슈퍼장작 10초씩 받아요.";
+      var t="🍠 고구마 굽기 오늘의 링크! 눌러 주시면 저는 슈퍼장작 쿠폰, 눌러 주신 분은 슈퍼장작 타임을 받아요 🔥";
       b1.disabled=true;
       rpc("gogu_share_bonus").then(function(res){
-        if(res.claimed){toast("슈퍼장작 10초를 받았어요!");reloadItems().catch(function(){})}
+        if(res.claimed){toast("슈퍼장작 타임 10초를 받았어요!");reloadItems().catch(function(){})}
         refresh();
       }).catch(function(e){toast(errMsg(e))}).then(function(){b1.disabled=false});
       if(navigator.share)navigator.share({title:"고구마 굽기",text:t,url:link}).catch(function(){});
@@ -342,15 +343,16 @@
   }
 
   /* ---------- 친구 초대 · 코드 입력 카드 ---------- */
+  var INV_MSG="🍠 놓아두기만 해도 돈이 쌓이는 고구마 굽기, 요즘 푹 빠졌어요! 이 링크로 들어오면 우리 둘 다 슈퍼장작 타임 30분(수입 7배) 🔥";
   function inviteCard(p,pr){
     var link=location.origin+location.pathname+"?ref="+pr.code;
     var c=el("div","card");c.appendChild(el("h4",null,"친구 초대"));
-    c.appendChild(el("div","muted","친구가 내 링크로 가입하면 친구도 나도 슈퍼장작 30분! 친구 3명을 초대할 때마다 랜덤 이벤트 스킨 7일권까지! (친구 최대 20명)"));
+    c.appendChild(el("div","muted","친구가 내 링크로 가입하면 친구도 나도 슈퍼장작 타임 30분! 친구 3명을 초대할 때마다 랜덤 이벤트 스킨 7일권까지! (친구 최대 20명)"));
     var cnt=el("div","muted","불러오는 중…");cnt.style.margin="6px 0";c.appendChild(cnt);
     var r=el("div","row");
     var b1=el("button","btn","링크 복사");b1.type="button";b1.addEventListener("click",function(){copy(link)});r.appendChild(b1);
     var b2=el("button","cbtn ghost","공유하기");b2.type="button";b2.addEventListener("click",function(){
-      var t="고구마 굽기 같이 해요! 이 링크로 들어오면 우리 둘 다 슈퍼장작 30분!";
+      var t=INV_MSG;
       if(navigator.share)navigator.share({title:"고구마 굽기",text:t,url:link}).catch(function(){});
       else copy(t+" "+link);
     });r.appendChild(b2);c.appendChild(r);
@@ -363,6 +365,27 @@
     });r2.appendChild(ok);c.appendChild(r2);
     p.appendChild(c);
     rpc("gogu_referral_my").then(function(m){cnt.textContent="내가 초대한 친구 "+m.invited+" / "+m.max+"명"+(m.invited<m.max?" · 스킨 7일권까지 "+(3-m.invited%3)+"명":"")+(m.used?" · 초대 코드 사용함":"")}).catch(function(){cnt.textContent=""});
+  }
+
+  /* ---------- 게임 초대 탭 ---------- */
+  function tabInvite(p){
+    back(p);
+    if(!U.ready){offline(p);return}
+    if(!U.user||!U.profile){needLogin(p);return}
+    var pr=U.profile,link=location.origin+location.pathname+"?ref="+pr.code;
+    var c=el("div","card");c.appendChild(el("h4",null,"게임 초대하고 혜택 받기"));
+    ["🔥 친구가 내 링크로 가입하면 친구도 나도 슈퍼장작 타임 30분 (최대 20명)",
+     "🎁 친구 3명을 초대할 때마다 랜덤 이벤트 스킨 7일권",
+     "🪵 매일 링크를 공유하고 누군가 눌러 주면 눌러 준 횟수만큼 슈퍼장작 쿠폰이 쌓여요 (며칠이 지나도 보관)"].forEach(function(t){var d=el("div",null,t);d.style.margin="5px 0";c.appendChild(d)});
+    var big=el("button","btn","친구에게 공유하기 (카톡 · 문자 · 당근 등)");big.type="button";big.style.width="100%";big.style.marginTop="8px";
+    big.addEventListener("click",function(){
+      if(navigator.share)navigator.share({title:"고구마 굽기",text:INV_MSG,url:link}).catch(function(){});
+      else copy(INV_MSG+" "+link);
+    });c.appendChild(big);
+    var cp=el("button","cbtn ghost","소개 문구 복사");cp.type="button";cp.style.marginTop="8px";cp.addEventListener("click",function(){copy(INV_MSG+" "+link)});c.appendChild(cp);
+    p.appendChild(c);
+    dailyCard(p,pr);
+    inviteCard(p,pr);
   }
 
   /* ---------- 내정보 탭 ---------- */
@@ -389,8 +412,6 @@
     var r2=el("div","row");r2.appendChild(el("span","codebox",pr.code));
     var cb=el("button","cbtn ghost","복사");cb.type="button";cb.addEventListener("click",function(){copy(pr.code)});r2.appendChild(cb);
     c2.appendChild(r2);p.appendChild(c2);
-    dailyCard(p,pr);
-    inviteCard(p,pr);
     if(window.GoguSocial)window.GoguSocial.meExtras(p);
 
     var gbox=el("div","card");gbox.appendChild(el("h4",null,"선물함"));gbox.appendChild(el("div","muted","불러오는 중…"));p.appendChild(gbox);
@@ -458,7 +479,7 @@
   function start(game){
     G=game;
     captureInvite();
-    G.registerTab("rk",tabRank);G.registerTab("cl",tabClan);G.registerTab("me",tabMe);G.registerTab("more",tabMore);
+    G.registerTab("rk",tabRank);G.registerTab("cl",tabClan);G.registerTab("me",tabMe);G.registerTab("more",tabMore);G.registerTab("iv",tabInvite);
     if(!cfg.SUPABASE_URL||!cfg.SUPABASE_ANON_KEY||!window.supabase){return}
     try{
       sb=window.supabase.createClient(cfg.SUPABASE_URL,cfg.SUPABASE_ANON_KEY,
