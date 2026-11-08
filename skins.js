@@ -15,7 +15,17 @@
       {id:"skin_p_gold",name:"황금고구마",tier:"paid",pal:["#8a5a00","#ffc21a","#fff7b0"]},
       {id:"skin_p_snow",name:"눈꽃고구마",tier:"event",pal:["#5a7aa8","#b8d4f0","#ffffff"]},
       {id:"skin_p_ember",name:"불타는 고구마",tier:"event",pal:["#4a0a00","#e0321a","#ffd23a"]},
-      {id:"skin_p_rainbow",name:"무지개고구마",tier:"event",rainbow:true}
+      {id:"skin_p_rainbow",name:"무지개고구마",tier:"event",rainbow:true},
+      {id:"skin_p_sakura",name:"벚꽃고구마",tier:"paid",pal:["#6a2a4a","#f28ab8","#fff0f6"]},
+      {id:"skin_p_emerald",name:"에메랄드고구마",tier:"paid",pal:["#04301c","#1fbf6a","#c8ffe0"]},
+      {id:"skin_p_ruby",name:"루비고구마",tier:"paid",pal:["#3a0010","#d01040","#ff9ab8"]},
+      {id:"skin_p_sapphire",name:"사파이어고구마",tier:"paid",pal:["#06143a","#2a6af0","#b0d0ff"]},
+      {id:"skin_p_neon",name:"네온고구마",tier:"paid",pal:["#2a0a4a","#ff2ad0","#7affff"]},
+      {id:"skin_p_galaxy",name:"은하고구마",tier:"paid",pal:["#0a0630","#5a3ad0","#e0a8ff"]},
+      {id:"skin_p_candy",name:"사탕고구마",tier:"paid",pal:["#7a1a3a","#ff6a9a","#fff0a0"]},
+      {id:"skin_p_diamond",name:"다이아고구마",tier:"paid",pal:["#4a6a8a","#a8e4ff","#ffffff"]},
+      {id:"skin_p_lava",name:"용암고구마",tier:"event",pal:["#200000","#ff4a00","#ffe040"]},
+      {id:"skin_p_aurora",name:"오로라고구마",tier:"event",pal:["#062a3a","#2adca0","#d8a8ff"]}
     ],
     b:[
       {id:"skin_b_default",name:"기본 화로",tier:"free"},
@@ -28,7 +38,17 @@
       {id:"skin_b_amethyst",name:"자수정 화로",tier:"paid",pal:["#1e0a38","#7a3cc0","#dcb8ff"]},
       {id:"skin_b_obsidian",name:"흑요석 화로",tier:"event",pal:["#050508","#262030","#6a5a8a"]},
       {id:"skin_b_ice",name:"얼음 화로",tier:"event",pal:["#2a5a80","#9adcf4","#f4ffff"]},
-      {id:"skin_b_jade",name:"비취 화로",tier:"event",pal:["#06301e","#22a070","#b0ffd8"]}
+      {id:"skin_b_jade",name:"비취 화로",tier:"event",pal:["#06301e","#22a070","#b0ffd8"]},
+      {id:"skin_b_neon",name:"네온 화로",tier:"paid",pal:["#1a0a3a","#ff2ad0","#7affff"]},
+      {id:"skin_b_diamond",name:"다이아 화로",tier:"paid",pal:["#3a5a7a","#a0e0ff","#ffffff"]},
+      {id:"skin_b_lava",name:"용암 화로",tier:"paid",pal:["#1a0000","#d03000","#ffc040"]},
+      {id:"skin_b_sakura",name:"벚꽃 화로",tier:"paid",pal:["#5a2a3e","#f4a0c4","#fff4f8"]},
+      {id:"skin_b_emerald",name:"에메랄드 화로",tier:"paid",pal:["#03281a","#18b060","#b8ffd8"]},
+      {id:"skin_b_galaxy",name:"은하 화로",tier:"paid",pal:["#08042a","#4a2ac0","#d8a0ff"]},
+      {id:"skin_b_candy",name:"사탕 화로",tier:"paid",pal:["#6a1a3a","#ff7aa8","#ffe8a0"]},
+      {id:"skin_b_bronze",name:"청동 화로",tier:"paid",pal:["#2a1a08","#8a6a3a","#e0c890"]},
+      {id:"skin_b_aurora",name:"오로라 화로",tier:"event",pal:["#042030","#20c8a8","#c8a0ff"]},
+      {id:"skin_b_prism",name:"프리즘 화로",tier:"event",rainbow:true}
     ],
     f:[
       {id:"skin_f_default",name:"기본 불꽃",tier:"free"},
@@ -40,7 +60,17 @@
       {id:"skin_f_teal",name:"청록 불꽃",tier:"paid",pal:["#04403a","#14c8b0","#c8fff4"]},
       {id:"skin_f_green",name:"초록 불꽃",tier:"event",pal:["#063a10","#2ad04a","#d0ffc0"]},
       {id:"skin_f_crimson",name:"진홍 불꽃",tier:"event",pal:["#2a0004","#c8101c","#ff8a7a"]},
-      {id:"skin_f_rainbow",name:"무지개 불꽃",tier:"event",rainbow:true}
+      {id:"skin_f_rainbow",name:"무지개 불꽃",tier:"event",rainbow:true},
+      {id:"skin_f_cyan",name:"시안 불꽃",tier:"paid",pal:["#02343e","#12d0e8","#d0ffff"]},
+      {id:"skin_f_lime",name:"라임 불꽃",tier:"paid",pal:["#2a4a00","#9aee14","#f4ffb0"]},
+      {id:"skin_f_magenta",name:"마젠타 불꽃",tier:"paid",pal:["#4a003a","#f01ac8","#ffc0f0"]},
+      {id:"skin_f_sunset",name:"노을 불꽃",tier:"paid",pal:["#4a0a2a","#ff6a3a","#ffe08a"]},
+      {id:"skin_f_ice",name:"빙결 불꽃",tier:"paid",pal:["#2a4a7a","#8ad0ff","#ffffff"]},
+      {id:"skin_f_plasma",name:"플라즈마 불꽃",tier:"paid",pal:["#1a0a5a","#7a4aff","#d0f0ff"]},
+      {id:"skin_f_ghost",name:"유령 불꽃",tier:"paid",pal:["#102a2a","#5ae8c8","#f0fff8"]},
+      {id:"skin_f_toxic",name:"독성 불꽃",tier:"paid",pal:["#1a3a00","#5ae000","#e8ff7a"]},
+      {id:"skin_f_royal",name:"로열 불꽃",tier:"event",pal:["#2a0a4a","#e0a81a","#fff4c0"]},
+      {id:"skin_f_prism",name:"프리즘 불꽃",tier:"event",rainbow:true}
     ]
   };
   var BY={};SLOTS.forEach(function(s){CAT[s[0]].forEach(function(k){k.slot=s[0];BY[k.id]=k})});
@@ -167,7 +197,7 @@
   function tabSkin(p){
     var el=G.el;
     var from=G.skFrom||"more";
-    var b=el("button","cbtn ghost back",from==="up"?"← 상점":"← 더보기");b.type="button";
+    var b=el("button","cbtn ghost back",from==="up"?"← 고구마 상점":from==="cash"?"← 캐쉬 상점":"← 더보기");b.type="button";
     b.addEventListener("click",function(){G.skFrom=null;G.openSheet(from)});p.appendChild(b);
     if(!ready){p.appendChild(el("div","muted","불러오는 중…"));return}
     var sel=equipped();
@@ -202,6 +232,16 @@
   }
 
   // 상점 탭에 넣는 스킨 상품 목록 (유료 스킨). 누르면 구매 신청, 보유 중이면 스킨 화면으로
+  function tabCash(p){
+    var el=G.el;
+    G.shopTabs(p,"cash");
+    var mb=el("button","menu");mb.type="button";
+    var ml=el("div");ml.appendChild(document.createTextNode("내 스킨 보기"));ml.appendChild(el("small",null,"스킨 바꾸기 · 자랑 이미지 공유"));
+    mb.appendChild(ml);mb.appendChild(el("i",null,"›"));
+    mb.addEventListener("click",function(){G.skFrom="cash";G.openSheet("sk")});p.appendChild(mb);
+    if(!ready){p.appendChild(el("div","muted","불러오는 중…"));return}
+    products(p);
+  }
   function products(p){
     if(!ready)return;
     var el=G.el,sel=equipped();
@@ -220,7 +260,7 @@
         c.appendChild(document.createTextNode(k.name));
         c.appendChild(el("small",null,has?"사용하러 가기":"구매 신청"));
         c.addEventListener("click",function(){
-          if(has){G.skFrom="up";G.openSheet("sk");return}
+          if(has){G.skFrom="cash";G.openSheet("sk");return}
           if(G.requestItem)G.requestItem(k);else G.toast("서버 연결 후 신청할 수 있어요");
         });
         grid.appendChild(c);
@@ -233,13 +273,13 @@
 
   function start(game){
     G=game;css();
-    G.registerTab("sk",tabSkin);
+    G.registerTab("sk",tabSkin);G.registerTab("cash",tabCash);
     var a=document.querySelectorAll("#term img");
     prepare([a[0].src,a[1].src],function(){
       D.ready=true;apply();
-      if(G.currentTab()==="sk"||G.currentTab()==="up")G.refresh();
+      if(G.currentTab()==="sk"||G.currentTab()==="cash")G.refresh();
     });
-    G.onItems=function(){apply();if(G.currentTab()==="sk"||G.currentTab()==="up")G.refresh()};
+    G.onItems=function(){apply();if(G.currentTab()==="sk"||G.currentTab()==="cash")G.refresh()};
   }
   window.GoguSkins={start:start,products:products,render:function(s,f){return render(s,f||0)},equipped:function(){return equipped()},ready:function(){return ready}};
   if(window.GoguGame)start(window.GoguGame);
