@@ -118,6 +118,13 @@ button.danger{background:var(--red)}.wrap2{flex-wrap:wrap}.wrap2>*{flex:1 1 45%}
         <div class="muted">붕어빵 코드(BUNGEOPPANG · 붕어빵)를 쓴 사람, 친구 초대 총 건수와 많이 초대한 사람 순위가 보여요.</div>
       </div>
       <div class="card">
+        <label>서비스 사용량 · 무료 한도 확인</label>
+        <div class="row"><button id="usView" class="ghost" type="button">불러오기</button></div>
+        <div id="usRes" style="margin-top:8px"></div>
+        <div id="usList" class="list" style="margin-top:10px"></div>
+        <div class="muted">활동 수는 최근 저장 기록 기준이에요 (무료 한도는 월 활성 5만 명 · DB 500MB). 데이터 전송량(5GB)은 Supabase 대시보드 Settings › Usage에서만 볼 수 있어요. 한도의 70%가 넘으면 빨간 글씨로 알려 드려요.</div>
+      </div>
+      <div class="card">
         <label for="ntCode">닉네임 변경권 지급 (유저 코드)</label>
         <input id="ntCode" placeholder="GOGU-XXXX-XXXX">
         <input id="ntN" type="number" min="1" max="20" value="1">
@@ -322,6 +329,18 @@ button.danger{background:var(--red)}.wrap2{flex-wrap:wrap}.wrap2>*{flex:1 1 45%}
       (r.top_inviters||[]).forEach(function(x){var d=mk("div");d.appendChild(mk("span",null,"[초대왕] "+x.nick+" · "+x.n+"명"));w.appendChild(d)});
       out("pmRes","붕어빵 코드 사용 "+(r.promo||[]).length+"명 · 친구 초대 "+r.referrals+"건","ok");
     }).catch(function(e){out("pmRes","실패: "+em(e),"bad")});
+  });
+  $("usView").addEventListener("click",function(){
+    rpc("gogu_admin_usage").then(function(r){
+      var w=$("usList");w.innerHTML="";
+      function row(t,warn){var d=mk("div");var sp=mk("span",null,t);if(warn)sp.style.color="#d23a3a";d.appendChild(sp);w.appendChild(d)}
+      var mau=r.active_30d/r.limit_mau,db=r.db_bytes/r.limit_db;
+      row("가입자 "+r.users.toLocaleString()+"명 (오늘 +"+r.new_today+" · 7일 +"+r.new_7d+")");
+      row("활동 · 오늘 "+r.active_1d+" / 7일 "+r.active_7d+" / 30일 "+r.active_30d+"명");
+      row("월 활성 이용자 "+r.active_30d.toLocaleString()+" / "+r.limit_mau.toLocaleString()+" ("+(mau*100).toFixed(1)+"%)",mau>=0.7);
+      row("DB 용량 "+(r.db_bytes/1048576).toFixed(1)+"MB / "+Math.round(r.limit_db/1048576)+"MB ("+(db*100).toFixed(1)+"%)",db>=0.7);
+      out("usRes",(mau>=0.7||db>=0.7)?"한도에 가까워요. 요금제를 확인하세요":"여유 있어요","ok");
+    }).catch(function(e){out("usRes","실패: "+em(e),"bad")});
   });
   $("ntGo").addEventListener("click",function(){
     var c=$("ntCode").value.trim(),n=parseInt($("ntN").value,10)||1;if(!c){out("ntRes","유저 코드를 넣어 주세요","bad");return}
