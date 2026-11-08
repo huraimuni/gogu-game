@@ -48,6 +48,26 @@
     if(st === "hold") toast("터치 패턴 확인 중이에요. 더보기 → 내정보에서 확인해 주세요");
     else if(st === "banned") toast("랭킹·시즌 보상에서 제외된 계정이에요");
     O.updateBadge();
+    if(st === "ok" || st === "warned") rankPopup(d.season);
+  }
+  // 랭킹(50위 안)에 들어 있으면 알려준다. 순위가 바뀐 경우에만 다시 띄운다
+  function rankPopup(season){
+    var G2 = window.GoguGame; if(!G2 || !G2.popup) return;
+    Promise.all([["ps","초당 최고"],["pc","터치당 최고"]].map(function(k){
+      return rpc("gogu_my_rank", { p_kind: k[0] }).then(function(m){ return { k: k[0], n: k[1], m: m }; }).catch(function(){ return null; });
+    })).then(function(rs){
+      var rows = [], key = "gogu-rk-" + season;
+      var last = {}; try{ last = JSON.parse(localStorage.getItem(key) || "{}"); }catch(e){}
+      var cur = {}, changed = false;
+      rs.forEach(function(r){
+        if(!r || !r.m || r.m.hidden || !r.m.rank || r.m.rank > 50) return;
+        cur[r.k] = r.m.rank; rows.push([r.n, r.m.rank + "위"]);
+        if(last[r.k] !== r.m.rank) changed = true;
+      });
+      if(!rows.length || !changed) return;
+      try{ localStorage.setItem(key, JSON.stringify(cur)); }catch(e){}
+      G2.popup({ title: "랭킹에 올라 있어요!", rows: rows, msg: "랭킹 버튼에서 전체 순위를 볼 수 있어요.", btn: "확인" });
+    });
   }
 
   /* ---------- 내정보 추가 영역 ---------- */

@@ -193,6 +193,14 @@ body.boost .term .f2{animation-duration:.2s}
 .item:focus-visible,.btn:focus-visible,.stab button:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
 .note{font-size:12px;color:var(--sheet-muted);display:flex;justify-content:space-between;gap:8px;align-items:center;margin-top:6px}
 .note a{color:var(--blue);font-weight:700}
+.pop{position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.62);padding:24px}
+.pop .box{background:#fff;color:var(--sheet-fg);border-radius:22px;padding:24px 20px 18px;max-width:340px;width:100%;text-align:center;box-shadow:0 18px 50px rgba(0,0,0,.5)}
+.pop h3{margin:0 0 6px;font:700 17px var(--f-body)}
+.pop .pv{font:400 clamp(26px,8.5vw,34px) var(--f-display);color:#e8590c;margin:8px 0;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.pop .pm{margin:0 0 4px;font:500 14px/1.5 var(--f-body);color:var(--sheet-muted)}
+.pop .pr{display:flex;justify-content:space-between;gap:10px;background:var(--row);border-radius:12px;padding:10px 14px;margin:6px 0;font:700 15px var(--f-body)}
+.pop .pr b{color:#e8590c}
+.pop button{margin-top:14px;width:100%;border:0;border-radius:14px;padding:13px;font:700 16px var(--f-body);background:var(--sheet-fg);color:#fff;cursor:pointer}
 .toast{position:fixed;left:50%;bottom:calc(110px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:#fff;color:var(--sheet-fg);
   padding:10px 16px;border-radius:14px;font:700 14px var(--f-body);opacity:0;pointer-events:none;transition:.25s;z-index:40;max-width:90vw;text-align:center}
 .toast.on{opacity:1;transform:translate(-50%,0)}
@@ -207,7 +215,7 @@ body.boost .term .f2{animation-duration:.2s}
 
   <div class="top">
     <button class="sq" id="openMis" type="button"><span class="b">미션<i id="misBadge" hidden>0</i></span></button>
-    <div class="title"><b>고구마 굽기</b><small>방치형 군고구마 게임 · v1.21</small></div>
+    <div class="title"><b>고구마 굽기</b><small>방치형 군고구마 게임 · v1.23</small></div>
     <button class="sq" id="openPts" type="button"><span class="b">포인트</span></button>
   </div>
 
@@ -261,7 +269,7 @@ body.boost .term .f2{animation-duration:.2s}
 <div class="splash" id="splash" role="dialog" aria-label="안내">
   <div class="sp-in">
     <div class="sp-art"><img class="f1" id="spA" alt=""><img class="f2" id="spB" alt=""></div>
-    <div class="sp-tag">고구마 굽기 · v1.21</div>
+    <div class="sp-tag">고구마 굽기 · v1.23</div>
     <p class="sp-msg">고구마를 터치해서 굽고,<br>화로를 키워 보세요.</p>
     <div class="sp-bar"><div></div></div>
     <p class="sp-load" id="spLoad">불 피우는 중…</p>
@@ -602,9 +610,34 @@ body.boost .term .f2{animation-duration:.2s}
   (function(){
     var now=Date.now();
     lastT=Math.max(S.last||now,now-offCap()*1000);
-    var g=settle(now);
-    if(g>=1)window.__pt="자리를 비운 사이 "+fmt(g)+"원이 쌓였어요";
+    var secs=(now-lastT)/1000,g=settle(now);
+    if(g>=1&&secs>=60)window.__off={g:g,secs:secs};
   })();
+  function dur(sec){
+    sec=Math.floor(sec);var h=Math.floor(sec/3600),m=Math.floor(sec%3600/60);
+    return h>0?h+"시간 "+m+"분":(m>0?m+"분":sec+"초");
+  }
+  function offlinePopup(g,secs){
+    var o=el("div"),capped=secs>=offCap()-1;
+    popup({first:true,title:"자리를 비운 동안",lines:[dur(secs)+" 동안"+(capped?" (최대 "+PERK.offlineH+"시간)":"")],value:"+"+fmt(g)+"원",msg:"고구마가 알아서 구워졌어요!",btn:"받았어요"});
+  }
+  // 팝업은 하나씩 차례로 띄운다 (시작 화면이 떠 있는 동안은 기다림)
+  var popQ=[],popOn=false;
+  function popup(o){if(o.first)popQ.unshift(o);else popQ.push(o);popFlush()}
+  function popFlush(){
+    if(popOn||!popQ.length||$("splash"))return;
+    popOn=true;var o=popQ.shift();
+    var w=el("div","pop"),b=el("div","box");w.setAttribute("role","dialog");
+    b.appendChild(el("h3",null,o.title));
+    if(o.value)b.appendChild(el("div","pv",o.value));
+    (o.lines||[]).forEach(function(l){b.appendChild(el("div","pm",l))});
+    (o.rows||[]).forEach(function(r){var d=el("div","pr");d.appendChild(el("span",null,r[0]));d.appendChild(el("b",null,r[1]));b.appendChild(d)});
+    if(o.msg)b.appendChild(el("div","pm",o.msg));
+    var bt=el("button",null,o.btn||"확인");bt.type="button";
+    bt.addEventListener("click",function(){w.remove();popOn=false;setTimeout(popFlush,250)});
+    b.appendChild(bt);w.appendChild(b);document.body.appendChild(w);bt.focus();
+  }
+  function showOffline(){if(window.__off){var o=window.__off;window.__off=null;offlinePopup(o.g,o.secs)}}
 
   var sinceSave=0;
   setInterval(function(){
@@ -612,8 +645,14 @@ body.boost .term .f2{animation-duration:.2s}
     paintTop();if(sheetOpen)paintPanel();
     sinceSave++;if(sinceSave>=50){sinceSave=0;save()}
   },100);
+  var hideAt=0,hideTotal=0;
   document.addEventListener("visibilitychange",function(){
-    if(document.hidden){save()}else{settle(Date.now());paintTop();if(sheetOpen)paintPanel()}
+    if(document.hidden){hideAt=Date.now();hideTotal=S.total;save()}
+    else{
+      settle(Date.now());paintTop();if(sheetOpen)paintPanel();
+      var away=hideAt?(Date.now()-hideAt)/1000:0,gain=S.total-hideTotal;hideAt=0;
+      if(away>=60&&gain>=1)offlinePopup(gain,Math.min(away,offCap()));
+    }
   });
   window.addEventListener("pagehide",save);
   var tf=document.querySelectorAll("#term img");
@@ -622,17 +661,16 @@ body.boost .term .f2{animation-duration:.2s}
   var spSeen=false;try{spSeen=sessionStorage.getItem("gogu-sp")==="1"}catch(e){}
   if(spSeen){   // 새로고침해도 첫 화면을 다시 보여주지 않는다
     $("splash").remove();
-    if(window.__pt){var m0=window.__pt;window.__pt=null;setTimeout(function(){toast(m0)},350)}
+    setTimeout(showOffline,350);
   }
   if($("spGo"))$("spGo").addEventListener("click",function(){
     try{sessionStorage.setItem("gogu-sp","1")}catch(e){}
-    var sp=$("splash");sp.classList.add("off");setTimeout(function(){sp.remove()},400);
-    if(window.__pt){var m=window.__pt;window.__pt=null;setTimeout(function(){toast(m)},350)}
+    var sp=$("splash");sp.classList.add("off");setTimeout(function(){sp.remove();showOffline();popFlush()},400);
   });
   window.GoguGame={
     state:function(){return S},
     setState:function(o){S=o;lastT=Date.now();renderPanel();paintTop();paintPanel();save();if(window.GoguGame&&window.GoguGame.onItems)window.GoguGame.onItems()},
-    fresh:fresh,save:save,toast:toast,fmt:fmt,el:el,$:$,
+    fresh:fresh,save:save,toast:toast,popup:popup,fmt:fmt,el:el,$:$,
     perks:PERK,
     registerTab:function(id,fn){ext[id]=fn},shopTabs:shopTabs,
     refresh:function(){if(sheetOpen&&ext[tab])renderPanel();paintTop()},
