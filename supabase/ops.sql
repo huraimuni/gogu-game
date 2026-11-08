@@ -920,3 +920,6 @@ begin
     execute format('grant execute on function public.%s to anon, authenticated', f);
   end loop;
 end $$;
+
+-- API가 새 함수를 바로 인식하도록 새로고침
+notify pgrst, 'reload schema';
