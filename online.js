@@ -178,7 +178,7 @@
       .then(function(r){ if(r.error)toast("로그인을 시작할 수 없어요"); });
   }
   function logout(){
-    sb.auth.signOut().then(function(){ U.user=null;U.profile=null;U.loaded=false;U.items=[];U.itemsExp={};U.gifts=0;U.friendIn=0;applyItems();cache={};G.refresh();toast("로그아웃했어요"); });
+    sb.auth.signOut().then(function(){ U.user=null;U.profile=null;U.loaded=false;U.items=[];U.itemsExp={};U.gifts=0;U.friendIn=0;applyItems();cache={};G.refresh();toast("로그아웃했어요"); showGate(); });
   }
   function cached(key,ttl,fn){
     var c=cache[key]; if(c&&Date.now()-c.t<ttl)return Promise.resolve(c.v);
@@ -521,6 +521,52 @@
     var n=(U.gifts||0)+(U.friendIn||0);b.textContent=n>0?"더보기 ("+n+")":"더보기";
   }
 
+
+  /* ---------- 최초 접속: 로그인 → 닉네임 → 게임 ---------- */
+  function ovl(){
+    var o=document.getElementById("gate");
+    if(!o){
+      o=document.createElement("div");o.id="gate";
+      o.style.cssText="position:fixed;inset:0;z-index:120;display:flex;align-items:center;justify-content:center;padding:24px;background:linear-gradient(180deg,#1b1330,#3a1d0e);color:#fff;font-family:var(--f-body,sans-serif)";
+      document.body.appendChild(o);
+    }
+    return o;
+  }
+  function gateClose(){ var o=document.getElementById("gate"); if(o)o.remove(); }
+  function showGate(){
+    var o=ovl(); o.innerHTML="";
+    var w=el("div");w.style.cssText="width:100%;max-width:340px;text-align:center";
+    var t=el("div",null,"🍠 고구마 굽기");t.style.cssText="font-size:28px;font-weight:800;margin-bottom:8px";
+    var d=el("div",null,"카카오로 시작하면 진행 상황이 서버에 저장되고\n랭킹·클랜·선물함을 쓸 수 있어요.");d.style.cssText="white-space:pre-line;opacity:.85;font-size:14px;line-height:1.6;margin-bottom:22px";
+    var b=el("button","kakao","카카오로 시작하기");b.type="button";b.addEventListener("click",login);
+    var n=el("div");n.style.cssText="margin-top:14px;font-size:12px;opacity:.7;line-height:1.6";
+    n.innerHTML='시작하면 <a href="terms.html" style="color:#ffd067">이용약관</a>과 <a href="privacy.html" style="color:#ffd067">개인정보처리방침</a>에 동의한 것으로 봐요.';
+    w.appendChild(t);w.appendChild(d);w.appendChild(b);w.appendChild(n);o.appendChild(w);
+  }
+  function showNick(cur){
+    var o=ovl(); o.innerHTML="";
+    var w=el("div");w.style.cssText="width:100%;max-width:340px;text-align:center";
+    var t=el("div",null,"닉네임을 정해 주세요");t.style.cssText="font-size:22px;font-weight:800;margin-bottom:8px";
+    var d=el("div",null,"한글·영문·숫자 2~10자. 랭킹에 이 이름으로 보여요.\n(이 설정은 무료 변경 1회에 포함되지 않아요)");d.style.cssText="white-space:pre-line;opacity:.85;font-size:13px;line-height:1.6;margin-bottom:16px";
+    var i=document.createElement("input");i.type="text";i.maxLength=10;i.value=cur||"";i.autocomplete="off";
+    i.style.cssText="width:100%;box-sizing:border-box;padding:13px;border-radius:12px;border:0;font:700 17px sans-serif;text-align:center;color:#222";
+    var e=el("div");e.style.cssText="min-height:20px;margin:8px 0;color:#ffb4a8;font-size:13px";
+    var b=el("button","kakao","시작하기");b.type="button";
+    b.addEventListener("click",function(){
+      if(b.disabled)return; b.disabled=true; e.textContent="";
+      rpc("gogu_onboard_nickname",{p_name:i.value}).then(function(nm){
+        if(U.profile)U.profile.nickname=nm; gateClose(); G.refresh(); toast("환영해요, "+nm+"님!");
+      }).catch(function(x){ b.disabled=false; e.textContent=errMsg(x); });
+    });
+    w.appendChild(t);w.appendChild(d);w.appendChild(i);w.appendChild(e);w.appendChild(b);o.appendChild(w);
+    setTimeout(function(){try{i.focus();i.select()}catch(_){}},50);
+  }
+  function checkOnboard(){
+    rpc("gogu_onboard_status").then(function(need){
+      if(need===true)showNick(U.profile&&U.profile.nickname); else gateClose();
+    }).catch(function(){});
+  }
+
   /* ---------- 시작 ---------- */
   function start(game){
     G=game;
@@ -536,11 +582,18 @@
       if(s&&s.user){
         if(U.user&&U.user.id===s.user.id)return;
         U.user=s.user;
-        rpc("gogu_load").then(function(d){afterLoad(d);updateBadge()}).catch(function(e){toast("서버에 연결하지 못했어요")});
+        rpc("gogu_load").then(function(d){afterLoad(d);updateBadge();checkOnboard()}).catch(function(e){toast("서버에 연결하지 못했어요")});
       }
     }
-    sb.auth.getSession().then(function(r){onSession(r.data&&r.data.session)});
-    sb.auth.onAuthStateChange(function(ev,s){ if(ev==="SIGNED_IN")setTimeout(function(){onSession(s)},0) });
+    sb.auth.getSession().then(function(r){
+      var ss=r.data&&r.data.session; onSession(ss);
+      if(!ss){
+        var back=/[?&#](code|access_token|error)=/.test(location.search+location.hash);
+        if(back){ setTimeout(function(){ if(!U.user)showGate() },4000); }
+        else showGate();
+      }
+    });
+    sb.auth.onAuthStateChange(function(ev,s){ if(ev==="SIGNED_IN")setTimeout(function(){onSession(s)},0); if(ev==="SIGNED_OUT"&&!U.user)showGate() });
     setInterval(function(){ if(!document.hidden)sync(false) },15000);
     document.addEventListener("visibilitychange",function(){ if(document.hidden)sync(false) });
     window.addEventListener("pagehide",function(){ sync(false) });
