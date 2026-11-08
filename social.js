@@ -129,10 +129,7 @@
   G.requestItem = function(k){
     if(!U.ready){ toast("서버 연결 후 이용할 수 있어요"); return; }
     if(!U.user){ toast("로그인하면 신청할 수 있어요"); login(); return; }
-    var msg = k.name + " 신청\n\n운영자가 확인 후 선물함으로 보내 드려요.\n신청 사유를 적어 주세요 (예: 카페 가입 인증, 후기 작성)";
-    var note = window.prompt(msg, "");
-    if(note === null) return;
-    rpc("gogu_request_create", { p_item: k.id, p_note: note }).then(function(){ toast("신청했어요! 운영자가 확인해요"); })
+    rpc("gogu_request_create", { p_item: k.id, p_note: "" }).then(function(){ toast("신청했어요! 운영자가 확인해요"); })
       .catch(function(e){ toast(errMsg(e)); });
   };
 
