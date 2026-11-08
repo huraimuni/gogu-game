@@ -213,10 +213,10 @@
         var im=el("img");im.alt="";im.src=render(o,0);c.appendChild(im);
         c.appendChild(document.createTextNode(k.name));
         var ex=G.itemsExp&&G.itemsExp[k.id],dl=ex?Math.max(1,Math.ceil((new Date(ex)-Date.now())/86400000)):0;
-        c.appendChild(el("small",null,on?"사용 중":has?(dl?dl+"일 남음":"사용하기"):(k.tier==="paid"?"준비 중":"신청하기")));
+        c.appendChild(el("small",null,on?"사용 중":has?(dl?dl+"일 남음":"사용하기"):(k.tier==="paid"?(G.isOwner&&G.isOwner()?"대표 구매":"준비 중"):"신청하기")));
         c.addEventListener("click",function(){
           if(!has){
-            if(k.tier==="paid"){G.toast("서비스 준비 중이에요");return}
+            if(k.tier==="paid"){if(G.isOwner&&G.isOwner())G.ownerBuy(k);else G.toast("서비스 준비 중이에요");return}
             if(G.requestItem)G.requestItem(k);
             else G.toast(k.tier==="paid"?"유료 스킨이에요. 지급받으면 사용할 수 있어요":"이벤트 스킨이에요. 이벤트 보상으로 받을 수 있어요");
             return;
@@ -259,10 +259,10 @@
         var o={p:sel.p,b:sel.b,f:sel.f};o[sl[0]]=k.id;
         var im=el("img");im.alt="";im.src=render(o,0);c.appendChild(im);
         c.appendChild(document.createTextNode(k.name));
-        c.appendChild(el("small",null,has?"사용하러 가기":"준비 중"));
+        c.appendChild(el("small",null,has?"사용하러 가기":(G.isOwner&&G.isOwner()?"대표 구매":"준비 중")));
         c.addEventListener("click",function(){
           if(has){G.skFrom="cash";G.openSheet("sk");return}
-          G.toast("서비스 준비 중이에요");
+          if(G.isOwner&&G.isOwner())G.ownerBuy(k);else G.toast("서비스 준비 중이에요");
         });
         grid.appendChild(c);
       });

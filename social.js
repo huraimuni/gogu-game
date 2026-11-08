@@ -126,6 +126,21 @@
   }
 
   /* ---------- 아이템 신청 (잠긴 스킨 누르면) ---------- */
+  // 대표 운영자: 캐쉬 상품을 바로 받는다 (선물 지급 → 바로 수령)
+  G.isOwner = function(){ return !!(U.user && U.profile && U.profile.is_admin); };
+  G.ownerBuy = function(k){
+    if(!G.isOwner()){ toast("서비스 준비 중이에요"); return; }
+    rpc("gogu_admin_give", { p_codes: [U.profile.code], p_kind: "item", p_item: k.id, p_amount: null, p_note: "대표 구매", p_days: 1, p_item_days: null })
+      .then(function(){ return rpc("gogu_gifts_list"); })
+      .then(function(list){
+        var g = (list || []).filter(function(x){ return x.item_id === k.id; })[0];
+        if(!g) throw new Error("선물을 찾지 못했어요");
+        return rpc("gogu_gift_claim", { p_id: g.id });
+      })
+      .then(function(cl){ O.applyClaim(cl); U.gifts = Math.max(0, (U.gifts || 0) - 1); O.updateBadge(); toast(k.name + " 구매 완료!"); G.refresh(); })
+      .catch(function(e){ toast(errMsg(e)); });
+  };
+
   G.requestItem = function(k){
     if(!U.ready){ toast("서버 연결 후 이용할 수 있어요"); return; }
     if(!U.user){ toast("로그인하면 신청할 수 있어요"); login(); return; }
