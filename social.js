@@ -198,21 +198,70 @@
   /* ---------- 이벤트 탭 (무료 룰렛) ---------- */
   /* ---------- 이벤트(룰렛) ---------- */
   var WHEEL_COLORS = ["#ff8a3d", "#ffd23f", "#4cc9a7", "#5b8def", "#b06bff", "#ff6b9a", "#8bd450", "#ff5a4d"];
+  var PX_DARK = "#0b0719", PX_GOLD = "#ffcf4a", PX_GOLD2 = "#c98a14";
   function ensureRouletteCss(){
     if(document.getElementById("rlcss")) return;
     var st = document.createElement("style"); st.id = "rlcss";
     st.textContent =
-      ".rlbox{position:relative;width:min(280px,76vw);aspect-ratio:1;margin:6px auto 12px}"+
-      ".rlwheel{position:absolute;inset:0;border-radius:50%;border:6px solid #ffd978;box-shadow:0 0 0 3px #7a4a10,0 8px 22px rgba(0,0,0,.35),inset 0 0 18px rgba(0,0,0,.35);overflow:hidden;transform:rotate(0deg)}"+
-      ".rlwheel span{position:absolute;left:50%;top:50%;width:46%;transform-origin:0 50%;font:400 13px var(--f-display);color:#2a1600;text-align:right;line-height:1.1;text-shadow:0 1px 0 rgba(255,255,255,.5);padding-right:4px;box-sizing:border-box;word-break:keep-all}"+
-      ".rlhub{position:absolute;left:50%;top:50%;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff2c4,#ffb830);border:3px solid #7a4a10;box-shadow:0 3px 6px rgba(0,0,0,.4);z-index:2}"+
-      ".rlpin{position:absolute;left:50%;top:-12px;margin-left:-14px;width:0;height:0;border-left:14px solid transparent;border-right:14px solid transparent;border-top:26px solid #e5483d;filter:drop-shadow(0 2px 2px rgba(0,0,0,.5));z-index:3}"+
-      ".rlres{text-align:center;padding:10px 8px;border-radius:14px;margin-bottom:10px;font:400 22px var(--f-display);background:var(--row);color:var(--sheet-fg);min-height:48px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:2px}"+
-      ".rlres small{font:500 13px var(--f-body);color:var(--sheet-muted)}"+
-      ".rlres.win{background:linear-gradient(180deg,#fff3c4,#ffd66a);color:#6a3a00;animation:rlpop .5s cubic-bezier(.2,1.5,.4,1)}"+
-      ".rlres.lose{background:#e9edf5;color:#5a6580}"+
+      "body .rlbox{position:relative;width:min(296px,78vw);aspect-ratio:1;margin:14px auto 16px}"+
+      "body .rlwheel{position:absolute;inset:0;transform:rotate(0deg)}"+
+      "body .rlwheel canvas{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated}"+
+      "body .rlwheel span{position:absolute;left:50%;top:50%;width:44%;transform-origin:0 50%;font:700 12px var(--f-body);color:#fff;text-align:right;line-height:1.15;"+
+        "text-shadow:-1px 0 0 #0b0719,1px 0 0 #0b0719,0 -1px 0 #0b0719,0 1px 0 #0b0719,1px 1px 0 #0b0719,-1px -1px 0 #0b0719;padding-right:8px;box-sizing:border-box;word-break:keep-all}"+
+      "body .rlhub{display:none}"+
+      "body .rlpin{position:absolute;left:50%;top:-14px;width:36px;height:36px;margin-left:-18px;z-index:3}"+
+      "body .rlpin canvas{width:100%;height:100%;image-rendering:pixelated;display:block}"+
+      "body .rlres{text-align:center;padding:12px 8px;margin-bottom:12px;font:700 20px var(--f-body);background:var(--row);color:var(--sheet-fg);min-height:52px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px}"+
+      "body .rlres small{font:400 13px var(--f-body);color:var(--sheet-muted)}"+
+      "body .rlres.win{background:var(--pxgold);color:#2a1600;animation:rlpop .5s steps(5,end)}"+
+      "body .rlres.win small{color:#5a3a00}"+
+      "body .rlres.lose{background:#3b2a78;color:#b9a9de}"+
       "@keyframes rlpop{0%{transform:scale(.6);opacity:0}100%{transform:none;opacity:1}}";
     document.head.appendChild(st);
+  }
+  // 픽셀 돌림판: 작은 캔버스에 한 칸씩 찍고, 화면에서는 네모 도트 그대로 크게 보여준다
+  function hexRgb(h){ return [parseInt(h.substr(1,2),16), parseInt(h.substr(3,2),16), parseInt(h.substr(5,2),16)]; }
+  function shade(c, k){ return [Math.max(0, Math.min(255, Math.round(c[0]*k))), Math.max(0, Math.min(255, Math.round(c[1]*k))), Math.max(0, Math.min(255, Math.round(c[2]*k)))]; }
+  function drawPxWheel(n){
+    var N = 96, cv = document.createElement("canvas"); cv.width = cv.height = N;
+    var cx = cv.getContext("2d"), img = cx.createImageData(N, N), d = img.data, mid = (N - 1) / 2, R = N / 2, seg = Math.PI * 2 / n;
+    var dark = hexRgb(PX_DARK), gold = hexRgb(PX_GOLD), gold2 = hexRgb(PX_GOLD2);
+    for(var y = 0; y < N; y++) for(var x = 0; x < N; x++){
+      var dx = x - mid, dy = y - mid, r = Math.sqrt(dx * dx + dy * dy), c = null;
+      if(r <= R){
+        if(r > R - 2.2) c = dark;
+        else if(r > R - 7){                                  // 금색 테두리 + 번갈아 켜진 전구
+          var a0 = Math.atan2(dx, -dy); if(a0 < 0) a0 += Math.PI * 2;
+          var bulb = Math.floor(a0 / (Math.PI * 2 / (n * 2)) ) % 2 === 0 && r > R - 5.2 && r < R - 3.6;
+          c = bulb ? [255, 250, 205] : (r > R - 3 ? gold2 : gold);
+        }
+        else if(r > R - 8.6) c = dark;
+        else if(r < 7.5) c = r > 5.6 ? dark : ((dx + dy < -1 && r < 4) ? [255, 244, 190] : gold);   // 가운데 단추
+        else {
+          var a = Math.atan2(dx, -dy); if(a < 0) a += Math.PI * 2;
+          var i = Math.floor(a / seg), da = Math.min(a - i * seg, (i + 1) * seg - a) * r;
+          if(da < 1.0) c = dark;                              // 칸 사이 구분선
+          else {
+            c = hexRgb(WHEEL_COLORS[i % WHEEL_COLORS.length]);
+            if(r > R - 16 && ((x + y) & 1)) c = shade(c, 0.82);   // 바깥쪽 도트 음영(디더링)
+            else if(r < 14 && ((x + y) & 1)) c = shade(c, 0.9);
+          }
+        }
+      }
+      if(c){ var o = (y * N + x) * 4; d[o] = c[0]; d[o+1] = c[1]; d[o+2] = c[2]; d[o+3] = 255; }
+    }
+    cx.putImageData(img, 0, 0);
+    return cv;
+  }
+  function drawPxPin(){
+    var cv = document.createElement("canvas"); cv.width = cv.height = 18; var cx = cv.getContext("2d");
+    for(var y = 0; y < 16; y++){                              // 아래로 향한 픽셀 화살표
+      var hw = Math.max(0, 7 - Math.floor(y / 2) - (y > 11 ? 1 : 0));
+      cx.fillStyle = PX_DARK; cx.fillRect(9 - hw - 1, y, hw * 2 + 2, 1);
+      if(hw > 0){ cx.fillStyle = y < 2 ? "#ff8a7a" : "#e5483d"; cx.fillRect(9 - hw, y, hw * 2, 1); }
+    }
+    cx.fillStyle = PX_DARK; cx.fillRect(8, 16, 2, 1);
+    return cv;
   }
   // 돌림판 칸: 스킨 상품은 종류별로 한 칸으로 묶어서 보여준다
   function slotKey(label, kind){
@@ -237,7 +286,8 @@
     ensureRouletteCss();
     var c = el("div", "card"); c.appendChild(el("h4", null, "무료 룰렛 · 하루 한 번"));
     var box = el("div", "rlbox"), wheel = el("div", "rlwheel");
-    box.appendChild(wheel); box.appendChild(el("div", "rlhub")); box.appendChild(el("div", "rlpin")); c.appendChild(box);
+    var pin = el("div", "rlpin"); pin.appendChild(drawPxPin());
+    box.appendChild(wheel); box.appendChild(pin); c.appendChild(box);
     var res = el("div", "rlres"); res.textContent = U.spun ? "오늘은 이미 돌렸어요" : "룰렛을 돌려 보세요!"; c.appendChild(res);
     var btn = el("button", "btn", U.spun ? "내일 또 도전하세요" : "룰렛 돌리기"); btn.type = "button"; btn.style.width = "100%";
     btn.disabled = true; c.appendChild(btn); p.appendChild(c);
@@ -249,14 +299,18 @@
 
     var rows = null, slots = ["포인트 10", "포인트 5", "포인트 30", "화력 최대 쿠폰 1장", "포인트 100", "화력 최대 쿠폰 3장", "이벤트 스킨", "유료 스킨", "선정 스킨"], rot = 0, odds = false;
     function build(){
-      var n = slots.length, seg = 360 / n, grad = [];
+      var n = slots.length, seg = 360 / n;
+      wheel.appendChild(drawPxWheel(n));
       slots.forEach(function(lab, i){
-        grad.push(WHEEL_COLORS[i % WHEEL_COLORS.length] + " " + (i * seg) + "deg " + ((i + 1) * seg) + "deg");
         var t = el("span", null, lab.replace("화력 최대 ", ""));
-        t.style.transform = "translateY(-50%) rotate(" + (i * seg + seg / 2 - 90) + "deg)";
+        var th = i * seg + seg / 2 - 90, left = ((th % 360) + 360) % 360;
+        if(left > 90 && left < 270){   // 왼쪽 칸은 글자가 뒤집히지 않게 반대쪽에서 시작
+          t.style.cssText = "transform-origin:100% 50%;margin-left:-44%;text-align:left;padding:0 0 0 8px;transform:translateY(-50%) rotate(" + (th + 180) + "deg)";
+        } else {
+          t.style.transform = "translateY(-50%) rotate(" + th + "deg)";
+        }
         wheel.appendChild(t);
       });
-      wheel.style.background = "conic-gradient(" + grad.join(",") + ")";
       btn.disabled = !!U.spun;
     }
     btn.addEventListener("click", function(){
