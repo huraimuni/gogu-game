@@ -104,7 +104,18 @@
       return r;
     });
   }
+  function claimLinkCoupons(){
+    if(!sb||!U.user)return;
+    rpc("gogu_claim_link_coupons").then(function(n){
+      n=Number(n)||0;if(n<1)return;
+      var s=G.state();s.coupons=Math.min(999,(s.coupons||0)+n);G.save();G.refresh();sync(true);
+      toast("내 링크를 눌러 준 덕분에 슈퍼장작 쿠폰 "+n+"장!");
+    }).catch(function(){});
+  }
+  setInterval(claimLinkCoupons,60000);
+  document.addEventListener("visibilitychange",function(){if(!document.hidden)claimLinkCoupons()});
   function afterLogin(){
+    claimLinkCoupons();
     rpc("gogu_checkin").then(function(r){
       if(r&&r.claimed){
         reloadItems().catch(function(){});
@@ -310,7 +321,7 @@
   function dailyCard(p,pr){
     var link=location.origin+location.pathname+"?gift="+pr.code;
     var c=el("div","card"),h=el("h4");h.appendChild(logImg(22));h.appendChild(document.createTextNode("오늘의 슈퍼장작 링크"));c.appendChild(h);
-    c.appendChild(el("div","muted","링크를 공유하면 슈퍼장작 10초! 누군가 내 링크를 누르면 나도 그 사람도 10초씩 받아요. 매일 자정에 새로 시작해요."));
+    c.appendChild(el("div","muted","링크를 공유하면 슈퍼장작 10초! 누군가 내 링크를 누르면 눌러 준 사람은 슈퍼장작 10초, 나는 슈퍼장작 쿠폰 1장을 받아요. 쿠폰은 며칠이 지나도 보관돼요."));
     var st=el("div","muted","불러오는 중…");st.style.margin="6px 0";c.appendChild(st);
     var r=el("div","row");
     var b1=el("button","btn","공유하고 10초 받기");b1.type="button";

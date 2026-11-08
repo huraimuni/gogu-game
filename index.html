@@ -98,6 +98,10 @@ body.boost .term .f2{animation-duration:.2s}
 .cp{position:relative;width:72px;height:72px;flex:none;border-radius:20px;border:3px solid #fff2c4;cursor:pointer;color:#5a3a00;
   background:linear-gradient(160deg,#ffe58a,var(--gold2));font:400 17px var(--f-display);display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.1}
 .cp:disabled{filter:grayscale(.6);opacity:.7;cursor:default}
+.cp{flex-direction:column;gap:1px;font-size:15px}
+.cp img{width:30px;height:30px;image-rendering:pixelated;display:block}
+.cp span{font-size:13px;white-space:nowrap;letter-spacing:-.5px}
+.cp em{font:700 11px/1 var(--f-body);font-style:normal;color:#5a3a00;display:block;min-height:11px}
 .cp i{position:absolute;right:-8px;top:-8px;min-width:24px;height:24px;border-radius:12px;background:var(--red);color:#fff;border:2px solid var(--night2);
   font:700 12px/20px var(--f-body);font-style:normal;text-align:center;padding:0 5px}
 .lv{flex:1;min-width:0;display:flex;align-items:center;gap:8px;background:#fff;border-radius:999px;padding:6px 14px 6px 6px;color:var(--sheet-fg)}
@@ -225,7 +229,7 @@ html,body{touch-action:manipulation}
 
   <div class="top">
     <button class="sq" id="openMis" type="button"><span class="b">미션<i id="misBadge" hidden>0</i></span></button>
-    <div class="title"><b>고구마 굽기</b><small>방치형 군고구마 게임 · v1.61</small></div>
+    <div class="title"><b>고구마 굽기</b><small>방치형 군고구마 게임 · v1.62</small></div>
     <button class="sq" id="openPts" type="button"><span class="b">포인트</span></button>
   </div>
 
@@ -254,7 +258,7 @@ html,body{touch-action:manipulation}
   </div>
 
   <div class="bottom">
-    <button class="cp" id="cp" type="button" aria-label="슈퍼장작 쿠폰 사용"><span id="cpT">슈퍼<br>장작</span><i id="cpN">3</i></button>
+    <button class="cp" id="cp" type="button" aria-label="슈퍼장작 쿠폰 사용"><img id="cpI" alt=""><span id="cpT">슈퍼장작</span><em id="cpR"></em><i id="cpN">3</i></button>
     <button class="lv" id="lvBtn" type="button" aria-label="레벨 미션 열기"><div class="dia" id="dia">1</div><div class="bar"><div id="lvb"></div><span id="lvt">0%</span></div></button>
   </div>
 </div>
@@ -280,7 +284,7 @@ html,body{touch-action:manipulation}
   <div class="sp-in">
     <h2>고구마 굽기</h2>
     <div class="sp-art"><img class="f1" id="spA" alt=""><img class="f2" id="spB" alt=""></div>
-    <div class="sp-tag">방치형 군고구마 게임 · v1.61</div>
+    <div class="sp-tag">방치형 군고구마 게임 · v1.62</div>
     <p class="sp-msg">고구마를 터치해서 굽고,<br>화로를 키워 보세요.</p>
     <p class="sp-sub">3개월마다 새 시즌! 돈·레벨은 새로 시작하고<br>스킨과 아이템은 그대로 남아요.</p>
     <div class="sp-bar"><div></div></div>
@@ -290,8 +294,8 @@ html,body{touch-action:manipulation}
 </div>
 <div class="toast" id="toast"></div>
 
-<script src="config.js?v=161"></script>
-<script src="icons.js?v=161"></script>
+<script src="config.js?v=162"></script>
+<script src="icons.js?v=162"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.js"></script>
 <script>
 (function(){
@@ -352,7 +356,7 @@ html,body{touch-action:manipulation}
     {id:"s15",kind:"s",nm:"고구마 은하 제국",ab:"은하",base:950000000000000000,gain:9000000000000}
   ];
 
-  var GROW=1.15, PERK={offlineH:8,couponMax:10}, ext={};
+  var GROW=1.15, PERK={offlineH:8,couponMax:10}, COUPON_MS=600000, ext={};
   function offCap(){return PERK.offlineH*3600}
   var MIS=[
     {id:"m1",nm:"고구마 10번 굽기",goal:10,get:function(){return S.clicks},pts:20},
@@ -535,16 +539,19 @@ html,body{touch-action:manipulation}
     $("pillRec").textContent="누적 "+fmt(S.total)+"원";
     $("pts").textContent=S.pts;
     $("ps").textContent=fmt(ps());$("pc").textContent=fmt(pc());
-    document.body.classList.toggle("boost",boosting());var bx=boosting()?"x7":"";$("psx").textContent=bx;$("pcx").textContent=bx;
+    document.body.classList.toggle("boost",boosting());var bx=boosting()?"x7 ("+(function(l){return l>=90?Math.ceil(l/60)+"분":l+"초"})(Math.ceil((bEnd()-Date.now())/1000))+")":"";$("psx").textContent=bx;$("pcx").textContent=bx;
     var lv=level(),cur=null;
     for(var i=0;i<MIS.length;i++){if(!S.done[MIS[i].id]){cur=MIS[i];break}}
     var pr=cur?Math.min(1,cur.get()/cur.goal):1;
     $("dia").textContent=lv+1;$("lvb").style.width=(pr*100)+"%";$("lvt").textContent=cur?(claimable()>0?"미션 완료! 눌러서 받기":cur.nm+" "+fmt(Math.floor(Math.min(cur.get(),cur.goal)))+"/"+fmt(cur.goal)):"MAX";$("lvBtn").classList.toggle("can",claimable()>0);
     var cl=claimable(),mb=$("misBadge");mb.hidden=cl===0;mb.textContent=cl;
-    var left=bEnd()-Date.now();
+    var left=bEnd()-Date.now(),mx=PERK.couponMax;
     $("cpN").textContent=S.coupons;
-    $("cpT").innerHTML=left>0?(left>90000?"슈퍼장작<br>"+Math.ceil(left/60000)+"분":Math.ceil(left/1000)+"초"):"슈퍼<br>장작";
-    $("cp").disabled=left>0||S.coupons<1;
+    var rc="";
+    if(S.coupons<mx){var rem=Math.max(0,COUPON_MS-(Date.now()-S.couponAt)),sec=Math.ceil(rem/1000);rc=Math.floor(sec/60)+":"+("0"+sec%60).slice(-2)}
+    $("cpR").textContent=rc;
+    $("cp").disabled=S.coupons<1;
+    $("cp").title=left>0?"슈퍼장작 적용 중 · 남은 "+Math.ceil(left/1000)+"초 (쿠폰을 쓰면 연장돼요)":"";
     if(sheetOpen){$("hm").textContent=fmt(S.money)+"원";$("hs").textContent=fmt(ps());$("hc").textContent=fmt(pc())}
   }
   function paintPanel(){
@@ -595,8 +602,11 @@ html,body{touch-action:manipulation}
   });
 
   $("cp").addEventListener("click",function(){
-    if(S.coupons<1||boosting())return;
-    S.coupons--;S.boosts++;S.boostEnd=Date.now()+20000;paintTop();save();
+    if(S.coupons<1)return;
+    var nw=Date.now();
+    if(S.coupons>=PERK.couponMax)S.couponAt=nw;            // 가득 찬 상태에서 쓰면 그때부터 10분 타이머 시작
+    S.coupons--;S.boosts++;S.boostEnd=Math.max(bEnd(),nw)+20000;   // 슈퍼장작 중에도 쓸 수 있고, 끝나는 시각에 이어서 연장
+    paintTop();save();
   });
   // 시간 기준 정산: 화면을 꺼두거나 다른 탭에 있어도 지난 시간만큼 초당 수입이 쌓인다 (최대 8시간)
   var lastT=Date.now();
@@ -609,9 +619,11 @@ html,body{touch-action:manipulation}
       g+=rawS()*6*Math.min(bOn,dt);
     }
     S.money+=g;S.total+=g;
-    var add=Math.floor((now-S.couponAt)/180000);
-    if(add>0){S.coupons=Math.min(PERK.couponMax,S.coupons+add);S.couponAt=now}
-    if(S.coupons>=PERK.couponMax)S.couponAt=now;
+    if(S.coupons>=PERK.couponMax)S.couponAt=now;      // 친구 링크 쿠폰으로 최대치를 넘겨도 그대로 보관
+    else{
+      var add=Math.floor((now-S.couponAt)/COUPON_MS);
+      if(add>0){S.coupons=Math.min(PERK.couponMax,S.coupons+add);S.couponAt=S.coupons>=PERK.couponMax?now:S.couponAt+add*COUPON_MS}
+    }
     return g;
   }
   (function(){
@@ -647,6 +659,14 @@ html,body{touch-action:manipulation}
   }
   function showOffline(){if(window.__off){var o=window.__off;window.__off=null;offlinePopup(o.g,o.secs)}}
 
+  // 슈퍼장작 버튼 아이콘 (16x16 픽셀: 불꽃 + 쌓인 장작)
+  (function(){
+    var M=["................",".......o........","......oOo.......","......oOOo..o...",".....oOYOo.oOo..",".....oOYYOoOOo..","....oOYyYOOOYOo.","....oOYyyYOYYOo.","....oOYyyYYYOo..",".....oOOYYOOo...","..KKKKKKKKKKKK..",".KbBKTTKKbBKTTK.",".KTTKBbKKTTKBbK.","KKKKKKKKKKKKKKKK","KbBKTTKbBKTTKbBK","KKKKKKKKKKKKKKKK"];
+    var C={K:"#3a2418",B:"#7a4a26",b:"#b5773e",T:"#e0b070",R:"#d23b2e",O:"#f08a24",o:"#ffb347",Y:"#ffd23a",y:"#fff1a0"};
+    var cv=document.createElement("canvas");cv.width=16;cv.height=16;var x=cv.getContext("2d");
+    M.forEach(function(r,j){for(var i=0;i<16;i++){var c=C[r[i]];if(c){x.fillStyle=c;x.fillRect(i,j,1,1)}}});
+    var im=document.getElementById("cpI");if(im)im.src=cv.toDataURL();
+  })();
   var sinceSave=0;
   setInterval(function(){
     var before=S.money;settle(Date.now());
@@ -697,9 +717,9 @@ html,body{touch-action:manipulation}
   paintTop();
 })();
 </script>
-<script src="skins.js?v=161"></script>
-<script src="online.js?v=161"></script>
-<script src="social.js?v=161"></script>
+<script src="skins.js?v=162"></script>
+<script src="online.js?v=162"></script>
+<script src="social.js?v=162"></script>
 
 </body>
 </html>
