@@ -257,6 +257,31 @@
     }
     G.popup({first:true,title:"홈 화면에 추가",lines:["① Chrome 오른쪽 위 ⋮ 누르기","② '홈 화면에 추가' 또는 '앱 설치' 누르기","③ '추가'(설치) 누르기"],msg:"Chrome이 아니면 Chrome으로 열어 주세요",btn:"알겠어요"});
   }
+  /* ---------- 운영자 (대표·운영자 계정에만 보임) ---------- */
+  function tabOp(p){
+    back(p);
+    var pr=U.profile||{};
+    if(!(pr.is_admin||pr.is_op)){note(p,"운영자만 볼 수 있어요.");return}
+    var c=el("div","card");c.appendChild(el("h4",null,"운영 현황"));
+    var box=el("div");box.appendChild(el("div","muted","불러오는 중…"));c.appendChild(box);p.appendChild(c);
+    function row(t,warn){var d=el("div",null,t);if(warn)d.style.color="#d23a3a";d.style.margin="4px 0";box.appendChild(d)}
+    var jobs=[];
+    box.innerHTML="";
+    if(pr.is_admin){
+      jobs.push(rpc("gogu_admin_usage").then(function(r){
+        row("가입자 "+Number(r.users).toLocaleString()+"명 (오늘 +"+r.new_today+" · 7일 +"+r.new_7d+")");
+        row("활동 · 오늘 "+r.active_1d+" / 7일 "+r.active_7d+" / 30일 "+r.active_30d+"명");
+        var mau=r.active_30d/r.limit_mau,db=r.db_bytes/r.limit_db;
+        row("월 활성 "+Number(r.active_30d).toLocaleString()+" / "+Number(r.limit_mau).toLocaleString()+" ("+(mau*100).toFixed(1)+"%)",mau>=0.7);
+        row("DB 용량 "+(r.db_bytes/1048576).toFixed(1)+"MB / "+Math.round(r.limit_db/1048576)+"MB ("+(db*100).toFixed(1)+"%)",db>=0.7);
+      }).catch(function(){row("가입자 수를 불러오지 못했어요")}));
+    }
+    jobs.push(rpc("gogu_admin_requests").then(function(r){row("아이템 신청 대기 "+(r||[]).length+"건",(r||[]).length>0)}).catch(function(){row("아이템 신청을 불러오지 못했어요")}));
+    jobs.push(rpc("gogu_admin_flagged").then(function(r){row("제재·이의 확인 대상 "+(r||[]).length+"건",(r||[]).length>0)}).catch(function(){row("제재 목록을 불러오지 못했어요")}));
+    var go=el("a","cbtn","운영자 페이지 열기");go.href="admin.html";go.target="_blank";go.rel="noopener";go.style.textDecoration="none";go.style.display="block";go.style.textAlign="center";go.style.marginTop="10px";
+    p.appendChild(go);
+    note(p,"일반 이용자에게는 이 메뉴가 보이지 않아요. 숫자는 열 때마다 새로 불러와요.");
+  }
   function tabMore(p){
     menuItem(p,"게임 초대","친구 초대 · 링크 공유하고 혜택 받기","iv");
     menuItem(p,"이벤트","하루 한 번 무료 룰렛","ev");
@@ -272,6 +297,7 @@
     var cl=el("div");cl.appendChild(document.createTextNode("커뮤니티 가기"));cl.appendChild(el("small",null,"카카오톡 오픈채팅에서 같이 이야기해요"));
     cm.appendChild(cl);cm.appendChild(el("i",null,"›"));p.appendChild(cm);
     menuItem(p,"규정 · 안내","공정한 플레이를 위한 규칙","rl");
+    if(U.profile&&(U.profile.is_admin||U.profile.is_op))menuItem(p,"운영자","가입자 · 신청 · 제재 현황 (운영자 전용)","op");
     ["이용약관|terms.html","개인정보처리방침|privacy.html"].forEach(function(x){
       var a=x.split("|"),lk=el("a","menu");lk.href=a[1];lk.target="_blank";lk.rel="noopener";lk.style.textDecoration="none";
       var d=el("div");d.appendChild(document.createTextNode(a[0]));lk.appendChild(d);lk.appendChild(el("i",null,"›"));p.appendChild(lk);
@@ -499,7 +525,7 @@
   function start(game){
     G=game;
     captureInvite();
-    G.registerTab("rk",tabRank);G.registerTab("cl",tabClan);G.registerTab("me",tabMe);G.registerTab("more",tabMore);G.registerTab("iv",tabInvite);
+    G.registerTab("rk",tabRank);G.registerTab("cl",tabClan);G.registerTab("me",tabMe);G.registerTab("more",tabMore);G.registerTab("iv",tabInvite);G.registerTab("op",tabOp);
     if(!cfg.SUPABASE_URL||!cfg.SUPABASE_ANON_KEY||!window.supabase){return}
     try{
       sb=window.supabase.createClient(cfg.SUPABASE_URL,cfg.SUPABASE_ANON_KEY,
