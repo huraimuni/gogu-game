@@ -252,10 +252,10 @@
       return;
     }
     if(ios){
-      G.popup({first:true,title:"홈 화면에 추가",lines:["① Safari 아래의 공유 버튼 (□↑) 누르기","② '홈 화면에 추가' 누르기","③ 오른쪽 위 '추가' 누르기"],msg:"Safari에서만 돼요 · Chrome이면 Safari로 열어 주세요",btn:"알겠어요"});
+      G.popup({first:true,title:"홈 화면에 추가",lines:["① Safari 아래의 공유 버튼 (□↑) 누르기","② '홈 화면에 추가' 누르기","③ 오른쪽 위 '추가' 누르기"],msg:"Safari에서만 돼요 · 예전에 만든 바로가기가 있으면 지우고 다시 추가해 주세요",btn:"알겠어요"});
       return;
     }
-    G.popup({first:true,title:"홈 화면에 추가",lines:["① Chrome 오른쪽 위 ⋮ 누르기","② '홈 화면에 추가' 또는 '앱 설치' 누르기","③ '추가'(설치) 누르기"],msg:"Chrome이 아니면 Chrome으로 열어 주세요",btn:"알겠어요"});
+    G.popup({first:true,title:"홈 화면에 추가",lines:["① Chrome 오른쪽 위 ⋮ 누르기","② '홈 화면에 추가' 또는 '앱 설치' 누르기","③ '추가'(설치) 누르기"],msg:"Chrome에서만 앱처럼 열려요 · 예전에 만든 바로가기가 있으면 지우고 다시 추가해 주세요",btn:"알겠어요"});
   }
   /* ---------- 운영자 (대표·운영자 계정에만 보임) ---------- */
   function tabOp(p){
