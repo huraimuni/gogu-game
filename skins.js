@@ -330,7 +330,7 @@
   function tabSkin(p){
     var el=G.el;
     var from=G.skFrom||"more";
-    var b=el("button","cbtn ghost back",from==="up"?"← 상점":from==="cash"?"← 캐쉬 상점":"← 더보기");b.type="button";
+    var b=el("button","cbtn ghost back",from==="up"?"← 아이템":from==="free"?"← 기본 상점":from==="cash"?"← 캐쉬 상점":"← 더보기");b.type="button";
     b.addEventListener("click",function(){PV={};G.skFrom=null;G.openSheet(from)});p.appendChild(b);
     if(!ready){p.appendChild(el("div","muted","불러오는 중…"));return}
     var sel=equipped(),cm=combo(),previewing=Object.keys(PV).some(function(x){return PV[x]!==sel[x]});
@@ -403,9 +403,9 @@
     var a=document.querySelectorAll("#term img");
     prepare([a[0].src,a[1].src],function(){
       D.ready=true;apply();
-      if(G.currentTab()==="sk"||G.currentTab()==="cash")G.refresh();
+      if(G.currentTab()==="sk"||G.currentTab()==="cash"||G.currentTab()==="free")G.refresh();
     });
-    G.onItems=function(){apply();if(G.currentTab()==="sk"||G.currentTab()==="cash")G.refresh()};
+    G.onItems=function(){apply();if(G.currentTab()==="sk"||G.currentTab()==="cash"||G.currentTab()==="free")G.refresh()};
   }
   window.GoguSkins={start:start,products:products,freeProducts:function(p){products(p,"free")},render:function(s,f){return render(s,f||0)},thumb:function(o,sl){return thumb(o,sl)},equipped:function(){return equipped()},ready:function(){return ready}};
   if(window.GoguGame)start(window.GoguGame);

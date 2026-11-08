@@ -238,7 +238,7 @@ html,body{touch-action:manipulation}
 
   <div class="top">
     <button class="sq" id="openMis" type="button"><span class="b">미션<i id="misBadge" hidden>0</i></span></button>
-    <div class="title"><b>고구마 굽기</b><small>방치형 군고구마 게임 · v1.73</small></div>
+    <div class="title"><b>고구마 굽기</b><small>방치형 군고구마 게임 · v1.74</small></div>
     <button class="sq" id="openPts" type="button"><span class="b">포인트</span></button>
   </div>
 
@@ -293,7 +293,7 @@ html,body{touch-action:manipulation}
   <div class="sp-in">
     <h2>고구마 굽기</h2>
     <div class="sp-art"><div class="sp-glow"></div><div class="sp-lit"><img class="f1" id="spA" alt=""><img class="f2" id="spB" alt=""></div><i class="sk" style="left:44%;--dx:-18px;animation-delay:0.5s"></i><i class="sk" style="left:52%;--dx:14px;animation-delay:0.7s"></i><i class="sk" style="left:48%;--dx:-6px;animation-delay:0.9s"></i><i class="sk" style="left:56%;--dx:22px;animation-delay:1.05s"></i><i class="sk" style="left:41%;--dx:-24px;animation-delay:1.2s"></i><i class="sk" style="left:50%;--dx:8px;animation-delay:1.35s"></i><i class="st" style="left:46%;--dx:-10px;animation-delay:1.2s"></i><i class="st" style="left:52%;--dx:8px;animation-delay:1.45s"></i><i class="st" style="left:49%;--dx:-4px;animation-delay:1.7s"></i><i class="st" style="left:55%;--dx:14px;animation-delay:1.95s"></i></div>
-    <div class="sp-tag">방치형 군고구마 게임 · v1.73</div>
+    <div class="sp-tag">방치형 군고구마 게임 · v1.74</div>
     <p class="sp-msg">고구마를 터치해서 굽고,<br>화로를 키워 보세요.</p>
     <p class="sp-sub">3개월마다 새 시즌! 돈·레벨은 새로 시작하고<br>스킨과 아이템은 그대로 남아요.</p>
     <div class="sp-bar"><div></div></div>
@@ -302,8 +302,8 @@ html,body{touch-action:manipulation}
 </div>
 <div class="toast" id="toast"></div>
 
-<script src="config.js?v=173"></script>
-<script src="icons.js?v=173"></script>
+<script src="config.js?v=174"></script>
+<script src="icons.js?v=174"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.js"></script>
 <script>
 (function(){
@@ -485,7 +485,7 @@ html,body{touch-action:manipulation}
 
   function shopTabs(p,cur){
     var w=el("div","shoptabs");
-    [["up","상점"],["cash","캐쉬 상점"]].forEach(function(x){
+    [["up","아이템"],["free","기본 상점"],["cash","캐쉬 상점"]].forEach(function(x){
       var b=el("button",null,x[1]);b.type="button";b.setAttribute("aria-pressed",x[0]===cur?"true":"false");
       b.addEventListener("click",function(){if(x[0]!==cur)openSheet(x[0])});w.appendChild(b);
     });
@@ -494,13 +494,15 @@ html,body{touch-action:manipulation}
   function renderPanel(){
     var p=$("panel");p.innerHTML="";
     if(ext[tab]){ext[tab](p);return}
-    if(tab==="up"){
-      shopTabs(p,"up");
+    if(tab==="free"){
+      shopTabs(p,"free");
       var sb=el("button","menu");sb.type="button";
       var sl=el("div");sl.appendChild(document.createTextNode("내 스킨 보기"));sl.appendChild(el("small",null,"스킨 바꾸기 · 자랑 이미지 공유"));
       sb.appendChild(sl);sb.appendChild(el("i",null,"›"));
-      sb.addEventListener("click",function(){window.GoguGame.skFrom="up";openSheet("sk")});p.appendChild(sb);
+      sb.addEventListener("click",function(){window.GoguGame.skFrom="free";openSheet("sk")});p.appendChild(sb);
       if(window.GoguSkins&&window.GoguSkins.freeProducts)window.GoguSkins.freeProducts(p);
+    }else if(tab==="up"){
+      shopTabs(p,"up");
 
       [["c","터치당 수입"],["s","초당 수입 · 구매하면 자동으로 벌어요"]].forEach(function(g){
         p.appendChild(el("div","group",g[1]));
@@ -592,8 +594,8 @@ html,body{touch-action:manipulation}
   var sheetOpen=false;
   function openSheet(t){
     tab=t;sheetOpen=true;
-    var TT={up:"상점",cash:"캐쉬 상점",sh:"포인트샵",ms:"미션",rk:"랭킹",more:"더보기",cl:"클랜",me:"내정보",sk:"스킨",ev:"이벤트",fr:"친구",rl:"규정 · 안내"};$("sTitle").textContent=TT[t]||"";
-    document.querySelectorAll(".stab button[data-t]").forEach(function(x){x.setAttribute("aria-selected",x.dataset.t===((t==="cl"||t==="me"||t==="sk"||t==="ev"||t==="fr"||t==="rl")?"more":t==="cash"?"up":t)?"true":"false")});
+    var TT={up:"상점",cash:"캐쉬 상점",free:"기본 상점",sh:"포인트샵",ms:"미션",rk:"랭킹",more:"더보기",cl:"클랜",me:"내정보",sk:"스킨",ev:"이벤트",fr:"친구",rl:"규정 · 안내"};$("sTitle").textContent=TT[t]||"";
+    document.querySelectorAll(".stab button[data-t]").forEach(function(x){x.setAttribute("aria-selected",x.dataset.t===((t==="cl"||t==="me"||t==="sk"||t==="ev"||t==="fr"||t==="rl")?"more":(t==="cash"||t==="free")?"up":t)?"true":"false")});
     $("sheet").classList.add("on");$("sheet").setAttribute("aria-hidden","false");$("scrim").classList.add("on");
     renderPanel();paintTop();paintPanel();
   }
@@ -726,7 +728,7 @@ html,body{touch-action:manipulation}
     fresh:fresh,save:save,toast:toast,popup:popup,fmt:fmt,el:el,$:$,
     perks:PERK,
     registerTab:function(id,fn){ext[id]=fn},shopTabs:shopTabs,
-    refresh:function(){if(sheetOpen&&ext[tab])renderPanel();paintTop()},
+    refresh:function(){if(sheetOpen&&(ext[tab]||tab==="free"))renderPanel();paintTop()},
     currentTab:function(){return sheetOpen?tab:null},
     openSheet:openSheet,
     owned:[],
@@ -741,9 +743,9 @@ html,body{touch-action:manipulation}
   paintTop();
 })();
 </script>
-<script src="skins.js?v=173"></script>
-<script src="online.js?v=173"></script>
-<script src="social.js?v=173"></script>
+<script src="skins.js?v=174"></script>
+<script src="online.js?v=174"></script>
+<script src="social.js?v=174"></script>
 
 </body>
 </html>
