@@ -102,6 +102,13 @@ button.danger{background:var(--red)}.wrap2{flex-wrap:wrap}.wrap2>*{flex:1 1 45%}
         <div id="opRes" style="margin-top:8px"></div>
         <div id="opList" class="list" style="margin-top:10px"></div>
       </div>
+      <div class="card">
+        <label for="featSel">룰렛 영구 당첨 스킨 (이번 기간 선정)</label>
+        <select id="featSel"></select>
+        <div class="row"><button id="featSave" type="button">선정하기</button><button id="featClear" class="ghost" type="button">선정 해제</button></div>
+        <div id="featRes" style="margin-top:8px"></div>
+        <div class="muted">룰렛에서 아주 드물게 나오는 '영구' 상품이 이 스킨으로 지급돼요. 기간이 바뀌면 다른 스킨으로 바꿔 주세요. 정하지 않으면 유료 스킨 중 무작위예요.</div>
+      </div>
     </div>
     <p class="muted"><a href="./">← 게임으로 돌아가기</a></p>
   </div>
@@ -143,6 +150,11 @@ button.danger{background:var(--red)}.wrap2{flex-wrap:wrap}.wrap2>*{flex:1 1 45%}
           var tag=i.kind==="skin"?" ["+(TIER[i.tier]||"")+" "+(SLOT[i.slot]||"")+"]":"";
           o.textContent=i.name+tag;sel.appendChild(o);
         });
+        var fs=$("featSel");fs.innerHTML="";
+        items.filter(function(i){return i.kind==="skin"&&(i.tier==="paid"||i.tier==="event")}).forEach(function(i){
+          var o=document.createElement("option");o.value=i.id;o.textContent=i.name+" ["+(TIER[i.tier]||"")+" "+(SLOT[i.slot]||"")+"]";fs.appendChild(o);
+        });
+        if(isAdmin){rpc("gogu_featured").then(function(f){if(f&&f.length){fs.value=f[0].id;out("featRes","현재 선정: "+f[0].name,"ok")}else out("featRes","현재 선정된 스킨이 없어요 (무작위)","")}).catch(function(){})}
         if(isAdmin)loadLog();
       });
     }).catch(function(e){say("불러오지 못했어요: "+em(e),"bad")});
@@ -261,6 +273,8 @@ button.danger{background:var(--red)}.wrap2{flex-wrap:wrap}.wrap2>*{flex:1 1 45%}
     rpc("gogu_admin_set_op",{p_code:code,p_on:on}).then(function(n){out("opRes",n+"님을 "+(on?"운영자로 지정했어요":"운영자에서 해제했어요"),"ok");loadOps()})
       .catch(function(e){out("opRes","실패: "+em(e),"bad")});
   }
+  $("featSave").addEventListener("click",function(){rpc("gogu_admin_set_featured",{p_item:$("featSel").value}).then(function(n){out("featRes","선정했어요: "+n,"ok")}).catch(function(e){out("featRes","실패: "+em(e),"bad")})});
+  $("featClear").addEventListener("click",function(){rpc("gogu_admin_set_featured",{p_item:null}).then(function(){out("featRes","선정을 해제했어요 (무작위)","ok")}).catch(function(e){out("featRes","실패: "+em(e),"bad")})});
   $("opAdd").addEventListener("click",function(){var c=$("opcode").value.trim().toUpperCase();if(c)setOp(c,true)});
 
   sb.auth.getSession().then(function(r){init(r.data&&r.data.session)});

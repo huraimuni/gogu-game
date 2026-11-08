@@ -203,7 +203,7 @@ where not exists (select 1 from public.gogu_roulette_prizes);
 
 -- 룰렛에 유료 스킨·영구 상품 추가 (낮은 확률). 이미 들어 있으면 건너뜀
 alter table public.gogu_roulette_prizes drop constraint if exists gogu_roulette_prizes_kind_check;
-alter table public.gogu_roulette_prizes add constraint gogu_roulette_prizes_kind_check check (kind in ('points','coupon','event_skin','paid_skin'));
+alter table public.gogu_roulette_prizes add constraint gogu_roulette_prizes_kind_check check (kind in ('points','coupon','event_skin','paid_skin','featured_skin'));
 insert into public.gogu_roulette_prizes(label, kind, amount, item_days, weight)
 select v.label, v.kind, v.amount, v.item_days, v.weight from (values
   ('유료 스킨 (7일, 무작위)',  'paid_skin',  null::int, 7,    20),
@@ -213,6 +213,17 @@ select v.label, v.kind, v.amount, v.item_days, v.weight from (values
   ('유료 스킨 (영구, 무작위)',  'paid_skin',  null, null, 1)
 ) v(label, kind, amount, item_days, weight)
 where not exists (select 1 from public.gogu_roulette_prizes r where r.label = v.label);
+
+-- 영구 상품은 '대표가 고른 선정 스킨' 한 가지로 통일 (예전 무작위 영구 2칸은 지움)
+delete from public.gogu_roulette_prizes where label in ('이벤트 스킨 (영구, 무작위)','유료 스킨 (영구, 무작위)');
+insert into public.gogu_roulette_prizes(label, kind, amount, item_days, weight)
+select '선정 스킨 (영구)', 'featured_skin', null, null, 2
+where not exists (select 1 from public.gogu_roulette_prizes where label = '선정 스킨 (영구)');
+
+-- 대표가 정하는 설정값 (이번 기간 선정 스킨 등)
+create table if not exists public.gogu_settings(key text primary key, value text);
+alter table public.gogu_settings enable row level security;
+revoke all on public.gogu_settings from anon, authenticated;
 
 do $$
 declare t text;
@@ -700,22 +711,27 @@ begin
     acc := acc + pr.weight;
     if roll <= acc then exit; end if;
   end loop;
-  if pr.kind in ('event_skin','paid_skin') then
-    -- 아직 없는 스킨을 먼저 고르고, 다 가졌으면 무작위
-    select * into skin from public.gogu_items where kind = 'skin' and tier = (case when pr.kind = 'paid_skin' then 'paid' else 'event' end)
-      order by public.gogu_has_item(uid, id), random() limit 1;
-    if not found then
+  if pr.kind in ('event_skin','paid_skin','featured_skin') then
+    if pr.kind = 'featured_skin' then
+      select i.* into skin from public.gogu_items i join public.gogu_settings st on st.key = 'featured_skin' and st.value = i.id where i.kind = 'skin';
+    end if;
+    if skin.id is null then
+      -- 아직 없는 스킨을 먼저 고르고, 다 가졌으면 무작위 (선정 스킨이 없으면 유료 스킨 중에서)
+      select * into skin from public.gogu_items where kind = 'skin' and tier = (case when pr.kind = 'event_skin' then 'event' else 'paid' end)
+        order by public.gogu_has_item(uid, id), random() limit 1;
+    end if;
+    if skin.id is null then
       pr.kind := 'points'; pr.amount := 30; pr.label := '포인트 30';
     end if;
   end if;
   update public.gogu_profiles set last_spin = today where id = uid;
   insert into public.gogu_gifts(to_user, kind, item_id, amount, note, expires_at, item_days)
-  values (uid, case when pr.kind in ('event_skin','paid_skin') then 'item' else pr.kind end,
-          case when pr.kind in ('event_skin','paid_skin') then skin.id end,
-          case when pr.kind not in ('event_skin','paid_skin') then pr.amount end,
-          '룰렛 당첨', now() + interval '7 days', case when pr.kind in ('event_skin','paid_skin') then pr.item_days end)
+  values (uid, case when pr.kind in ('event_skin','paid_skin','featured_skin') then 'item' else pr.kind end,
+          case when pr.kind in ('event_skin','paid_skin','featured_skin') then skin.id end,
+          case when pr.kind not in ('event_skin','paid_skin','featured_skin') then pr.amount end,
+          '룰렛 당첨', now() + interval '7 days', case when pr.kind in ('event_skin','paid_skin','featured_skin') then pr.item_days end)
   returning id into gid;
-  return jsonb_build_object('gift_id', gid, 'label', case when pr.kind in ('event_skin','paid_skin') then skin.name || ' (' || coalesce(pr.item_days::text || '일', '영구') || ')' else pr.label end,
+  return jsonb_build_object('gift_id', gid, 'label', case when pr.kind in ('event_skin','paid_skin','featured_skin') then skin.name || ' (' || coalesce(pr.item_days::text || '일', '영구') || ')' else pr.label end,
                             'kind', pr.kind);
 end $$;
 
@@ -847,6 +863,28 @@ begin
   update public.gogu_profiles set show_profile = coalesce(p_on, true) where id = auth.uid();
 end $$;
 
+-- 선정 스킨: 대표가 고르고, 누구나 볼 수 있음
+create or replace function public.gogu_featured() returns table(id text, name text, tier text)
+language sql stable security definer set search_path = public as $$
+  select i.id, i.name, i.tier from public.gogu_settings st join public.gogu_items i on i.id = st.value
+  where st.key = 'featured_skin' and i.kind = 'skin';
+$$;
+create or replace function public.gogu_admin_set_featured(p_item text) returns text
+language plpgsql security definer set search_path = public as $$
+declare nm text;
+begin
+  if not public.gogu_is_admin() then raise exception 'forbidden'; end if;
+  if p_item is null or btrim(p_item) = '' then
+    delete from public.gogu_settings where key = 'featured_skin';
+    return null;
+  end if;
+  select name into nm from public.gogu_items where id = p_item and kind = 'skin' and tier in ('paid','event');
+  if nm is null then raise exception '선정할 수 없는 스킨이에요'; end if;
+  insert into public.gogu_settings(key, value) values ('featured_skin', p_item)
+    on conflict (key) do update set value = excluded.value;
+  return nm;
+end $$;
+
 -- ---------- 실행 권한 ----------
 do $$
 declare f text;
@@ -858,7 +896,7 @@ begin
     'gogu_admin_set_op(text,boolean)','gogu_admin_ops()','gogu_admin_lookup(text)',
     'gogu_admin_give(text[],text,text,int,text,int,int)','gogu_admin_log(int)',
     'gogu_request_create(text,text)','gogu_request_my()','gogu_admin_requests()','gogu_admin_requests_resolve(uuid[],boolean,int)',
-    'gogu_roulette_odds()','gogu_roulette_spin()',
+    'gogu_roulette_odds()','gogu_roulette_spin()','gogu_featured()','gogu_admin_set_featured(text)',
     'gogu_friend_request(text)','gogu_friend_list()','gogu_friend_respond(uuid,boolean)','gogu_friend_remove(uuid)',
     'gogu_friend_profile(uuid)','gogu_set_show_profile(boolean)',
     'gogu_ranking(text,boolean,int,int)','gogu_clan_ranking(int)'
@@ -872,13 +910,13 @@ begin
     'gogu_admin_set_op(text,boolean)','gogu_admin_ops()','gogu_admin_lookup(text)',
     'gogu_admin_give(text[],text,text,int,text,int,int)','gogu_admin_log(int)',
     'gogu_request_create(text,text)','gogu_request_my()','gogu_admin_requests()','gogu_admin_requests_resolve(uuid[],boolean,int)',
-    'gogu_roulette_spin()',
+    'gogu_roulette_spin()','gogu_admin_set_featured(text)',
     'gogu_friend_request(text)','gogu_friend_list()','gogu_friend_respond(uuid,boolean)','gogu_friend_remove(uuid)',
     'gogu_friend_profile(uuid)','gogu_set_show_profile(boolean)'
   ] loop
     execute format('grant execute on function public.%s to authenticated', f);
   end loop;
-  foreach f in array array['gogu_ranking(text,boolean,int,int)','gogu_clan_ranking(int)','gogu_roulette_odds()'] loop
+  foreach f in array array['gogu_ranking(text,boolean,int,int)','gogu_clan_ranking(int)','gogu_roulette_odds()','gogu_featured()'] loop
     execute format('grant execute on function public.%s to anon, authenticated', f);
   end loop;
 end $$;

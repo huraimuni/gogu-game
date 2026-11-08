@@ -216,6 +216,7 @@
   }
   // 돌림판 칸: 스킨 상품은 종류별로 한 칸으로 묶어서 보여준다
   function slotKey(label, kind){
+    if(kind === "featured_skin" || (!kind && label.indexOf("선정 스킨") >= 0)) return "선정 스킨";
     if(kind === "paid_skin" || (!kind && label.indexOf("유료 스킨") >= 0)) return "유료 스킨";
     if(kind === "event_skin" || (!kind && label.indexOf("이벤트 스킨") >= 0)) return "이벤트 스킨";
     return label;
@@ -239,6 +240,10 @@
     var res = el("div", "rlres"); res.textContent = U.spun ? "오늘은 이미 돌렸어요" : "룰렛을 돌려 보세요!"; c.appendChild(res);
     var btn = el("button", "btn", U.spun ? "내일 또 도전하세요" : "룰렛 돌리기"); btn.type = "button"; btn.style.width = "100%";
     btn.disabled = true; c.appendChild(btn); p.appendChild(c);
+    var fb = el("div", "muted"); fb.style.cssText = "text-align:center;margin:-4px 0 10px"; c.appendChild(fb);
+    rpc("gogu_featured").then(function(f){
+      if(f && f.length) fb.textContent = "이번 기간 선정 스킨(영구 당첨): " + f[0].name;
+    }).catch(function(){});
     var oc = el("div", "card"); oc.appendChild(el("h4", null, "당첨 확률")); p.appendChild(oc);
 
     var rows = null, slots = null, rot = 0;
