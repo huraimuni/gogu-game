@@ -181,34 +181,89 @@
   G.shareCard = shareCard;
 
   /* ---------- 이벤트 탭 (무료 룰렛) ---------- */
+  /* ---------- 이벤트(룰렛) ---------- */
+  var WHEEL_COLORS = ["#ff8a3d", "#ffd23f", "#4cc9a7", "#5b8def", "#b06bff", "#ff6b9a", "#8bd450", "#ff5a4d"];
+  function ensureRouletteCss(){
+    if(document.getElementById("rlcss")) return;
+    var st = document.createElement("style"); st.id = "rlcss";
+    st.textContent =
+      ".rlbox{position:relative;width:min(280px,76vw);aspect-ratio:1;margin:6px auto 12px}"+
+      ".rlwheel{position:absolute;inset:0;border-radius:50%;border:6px solid #ffd978;box-shadow:0 0 0 3px #7a4a10,0 8px 22px rgba(0,0,0,.35),inset 0 0 18px rgba(0,0,0,.35);overflow:hidden;transform:rotate(0deg)}"+
+      ".rlwheel span{position:absolute;left:50%;top:50%;width:46%;transform-origin:0 50%;font:400 13px var(--f-display);color:#2a1600;text-align:right;line-height:1.1;text-shadow:0 1px 0 rgba(255,255,255,.5);padding-right:4px;box-sizing:border-box;word-break:keep-all}"+
+      ".rlhub{position:absolute;left:50%;top:50%;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff2c4,#ffb830);border:3px solid #7a4a10;box-shadow:0 3px 6px rgba(0,0,0,.4);z-index:2}"+
+      ".rlpin{position:absolute;left:50%;top:-12px;margin-left:-14px;width:0;height:0;border-left:14px solid transparent;border-right:14px solid transparent;border-top:26px solid #e5483d;filter:drop-shadow(0 2px 2px rgba(0,0,0,.5));z-index:3}"+
+      ".rlres{text-align:center;padding:10px 8px;border-radius:14px;margin-bottom:10px;font:400 22px var(--f-display);background:var(--row);color:var(--sheet-fg);min-height:48px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:2px}"+
+      ".rlres small{font:500 13px var(--f-body);color:var(--sheet-muted)}"+
+      ".rlres.win{background:linear-gradient(180deg,#fff3c4,#ffd66a);color:#6a3a00;animation:rlpop .5s cubic-bezier(.2,1.5,.4,1)}"+
+      ".rlres.lose{background:#e9edf5;color:#5a6580}"+
+      "@keyframes rlpop{0%{transform:scale(.6);opacity:0}100%{transform:none;opacity:1}}";
+    document.head.appendChild(st);
+  }
+  // 서버가 돌려준 결과가 상품표의 몇 번째 칸인지 찾는다
+  function wheelIndex(rows, r){
+    var i, lab = r.label || "";
+    for(i = 0; i < rows.length; i++) if(rows[i].label === lab) return i;
+    if(r.kind === "event_skin"){
+      var m = /\((\d+)일\)/.exec(lab), d = m ? m[1] : "";
+      for(i = 0; i < rows.length; i++) if(rows[i].label.indexOf("스킨") >= 0 && rows[i].label.indexOf("(" + d + "일") >= 0) return i;
+    }
+    return 0;
+  }
   function tabEvent(p){
     O.back(p);
     if(!U.ready){ O.offline(p); return; }
+    ensureRouletteCss();
     var c = el("div", "card"); c.appendChild(el("h4", null, "무료 룰렛 · 하루 한 번"));
-    var res = el("div", "big", "오늘의 행운은?"); res.style.cssText = "text-align:center;padding:14px 0";
-    c.appendChild(res);
-    var btn = el("button", "btn", U.spun ? "오늘은 이미 돌렸어요" : "룰렛 돌리기"); btn.type = "button"; btn.style.width = "100%";
-    btn.disabled = !!U.spun;
+    var box = el("div", "rlbox"), wheel = el("div", "rlwheel");
+    box.appendChild(wheel); box.appendChild(el("div", "rlhub")); box.appendChild(el("div", "rlpin")); c.appendChild(box);
+    var res = el("div", "rlres"); res.textContent = U.spun ? "오늘은 이미 돌렸어요" : "룰렛을 돌려 보세요!"; c.appendChild(res);
+    var btn = el("button", "btn", U.spun ? "내일 또 도전하세요" : "룰렛 돌리기"); btn.type = "button"; btn.style.width = "100%";
+    btn.disabled = true; c.appendChild(btn); p.appendChild(c);
+    var oc = el("div", "card"); oc.appendChild(el("h4", null, "당첨 확률")); p.appendChild(oc);
+
+    var rows = null, rot = 0;
+    function build(){
+      var n = rows.length, seg = 360 / n, grad = [];
+      rows.forEach(function(r, i){
+        grad.push(WHEEL_COLORS[i % WHEEL_COLORS.length] + " " + (i * seg) + "deg " + ((i + 1) * seg) + "deg");
+        var t = el("span", null, r.label.replace("화력 최대 ", "").replace("이벤트 ", "").replace(", 무작위", ""));
+        t.style.transform = "translateY(-50%) rotate(" + (i * seg + seg / 2 - 90) + "deg)";
+        wheel.appendChild(t);
+      });
+      wheel.style.background = "conic-gradient(" + grad.join(",") + ")";
+      btn.disabled = !!U.spun;
+    }
     btn.addEventListener("click", function(){
       if(!U.user){ toast("로그인하면 참여할 수 있어요"); login(); return; }
-      btn.disabled = true; var n = 0;
-      var labels = ["포인트", "쿠폰", "스킨", "포인트", "쿠폰"], iv = setInterval(function(){ res.textContent = labels[n++ % labels.length] + " …"; }, 120);
+      if(!rows) return;
+      btn.disabled = true; res.className = "rlres"; res.textContent = "룰렛이 돌아가요…";
       rpc("gogu_roulette_spin").then(function(r){
         return rpc("gogu_gift_claim", { p_id: r.gift_id }).then(function(cl){
+          var n = rows.length, seg = 360 / n, idx = wheelIndex(rows, r);
+          // 칸의 가운데가 위쪽 바늘에 오도록 여러 바퀴 돌린 뒤 멈춘다
+          var target = 360 * 6 + (360 - (idx * seg + seg / 2)) + (Math.random() * seg * 0.5 - seg * 0.25);
+          rot = Math.ceil(rot / 360) * 360 + target;
+          wheel.style.transition = "transform 4.2s cubic-bezier(.12,.62,.1,1)";
+          wheel.style.transform = "rotate(" + rot + "deg)";
           setTimeout(function(){
-            clearInterval(iv); O.applyClaim(cl); U.spun = true;
-            res.textContent = "🎉 " + r.label; btn.textContent = "내일 또 도전하세요!"; toast("당첨! " + r.label);
-          }, 900);
+            O.applyClaim(cl); U.spun = true;
+            var lose = r.kind === "none";
+            res.className = "rlres " + (lose ? "lose" : "win"); res.textContent = "";
+            res.appendChild(document.createTextNode(lose ? "아쉽게 꽝이에요" : "🎉 당첨!"));
+            res.appendChild(el("small", null, lose ? "내일 또 도전해 보세요" : r.label + " 지급 완료"));
+            btn.textContent = "내일 또 도전하세요";
+            toast(lose ? "꽝! 내일 또 도전하세요" : "당첨! " + r.label);
+          }, 4400);
         });
-      }).catch(function(e){ clearInterval(iv); res.textContent = "오늘의 행운은?"; btn.disabled = false; toast(errMsg(e)); });
+      }).catch(function(e){ res.className = "rlres"; res.textContent = "룰렛을 돌려 보세요!"; btn.disabled = false; toast(errMsg(e)); });
     });
-    c.appendChild(btn); p.appendChild(c);
-    var oc = el("div", "card"); oc.appendChild(el("h4", null, "당첨 확률")); p.appendChild(oc);
-    rpc("gogu_roulette_odds").then(function(rows){
-      rows.forEach(function(r){
+    rpc("gogu_roulette_odds").then(function(list){
+      rows = list;
+      list.forEach(function(r){
         var row = el("div", "row"); row.style.justifyContent = "space-between";
         row.appendChild(el("span", null, r.label)); row.appendChild(el("span", "muted", r.pct + "%")); oc.appendChild(row);
       });
+      build();
     }).catch(function(){ oc.appendChild(el("div", "muted", "불러오지 못했어요")); });
     O.note(p, "무료 이벤트예요. 돈으로 사거나 팔 수 없고, 당첨 스킨은 기간제(7일·30일)로 지급돼요. 기간이 끝나면 기본 모습으로 돌아가요.");
     if(!U.user) O.needLogin(p);
