@@ -27,8 +27,6 @@ body{margin:0;background:var(--night1);color:var(--fg);font-family:var(--f-body)
   -webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;overflow-x:hidden}
 .scene{position:fixed;inset:0;z-index:0;overflow:hidden;
   background:linear-gradient(180deg,var(--night1) 0%,var(--night2) 62%,#222c44 100%)}
-.scene .lamp{position:absolute;right:8%;top:20%;width:7px;height:48%;background:#6b4a2b;border-radius:3px}
-.scene .lamp::before{content:"";position:absolute;left:-26px;top:-8px;width:58px;height:12px;border-radius:8px 8px 0 0;background:#3a2a1a}
 .scene .glow{position:absolute;right:-8%;top:8%;width:62vmax;height:62vmax;max-width:520px;max-height:520px;border-radius:50%;
   background:radial-gradient(circle,rgba(var(--fe),.34) 0%,rgba(var(--fe),.12) 38%,rgba(var(--fe),0) 68%)}
 .scene .ground{position:absolute;left:0;right:0;bottom:0;height:18%;
@@ -222,14 +220,14 @@ html,body{touch-action:manipulation}
 </style>
 </head>
 <body>
-<div class="scene"><div class="glow"></div><div class="lamp"></div><div class="ground"></div></div>
+<div class="scene"><div class="glow"></div><div class="ground"></div></div>
 
 <div class="app">
   <div class="strip"><b>나인페이먼츠</b><br>토스단말기&amp;네이버단말기 0원 상담 <a href="https://rebrand.ly/ninepay" target="_blank" rel="noopener">rebrand.ly/ninepay</a></div>
 
   <div class="top">
     <button class="sq" id="openMis" type="button"><span class="b">미션<i id="misBadge" hidden>0</i></span></button>
-    <div class="title"><b>고구마 굽기</b><small>방치형 군고구마 게임 · v1.68</small></div>
+    <div class="title"><b>고구마 굽기</b><small>방치형 군고구마 게임 · v1.69</small></div>
     <button class="sq" id="openPts" type="button"><span class="b">포인트</span></button>
   </div>
 
@@ -284,7 +282,7 @@ html,body{touch-action:manipulation}
   <div class="sp-in">
     <h2>고구마 굽기</h2>
     <div class="sp-art"><img class="f1" id="spA" alt=""><img class="f2" id="spB" alt=""></div>
-    <div class="sp-tag">방치형 군고구마 게임 · v1.68</div>
+    <div class="sp-tag">방치형 군고구마 게임 · v1.69</div>
     <p class="sp-msg">고구마를 터치해서 굽고,<br>화로를 키워 보세요.</p>
     <p class="sp-sub">3개월마다 새 시즌! 돈·레벨은 새로 시작하고<br>스킨과 아이템은 그대로 남아요.</p>
     <div class="sp-bar"><div></div></div>
@@ -294,8 +292,8 @@ html,body{touch-action:manipulation}
 </div>
 <div class="toast" id="toast"></div>
 
-<script src="config.js?v=168"></script>
-<script src="icons.js?v=168"></script>
+<script src="config.js?v=169"></script>
+<script src="icons.js?v=169"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.js"></script>
 <script>
 (function(){
@@ -732,9 +730,9 @@ html,body{touch-action:manipulation}
   paintTop();
 })();
 </script>
-<script src="skins.js?v=168"></script>
-<script src="online.js?v=168"></script>
-<script src="social.js?v=168"></script>
+<script src="skins.js?v=169"></script>
+<script src="online.js?v=169"></script>
+<script src="social.js?v=169"></script>
 
 </body>
 </html>

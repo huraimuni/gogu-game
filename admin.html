@@ -140,13 +140,6 @@ button.danger{background:var(--red)}.wrap2{flex-wrap:wrap}.wrap2>*{flex:1 1 45%}
         <div id="rwList" class="list" style="margin-top:10px"></div>
         <div class="muted">초당·터치당 각각 1~3위에게 시즌 칭호(영구, 계속 쌓임)와 30일 아이템 선물(오프라인 24시간, 쿠폰 +5, 1위는 황금 스킨 추가)을 줘요. 매크로 의심·제외 계정은 빠져요. 끝난 시즌만, 시즌당 한 번만 지급돼요. 꼭 미리보기로 확인하세요.</div>
       </div>
-      <div class="card">
-        <label for="featSel">룰렛 영구 당첨 스킨 (이번 기간 선정)</label>
-        <select id="featSel"></select>
-        <div class="row"><button id="featSave" type="button">선정하기</button><button id="featClear" class="ghost" type="button">선정 해제</button></div>
-        <div id="featRes" style="margin-top:8px"></div>
-        <div class="muted">룰렛에서 아주 드물게 나오는 '영구' 상품이 이 스킨으로 지급돼요. 기간이 바뀌면 다른 스킨으로 바꿔 주세요. 정하지 않으면 유료 스킨 중 무작위예요.</div>
-      </div>
     </div>
     <p class="muted"><a href="./">← 게임으로 돌아가기</a></p>
   </div>
@@ -166,7 +159,7 @@ button.danger{background:var(--red)}.wrap2{flex-wrap:wrap}.wrap2>*{flex:1 1 45%}
   function parse(){return $("codes").value.split(/[\s,]+/).map(function(x){return x.trim().toUpperCase()}).filter(Boolean).filter(function(v,i,a){return a.indexOf(v)===i})}
   function out(id,t,cls){var d=$(id);d.className=cls||"";d.textContent=t}
   function em(e){return (e&&e.message)||String(e)}
-  var TIER={free:"무료",paid:"유료",event:"이벤트"},SLOT={potato:"고구마",brazier:"화로",fire:"불"};
+  var TIER={free:"무료",paid:"유료",event:"이벤트"},SLOT={potato:"고구마",brazier:"화로",fire:"불",background:"배경"};
   function showLogin(){
     msg.className="card";msg.innerHTML="";
     var t=mk("div",null,"운영자 계정으로 로그인하세요.");msg.appendChild(t);
@@ -188,11 +181,6 @@ button.danger{background:var(--red)}.wrap2{flex-wrap:wrap}.wrap2>*{flex:1 1 45%}
           var tag=i.kind==="skin"?" ["+(TIER[i.tier]||"")+" "+(SLOT[i.slot]||"")+"]":"";
           o.textContent=i.name+tag;sel.appendChild(o);
         });
-        var fs=$("featSel");fs.innerHTML="";
-        items.filter(function(i){return i.kind==="skin"&&(i.tier==="paid"||i.tier==="event")}).forEach(function(i){
-          var o=document.createElement("option");o.value=i.id;o.textContent=i.name+" ["+(TIER[i.tier]||"")+" "+(SLOT[i.slot]||"")+"]";fs.appendChild(o);
-        });
-        if(isAdmin){rpc("gogu_featured").then(function(f){if(f&&f.length){fs.value=f[0].id;out("featRes","현재 선정: "+f[0].name,"ok")}else out("featRes","현재 선정된 스킨이 없어요 (무작위)","")}).catch(function(){})}
         if(isAdmin)loadLog();
       });
     }).catch(function(e){say("불러오지 못했어요: "+em(e),"bad")});
@@ -311,8 +299,6 @@ button.danger{background:var(--red)}.wrap2{flex-wrap:wrap}.wrap2>*{flex:1 1 45%}
     rpc("gogu_admin_set_op",{p_code:code,p_on:on}).then(function(n){out("opRes",n+"님을 "+(on?"운영자로 지정했어요":"운영자에서 해제했어요"),"ok");loadOps()})
       .catch(function(e){out("opRes","실패: "+em(e),"bad")});
   }
-  $("featSave").addEventListener("click",function(){rpc("gogu_admin_set_featured",{p_item:$("featSel").value}).then(function(n){out("featRes","선정했어요: "+n,"ok")}).catch(function(e){out("featRes","실패: "+em(e),"bad")})});
-  $("featClear").addEventListener("click",function(){rpc("gogu_admin_set_featured",{p_item:null}).then(function(){out("featRes","선정을 해제했어요 (무작위)","ok")}).catch(function(e){out("featRes","실패: "+em(e),"bad")})});
   function reward(commit){
     var s=parseInt($("rwSeason").value,10);if(isNaN(s)){out("rwRes","시즌 번호를 넣어 주세요","bad");return}
     if(commit&&!confirm("시즌 "+s+" 보상을 지급할까요? 되돌릴 수 없어요."))return;
