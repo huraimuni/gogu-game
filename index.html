@@ -229,7 +229,7 @@ html,body{touch-action:manipulation}
 
   <div class="top">
     <button class="sq" id="openMis" type="button"><span class="b">미션<i id="misBadge" hidden>0</i></span></button>
-    <div class="title"><b>고구마 굽기</b><small>방치형 군고구마 게임 · v1.66</small></div>
+    <div class="title"><b>고구마 굽기</b><small>방치형 군고구마 게임 · v1.67</small></div>
     <button class="sq" id="openPts" type="button"><span class="b">포인트</span></button>
   </div>
 
@@ -284,7 +284,7 @@ html,body{touch-action:manipulation}
   <div class="sp-in">
     <h2>고구마 굽기</h2>
     <div class="sp-art"><img class="f1" id="spA" alt=""><img class="f2" id="spB" alt=""></div>
-    <div class="sp-tag">방치형 군고구마 게임 · v1.66</div>
+    <div class="sp-tag">방치형 군고구마 게임 · v1.67</div>
     <p class="sp-msg">고구마를 터치해서 굽고,<br>화로를 키워 보세요.</p>
     <p class="sp-sub">3개월마다 새 시즌! 돈·레벨은 새로 시작하고<br>스킨과 아이템은 그대로 남아요.</p>
     <div class="sp-bar"><div></div></div>
@@ -294,8 +294,8 @@ html,body{touch-action:manipulation}
 </div>
 <div class="toast" id="toast"></div>
 
-<script src="config.js?v=166"></script>
-<script src="icons.js?v=166"></script>
+<script src="config.js?v=167"></script>
+<script src="icons.js?v=167"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.js"></script>
 <script>
 (function(){
@@ -610,7 +610,7 @@ html,body{touch-action:manipulation}
     paintTop();save();
   });
   // 시간 기준 정산: 화면을 꺼두거나 다른 탭에 있어도 지난 시간만큼 초당 수입이 쌓인다 (최대 8시간)
-  var lastT=Date.now();
+  var lastT=Date.now(),awayPend=null;
   function settle(now){
     var away=(now-lastT)>60000;                        // 1분 넘게 화면이 꺼져 있었으면 '자리 비움'
     var dt=Math.max(0,Math.min((now-lastT)/1000,offCap()));lastT=now;
@@ -632,7 +632,8 @@ html,body{touch-action:manipulation}
   (function(){
     var now=Date.now();
     lastT=Math.max(S.last||now,now-offCap()*1000);
-    var secs=(now-lastT)/1000,g=settle(now);
+    var secs=(now-lastT)/1000,from0=lastT,g=settle(now);
+    if(secs>=60)awayPend={from:from0,to:now};         // 슈퍼장작 타임 정보는 로그인 후에 도착하므로, 그때 닫아 둔 구간을 다시 정산
     if(g>=1&&secs>=60)window.__off={g:g,secs:secs};
   })();
   function dur(sec){
@@ -701,7 +702,18 @@ html,body{touch-action:manipulation}
   window.GoguGame={
     state:function(){return S},
     setState:function(o){S=o;lastT=Date.now();renderPanel();paintTop();paintPanel();save();if(window.GoguGame&&window.GoguGame.onItems)window.GoguGame.onItems()},
-    setButter:function(t){BUTTER=t||0;paintTop()},
+    setButter:function(t){
+      BUTTER=t||0;
+      if(awayPend){                                    // 닫아 둔 동안 켜져 있던 슈퍼장작 타임을 7배로 정산 (쿠폰 효과와 겹친 구간은 이미 반영됨)
+        var ap=awayPend;awayPend=null;
+        if(BUTTER>ap.from){
+          var bEndT=Math.min(BUTTER,ap.to),cEnd=Math.min(S.boostEnd||0,bEndT);
+          var sec=Math.max(0,bEndT-ap.from)/1000-Math.max(0,cEnd-ap.from)/1000;
+          var ex=rawS()*6*Math.max(0,sec);
+          if(ex>=1){S.money+=ex;S.total+=ex;if(window.__off)window.__off.g+=ex;else toast("닫아 둔 동안의 슈퍼장작 타임 +"+fmt(ex)+"원");save()}
+        }
+      }
+      paintTop()},
     fresh:fresh,save:save,toast:toast,popup:popup,fmt:fmt,el:el,$:$,
     perks:PERK,
     registerTab:function(id,fn){ext[id]=fn},shopTabs:shopTabs,
@@ -720,9 +732,9 @@ html,body{touch-action:manipulation}
   paintTop();
 })();
 </script>
-<script src="skins.js?v=166"></script>
-<script src="online.js?v=166"></script>
-<script src="social.js?v=166"></script>
+<script src="skins.js?v=167"></script>
+<script src="online.js?v=167"></script>
+<script src="social.js?v=167"></script>
 
 </body>
 </html>
