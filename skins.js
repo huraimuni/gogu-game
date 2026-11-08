@@ -10,8 +10,8 @@
     p:[
       {id:"skin_p_default",name:"기본 고구마",tier:"free"},
       {id:"skin_p_pumpkin",name:"호박고구마",tier:"free",pal:["#a8501c","#f08a24","#ffd06a"]},
-      {id:"skin_p_chestnut",name:"밤고구마",tier:"paid",pal:["#8a6a2a","#e0b55a","#fff0b8"]},
-      {id:"skin_p_violet",name:"자색고구마",tier:"paid",pal:["#2a1050","#7a3fd0","#d9b8ff"]},
+      {id:"skin_p_chestnut",name:"밤고구마",tier:"free",pal:["#8a6a2a","#e0b55a","#fff0b8"]},
+      {id:"skin_p_violet",name:"자색고구마",tier:"free",pal:["#2a1050","#7a3fd0","#d9b8ff"]},
       {id:"skin_p_gold",name:"황금고구마",tier:"paid",pal:["#8a5a00","#ffc21a","#fff7b0"],fx:"sparkle"},
       {id:"skin_p_snow",name:"눈꽃고구마",tier:"event",pal:["#5a7aa8","#b8d4f0","#ffffff"],fx:"snow"},
       {id:"skin_p_ember",name:"불타는 고구마",tier:"event",pal:["#4a0a00","#e0321a","#ffd23a"],vert:true},
@@ -46,14 +46,14 @@
       {id:"skin_b_emerald",name:"에메랄드 화로",tier:"paid",pal:["#03281a","#18b060","#b8ffd8"]},
       {id:"skin_b_galaxy",name:"은하 화로",tier:"paid",pal:["#050520","#2a1a8a","#8a6aff"],fx:"stars"},
       {id:"skin_b_candy",name:"사탕 화로",tier:"paid",pal:["#d01a50","#ff7aa8","#fff4f8"],fx:"stripes"},
-      {id:"skin_b_bronze",name:"청동 화로",tier:"paid",pal:["#2a1a08","#8a6a3a","#e0c890"]},
+      {id:"skin_b_bronze",name:"청동 화로",tier:"free",pal:["#2a1a08","#8a6a3a","#e0c890"]},
       {id:"skin_b_aurora",name:"오로라 화로",tier:"event",pal:["#042030","#20c8a8","#c8a0ff"],fx:"aurora"},
       {id:"skin_b_prism",name:"프리즘 화로",tier:"event",rainbow:true}
     ],
     f:[
       {id:"skin_f_default",name:"기본 불꽃",tier:"free"},
       {id:"skin_f_blue",name:"푸른 불꽃",tier:"free",pal:["#0a1a6a","#2a7aff","#bfe6ff"]},
-      {id:"skin_f_purple",name:"보라 불꽃",tier:"paid",pal:["#2a0a5a","#9a3cf0","#f0c8ff"]},
+      {id:"skin_f_purple",name:"보라 불꽃",tier:"free",pal:["#2a0a5a","#9a3cf0","#f0c8ff"]},
       {id:"skin_f_pink",name:"분홍 불꽃",tier:"paid",pal:["#6a0a3a","#ff4a9a","#ffd0ea"]},
       {id:"skin_f_white",name:"백색 불꽃",tier:"paid",pal:["#6a7a90","#e8f0ff","#ffffff"],fx:"sparkle"},
       {id:"skin_f_gold",name:"황금 불꽃",tier:"paid",pal:["#7a4a00","#ffc21a","#fffbd0"]},
@@ -63,7 +63,7 @@
       {id:"skin_f_rainbow",name:"무지개 불꽃",tier:"event",rainbow:true},
       {id:"skin_f_cyan",name:"번개 불꽃",tier:"paid",pal:["#0a0a40","#ffe83a","#ffffff"],fx:"sparkle"},
       {id:"skin_f_lime",name:"먹구름 불꽃",tier:"paid",pal:["#101018","#5a5a70","#d0d0e0"]},
-      {id:"skin_f_sunset",name:"노을 불꽃",tier:"paid",pal:["#4a0a2a","#ff6a3a","#ffe08a"],vert:true},
+      {id:"skin_f_sunset",name:"노을 불꽃",tier:"free",pal:["#4a0a2a","#ff6a3a","#ffe08a"],vert:true},
       {id:"skin_f_ice",name:"서리 불꽃",tier:"paid",pal:["#2a4a7a","#8ad0ff","#ffffff"],fx:"snow"},
       {id:"skin_f_toxic",name:"독성 불꽃",tier:"paid",pal:["#1a3a00","#5ae000","#e8ff7a"]},
       {id:"skin_f_royal",name:"로열 불꽃",tier:"event",pal:["#2a0a4a","#e0a81a","#fff4c0"]},
@@ -226,17 +226,59 @@
       ".sk.lock{opacity:.55}"+
       ".sk .tg{position:absolute;top:4px;left:4px;font:700 10px var(--f-body);padding:1px 6px;border-radius:999px;background:#e6ebf3;color:var(--sheet-muted)}"+
       ".sk .tg.paid{background:#fff0c8;color:#8a5a00}.sk .tg.event{background:#e8dcff;color:#5a2aa8}"+
+      ".skpop{position:fixed;inset:0;background:rgba(5,8,16,.6);z-index:60;display:flex;align-items:center;justify-content:center;padding:16px}"+
+      ".skbox{background:#fff;color:var(--sheet-fg);border-radius:20px;padding:16px;width:min(340px,100%);text-align:center;max-height:92vh;overflow:auto}"+
+      ".skh{display:flex;align-items:center;justify-content:center;gap:8px;font-size:17px;margin-bottom:6px}.skh .tg{position:static}"+
+      ".skbox img{width:min(220px,70vw);aspect-ratio:1;image-rendering:pixelated;background:var(--row);border-radius:16px;display:block;margin:6px auto}"+
+      ".sknm{font:700 12px var(--f-body);color:var(--sheet-muted);text-align:center}"+
+      ".skmsg{margin:10px 0 12px;font-size:14px}.skrow{display:flex;gap:8px;justify-content:center}.skrow .cbtn{flex:1}.skrow .cbtn:disabled{opacity:.5}"+
       ".sk small{display:block;font-weight:500;color:var(--sheet-muted);margin-top:2px}";
     document.head.appendChild(s);
   }
+
+  /* ---------- 미리보기 팝업: 누르면 내 조합으로 어떻게 보이는지 먼저 보여준다 ---------- */
+  var PV={};   // 미리보기로 고른 스킨 (칸 → id). 장착하지 않아도 위쪽 큰 그림에 반영돼요
+  function combo(extra){var e=equipped(),o={p:e.p,b:e.b,f:e.f},k;for(k in PV)o[k]=PV[k];if(extra)for(k in extra)o[k]=extra[k];return o}
+  function comboNames(o){return SLOTS.map(function(sl){var k=BY[o[sl[0]]];return sl[1]+" "+(k?k.name:"")}).join(" · ")}
+  function closePop(){var x=document.getElementById("skpop");if(x)x.parentNode.removeChild(x)}
+  function equip(k){var s=G.state();s.skin=Object.assign({},s.skin||{});s.skin[k.slot]=k.id;delete PV[k.slot];G.save();apply();G.refresh()}
+  function skinPopup(k){
+    var el=G.el;closePop();PV[k.slot]=k.id;
+    var has=owned(k.id),on=equipped()[k.slot]===k.id,isOwner=!!(G.isOwner&&G.isOwner());
+    var ov=el("div","skpop");ov.id="skpop";
+    ov.addEventListener("click",function(e){if(e.target===ov){closePop();G.refresh()}});
+    var bx=el("div","skbox");ov.appendChild(bx);
+    var h=el("div","skh");h.appendChild(el("b",null,k.name));h.appendChild(el("span","tg "+k.tier,TIER[k.tier]));bx.appendChild(h);
+    var im=el("img");im.alt="";im.src=render(combo(),0);bx.appendChild(im);
+    bx.appendChild(el("div","sknm","내 조합: "+comboNames(combo())));
+    var msg,btns=[];
+    if(on){msg="지금 사용 중인 스킨이에요.";btns.push(["사용 중",null,true])}
+    else if(has){msg="보유 중이에요. 사용하면 위 조합 그대로 적용돼요.";btns.push(["사용하기",function(){equip(k);closePop()}])}
+    else if(k.tier==="paid"){
+      if(isOwner){msg="이 스킨을 구매할까요? (대표 구매)";btns.push(["구매하기",function(){closePop();G.ownerBuy(k)}])}
+      else{msg="유료 스킨이에요. 구매는 서비스 준비 중이에요. 지금은 미리보기만 볼 수 있어요."}
+    }else{
+      msg="이벤트 스킨이에요. 신청하면 운영자가 확인해요.";
+      if(G.requestItem)btns.push(["신청하기",function(){closePop();G.requestItem(k)}]);
+    }
+    bx.appendChild(el("div","skmsg",msg));
+    var row=el("div","skrow");
+    btns.forEach(function(b){var x=el("button","cbtn",b[0]);x.type="button";if(b[2])x.disabled=true;else x.addEventListener("click",b[1]);row.appendChild(x)});
+    var cb=el("button","cbtn ghost","닫기");cb.type="button";cb.addEventListener("click",function(){closePop();G.refresh()});row.appendChild(cb);
+    bx.appendChild(row);
+    document.body.appendChild(ov);
+  }
+
   function tabSkin(p){
     var el=G.el;
     var from=G.skFrom||"more";
     var b=el("button","cbtn ghost back",from==="up"?"← 고구마 상점":from==="cash"?"← 캐쉬 상점":"← 더보기");b.type="button";
-    b.addEventListener("click",function(){G.skFrom=null;G.openSheet(from)});p.appendChild(b);
+    b.addEventListener("click",function(){PV={};G.skFrom=null;G.openSheet(from)});p.appendChild(b);
     if(!ready){p.appendChild(el("div","muted","불러오는 중…"));return}
-    var sel=equipped();
-    var pv=el("div","skprev"),pi=el("img");pi.alt="";pi.src=render(sel,0);pv.appendChild(pi);p.appendChild(pv);
+    var sel=equipped(),cm=combo(),previewing=Object.keys(PV).some(function(x){return PV[x]!==sel[x]});
+    var pv=el("div","skprev"),pi=el("img");pi.alt="";pi.src=render(cm,0);pv.appendChild(pi);p.appendChild(pv);
+    var pn=el("div","sknm",(previewing?"미리보기 중 · ":"내 조합 · ")+comboNames(cm));pn.style.marginBottom="8px";p.appendChild(pn);
+    if(previewing){var pr=el("button","cbtn ghost","미리보기 끝내기");pr.type="button";pr.style.marginBottom="8px";pr.addEventListener("click",function(){PV={};G.refresh()});p.appendChild(pr)}
     SLOTS.forEach(function(sl){
       var g=el("div","group",sl[1]);g.style.marginBottom="6px";p.appendChild(g);
       var grid=el("div","skgrid");
@@ -249,16 +291,8 @@
         c.appendChild(document.createTextNode(k.name));
         var ex=G.itemsExp&&G.itemsExp[k.id],dl=ex?Math.max(1,Math.ceil((new Date(ex)-Date.now())/86400000)):0;
         c.appendChild(el("small",null,on?"사용 중":has?(dl?dl+"일 남음":"사용하기"):(k.tier==="paid"?(G.isOwner&&G.isOwner()?"대표 구매":"준비 중"):"신청하기")));
-        c.addEventListener("click",function(){
-          if(!has){
-            if(k.tier==="paid"){if(G.isOwner&&G.isOwner())G.ownerBuy(k);else G.toast("서비스 준비 중이에요");return}
-            if(G.requestItem)G.requestItem(k);
-            else G.toast(k.tier==="paid"?"유료 스킨이에요. 지급받으면 사용할 수 있어요":"이벤트 스킨이에요. 이벤트 보상으로 받을 수 있어요");
-            return;
-          }
-          var s=G.state();s.skin=Object.assign({},s.skin||{});s.skin[sl[0]]=k.id;
-          G.save();apply();G.refresh();
-        });
+        if(PV[sl[0]]===k.id&&!on)c.style.borderStyle="dashed";
+        c.addEventListener("click",function(){skinPopup(k)});
         grid.appendChild(c);
       });
       p.appendChild(grid);
@@ -295,10 +329,7 @@
         var im=el("img");im.alt="";im.src=thumb(o,sl[0]);c.appendChild(im);
         c.appendChild(document.createTextNode(k.name));
         c.appendChild(el("small",null,has?"사용하러 가기":(G.isOwner&&G.isOwner()?"대표 구매":"준비 중")));
-        c.addEventListener("click",function(){
-          if(has){G.skFrom="cash";G.openSheet("sk");return}
-          if(G.isOwner&&G.isOwner())G.ownerBuy(k);else G.toast("서비스 준비 중이에요");
-        });
+        c.addEventListener("click",function(){skinPopup(k)});
         grid.appendChild(c);
       });
       p.appendChild(grid);
