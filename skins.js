@@ -201,16 +201,46 @@
     p.appendChild(el("div","muted","잠긴 스킨을 누르면 운영자에게 신청할 수 있어요. 이벤트 룰렛 보상으로도 받을 수 있고, 로그인하면 보유 스킨이 불러와져요."));
   }
 
+  // 상점 탭에 넣는 스킨 상품 목록 (유료 스킨). 누르면 구매 신청, 보유 중이면 스킨 화면으로
+  function products(p){
+    if(!ready)return;
+    var el=G.el,sel=equipped();
+    p.appendChild(el("div","group","스킨 상품"));
+    SLOTS.forEach(function(sl){
+      var list=CAT[sl[0]].filter(function(k){return k.tier==="paid"});
+      if(!list.length)return;
+      var g=el("div","muted",sl[1]);g.style.margin="2px 0 4px";p.appendChild(g);
+      var grid=el("div","skgrid");
+      list.forEach(function(k){
+        var has=owned(k.id);
+        var c=el("button","sk"+(has?"":" lock"));c.type="button";
+        c.appendChild(el("span","tg paid",has?"보유":"유료"));
+        var o={p:sel.p,b:sel.b,f:sel.f};o[sl[0]]=k.id;
+        var im=el("img");im.alt="";im.src=render(o,0);c.appendChild(im);
+        c.appendChild(document.createTextNode(k.name));
+        c.appendChild(el("small",null,has?"사용하러 가기":"구매 신청"));
+        c.addEventListener("click",function(){
+          if(has){G.skFrom="up";G.openSheet("sk");return}
+          if(G.requestItem)G.requestItem(k);else G.toast("서버 연결 후 신청할 수 있어요");
+        });
+        grid.appendChild(c);
+      });
+      p.appendChild(grid);
+    });
+    p.appendChild(el("div","muted","유료 스킨은 구매 신청하면 운영자가 확인 후 선물함으로 보내 드려요."));
+    p.lastChild.style.marginBottom="10px";
+  }
+
   function start(game){
     G=game;css();
     G.registerTab("sk",tabSkin);
     var a=document.querySelectorAll("#term img");
     prepare([a[0].src,a[1].src],function(){
       D.ready=true;apply();
-      if(G.currentTab()==="sk")G.refresh();
+      if(G.currentTab()==="sk"||G.currentTab()==="up")G.refresh();
     });
-    G.onItems=function(){apply();if(G.currentTab()==="sk")G.refresh()};
+    G.onItems=function(){apply();if(G.currentTab()==="sk"||G.currentTab()==="up")G.refresh()};
   }
-  window.GoguSkins={start:start,render:function(s,f){return render(s,f||0)},equipped:function(){return equipped()},ready:function(){return ready}};
+  window.GoguSkins={start:start,products:products,render:function(s,f){return render(s,f||0)},equipped:function(){return equipped()},ready:function(){return ready}};
   if(window.GoguGame)start(window.GoguGame);
 })();

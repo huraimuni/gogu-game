@@ -39,30 +39,30 @@ body{margin:0;background:var(--night1);color:var(--fg);font-family:var(--f-body)
 .strip a{color:#fff;font-weight:700;text-decoration:underline}
 .top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px}
 .title{font:400 19px var(--f-display);letter-spacing:.03em;text-align:center;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.sq{width:56px;display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:0;color:var(--fg);font:700 11px var(--f-body);cursor:pointer;padding:0}
+.sq{width:52px;display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:0;color:var(--fg);font:700 11px var(--f-body);cursor:pointer;padding:0}
 .sq .b{width:48px;height:48px;border-radius:15px;display:flex;align-items:center;justify-content:center;font:400 16px var(--f-display);
   background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);position:relative}
 .sq .b i{position:absolute;right:-4px;top:-4px;min-width:18px;height:18px;border-radius:9px;background:var(--red);color:#fff;font:700 11px/18px var(--f-body);font-style:normal;text-align:center;padding:0 4px}
 .sq:focus-visible,.cp:focus-visible,.term:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
-.pills{display:flex;justify-content:center;gap:8px;margin-top:10px}
-.pill{background:#fff;color:var(--sheet-fg);border-radius:999px;padding:7px 15px;font:700 14px var(--f-body);font-variant-numeric:tabular-nums}
-.total{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:14px}
-.total img{width:44px;height:44px;image-rendering:pixelated;flex:none}
-.total .big{font:400 clamp(28px,9.5vw,42px) var(--f-display);font-variant-numeric:tabular-nums;text-shadow:0 2px 10px rgba(0,0,0,.5);min-width:0;overflow-wrap:anywhere}
-.rates{text-align:center;margin-top:8px;font:700 15px var(--f-body);font-variant-numeric:tabular-nums;text-shadow:0 1px 6px rgba(0,0,0,.6)}
+.pills{display:flex;justify-content:center;gap:6px;margin-top:6px}
+.pill{background:#fff;color:var(--sheet-fg);border-radius:999px;padding:4px 11px;font:700 12px var(--f-body);font-variant-numeric:tabular-nums}
+.total{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:6px}
+.total img{width:30px;height:30px;image-rendering:pixelated;flex:none}
+.total .big{font:400 clamp(20px,6.5vw,28px) var(--f-display);font-variant-numeric:tabular-nums;text-shadow:0 2px 10px rgba(0,0,0,.5);min-width:0;overflow-wrap:anywhere}
+.rates{text-align:center;margin-top:3px;font:700 12px var(--f-body);font-variant-numeric:tabular-nums;text-shadow:0 1px 6px rgba(0,0,0,.6)}
 .rates div b{font-weight:700}
 .rates .s b{color:#ffd9a8}.rates .c b{color:#bfe9cf}
 .rates .x{color:var(--gold);margin-left:6px}
-.stage{position:relative;flex:1;display:flex;align-items:center;justify-content:center;min-height:280px}
+.stage{position:relative;flex:1;display:flex;align-items:center;justify-content:center;min-height:340px}
 .term{position:relative;display:grid;border:0;background:none;padding:0;cursor:pointer;touch-action:none;z-index:2;transition:transform .06s}
-.term img{grid-area:1/1;display:block;width:min(300px,74vw);aspect-ratio:1;image-rendering:pixelated;filter:drop-shadow(0 16px 14px rgba(0,0,0,.45));pointer-events:none}
+.term img{grid-area:1/1;display:block;width:min(400px,96vw);aspect-ratio:1;image-rendering:pixelated;filter:drop-shadow(0 16px 14px rgba(0,0,0,.45));pointer-events:none}
 .term:active,.term.hit{transform:scale(.96)}
 .term .f1{animation:fa .5s steps(1) infinite}
 .term .f2{animation:fb .5s steps(1) infinite}
 @keyframes fa{0%{opacity:1}50%{opacity:0}}
 @keyframes fb{0%{opacity:0}50%{opacity:1}}
 
-.heat{position:absolute;left:50%;top:50%;width:min(300px,74vw);aspect-ratio:1;transform:translate(-50%,-50%);z-index:1;pointer-events:none}
+.heat{position:absolute;left:50%;top:50%;width:min(400px,96vw);aspect-ratio:1;transform:translate(-50%,-50%);z-index:1;pointer-events:none}
 .heat::before{content:"";position:absolute;left:8%;right:8%;bottom:-4%;height:46%;border-radius:50%;
   background:radial-gradient(ellipse at 50% 70%,rgba(var(--fa),.55) 0%,rgba(var(--fb),.22) 45%,rgba(var(--fb),0) 72%);opacity:.35;transition:opacity .4s}
 .heat .sm{position:absolute;left:var(--x);top:36%;width:34%;aspect-ratio:1;border-radius:50%;opacity:0;filter:blur(7px);
@@ -205,7 +205,7 @@ body.boost .term .f2{animation-duration:.2s}
   <div class="top">
     <button class="sq" id="openMis" type="button"><span class="b">미션<i id="misBadge" hidden>0</i></span></button>
     <div class="title">고구마 굽기</div>
-    <button class="sq" id="openPts" type="button"><span class="b">샵</span></button>
+    <button class="sq" id="openPts" type="button"><span class="b">포인트</span></button>
   </div>
 
   <div class="pills">
@@ -434,6 +434,7 @@ body.boost .term .f2{animation-duration:.2s}
       var sl=el("div");sl.appendChild(document.createTextNode("내 스킨 보기"));sl.appendChild(el("small",null,"스킨 바꾸기 · 자랑 이미지 공유"));
       sb.appendChild(sl);sb.appendChild(el("i",null,"›"));
       sb.addEventListener("click",function(){window.GoguGame.skFrom="up";openSheet("sk")});p.appendChild(sb);
+      if(window.GoguSkins&&window.GoguSkins.products)window.GoguSkins.products(p);
       [["c","터치당 수입"],["s","초당 수입 · 구매하면 자동으로 벌어요"]].forEach(function(g){
         p.appendChild(el("div","group",g[1]));
         var list=UP.filter(function(u){return u.kind===g[0]}),top=-1;
