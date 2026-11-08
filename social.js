@@ -230,6 +230,7 @@
     var i = slots.indexOf(slotKey(r.label, r.kind));
     return i < 0 ? 0 : i;
   }
+  function rawMsg(e){ var m = (e && (e.message || e.details)) || String(e || ""); return m.slice(0, 120); }
   function tabEvent(p){
     O.back(p);
     if(!U.ready){ O.offline(p); return; }
@@ -279,7 +280,7 @@
             toast(lose ? "꽝! 내일 또 도전하세요" : "당첨! " + r.label);
           }, 4400);
         });
-      }).catch(function(e){ res.className = "rlres"; res.textContent = "룰렛을 돌려 보세요!"; btn.disabled = false; toast(errMsg(e)); });
+      }).catch(function(e){ res.className = "rlres lose"; res.textContent = ""; res.appendChild(document.createTextNode("룰렛을 돌리지 못했어요")); res.appendChild(el("small", null, rawMsg(e))); btn.disabled = !!U.spun; });
     });
     rpc("gogu_roulette_odds").then(function(list){
       rows = list; odds = true; slots = wheelSlots(list); wheel.innerHTML = "";
@@ -288,7 +289,7 @@
         row.appendChild(el("span", null, r.label)); row.appendChild(el("span", "muted", r.pct + "%")); oc.appendChild(row);
       });
       build();
-    }).catch(function(){ oc.appendChild(el("div", "muted", "확률표를 불러오지 못했어요")); });
+    }).catch(function(e){ oc.appendChild(el("div", "muted", "확률표를 불러오지 못했어요: " + rawMsg(e))); });
     build();   // 확률표를 기다리지 않고 기본 돌림판을 먼저 그린다
     O.note(p, "무료 이벤트예요. 돈으로 사거나 팔 수 없고, 당첨 스킨은 기간제로 지급되고, 아주 드물게 영구 스킨도 나와요. 기간이 끝나면 기본 모습으로 돌아가요.");
     if(!U.user) O.needLogin(p);
