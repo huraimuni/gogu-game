@@ -38,6 +38,7 @@
     G.perks.offlineH = has("perk_offline24")?24:has("perk_offline12")?12:8;
     G.perks.couponMax = has("perk_coupon15")?15:10;
     G.owned = U.items.slice(); G.itemsExp = U.itemsExp||{}; if(G.onItems) G.onItems();
+    var bt=U.itemsExp&&U.itemsExp.perk_butter7; if(G.setButter)G.setButter(bt?Date.parse(bt):0);   // 7배 버터
   }
 
   function afterLoad(d){
@@ -64,6 +65,55 @@
     }
     G.refresh();
     if(window.GoguSocial)window.GoguSocial.onLoad(d);
+    afterLogin();
+  }
+
+  /* ---------- 초대 코드 · 출석 · 7배 버터 ---------- */
+  var PEND="gogu-code";
+  function pendingGet(){ try{return localStorage.getItem(PEND)}catch(e){return null} }
+  function pendingSet(v){ try{ if(v)localStorage.setItem(PEND,v); else localStorage.removeItem(PEND); }catch(e){} }
+  // 주소의 ?from=bread (붕어빵 초대) / ?ref=친구코드 를 저장해 두었다가 로그인 후 자동으로 넣어요
+  function captureInvite(){
+    try{
+      var u=new URL(location.href),from=u.searchParams.get("from"),ref=u.searchParams.get("ref"),code=null;
+      if(ref&&/^GOGU-[A-Z0-9]{4}-[A-Z0-9]{4}$/i.test(ref))code=ref.toUpperCase();
+      else if(from&&from.toLowerCase()==="bread")code="BUNGEOPPANG";
+      if(from!==null||ref!==null){
+        u.searchParams.delete("from");u.searchParams.delete("ref");
+        history.replaceState(null,"",u.pathname+(u.search||"")+u.hash);
+      }
+      if(code)pendingSet(code);
+    }catch(e){}
+  }
+  function reloadItems(){
+    return rpc("gogu_load").then(function(d){U.items=d.items||[];U.itemsExp=d.items_exp||{};U.gifts=d.gifts||0;applyItems();updateBadge();G.refresh()});
+  }
+  function butterText(m){ return m>=60?(m%60?Math.floor(m/60)+"시간 "+(m%60)+"분":(m/60)+"시간"):m+"분"; }
+  function redeem(code){
+    return rpc("gogu_redeem_code",{p_code:code}).then(function(r){
+      pendingSet(null);
+      reloadItems().catch(function(){});
+      if(r.kind==="promo"){
+        G.popup({first:true,title:r.label+" 선물 도착!",lines:(r.items||[]).map(function(n){return "· "+n+" (영구)"}).concat(["· 7배 버터 "+butterText(r.minutes)]),msg:"더보기 › 스킨에서 바꿔 보세요",btn:"좋아요"});
+      }else{
+        G.popup({first:true,title:"초대 완료!",lines:[r.inviter+"님 덕분에 시작해요","7배 버터 "+butterText(r.minutes)+" 적용됐어요"],btn:"좋아요"});
+      }
+      return r;
+    });
+  }
+  function afterLogin(){
+    rpc("gogu_checkin").then(function(r){
+      if(r&&r.claimed){
+        reloadItems().catch(function(){});
+        G.popup({title:"출석 보상",lines:["연속 "+r.streak+"일째예요"],value:"7배 버터 "+butterText(r.minutes),msg:(r.streak%7===0?"7일 연속 달성! 보너스예요":"내일도 오면 이어져요 (7일 연속이면 1시간)"),btn:"받았어요"});
+      }
+    }).catch(function(){}).then(function(){
+      var c=pendingGet();if(!c)return;
+      redeem(c).catch(function(e){
+        var m=(e&&e.message)||"";
+        if(!/fetch|network/i.test(m)){pendingSet(null);toast(m.length>40?"코드를 사용할 수 없어요":m)}
+      });
+    });
   }
 
   /* ---------- 저장 동기화 ---------- */
@@ -245,6 +295,30 @@
     G.save();sync(true);
   }
 
+  /* ---------- 친구 초대 · 코드 입력 카드 ---------- */
+  function inviteCard(p,pr){
+    var link=location.origin+location.pathname+"?ref="+pr.code;
+    var c=el("div","card");c.appendChild(el("h4",null,"친구 초대"));
+    c.appendChild(el("div","muted","친구가 내 링크로 가입하면 친구도 나도 7배 버터 30분! (친구 최대 20명)"));
+    var cnt=el("div","muted","불러오는 중…");cnt.style.margin="6px 0";c.appendChild(cnt);
+    var r=el("div","row");
+    var b1=el("button","btn","링크 복사");b1.type="button";b1.addEventListener("click",function(){copy(link)});r.appendChild(b1);
+    var b2=el("button","cbtn ghost","공유하기");b2.type="button";b2.addEventListener("click",function(){
+      var t="고구마 굽기 같이 해요! 이 링크로 들어오면 우리 둘 다 7배 버터 30분!";
+      if(navigator.share)navigator.share({title:"고구마 굽기",text:t,url:link}).catch(function(){});
+      else copy(t+" "+link);
+    });r.appendChild(b2);c.appendChild(r);
+    var h=el("div","group","초대 코드 입력");h.style.marginTop="12px";c.appendChild(h);
+    c.appendChild(el("div","muted","친구 코드(GOGU-…)나 이벤트 초대 코드를 넣어 주세요. 계정당 한 번이에요."));
+    var r2=el("div","row");r2.style.marginTop="6px";var ci=el("input");ci.placeholder="코드";ci.maxLength=30;r2.appendChild(ci);
+    var ok=el("button","btn","확인");ok.type="button";ok.addEventListener("click",function(){
+      if(!ci.value.trim())return;ok.disabled=true;
+      redeem(ci.value).then(function(){ci.value="";G.refresh()}).catch(function(e){toast(errMsg(e))}).then(function(){ok.disabled=false});
+    });r2.appendChild(ok);c.appendChild(r2);
+    p.appendChild(c);
+    rpc("gogu_referral_my").then(function(m){cnt.textContent="내가 초대한 친구 "+m.invited+" / "+m.max+"명"+(m.used?" · 초대 코드 사용함":"")}).catch(function(){cnt.textContent=""});
+  }
+
   /* ---------- 내정보 탭 ---------- */
   function tabMe(p){
     back(p);
@@ -268,6 +342,7 @@
     var r2=el("div","row");r2.appendChild(el("span","codebox",pr.code));
     var cb=el("button","cbtn ghost","복사");cb.type="button";cb.addEventListener("click",function(){copy(pr.code)});r2.appendChild(cb);
     c2.appendChild(r2);p.appendChild(c2);
+    inviteCard(p,pr);
     if(window.GoguSocial)window.GoguSocial.meExtras(p);
 
     var gbox=el("div","card");gbox.appendChild(el("h4",null,"선물함"));gbox.appendChild(el("div","muted","불러오는 중…"));p.appendChild(gbox);
@@ -334,6 +409,7 @@
   /* ---------- 시작 ---------- */
   function start(game){
     G=game;
+    captureInvite();
     G.registerTab("rk",tabRank);G.registerTab("cl",tabClan);G.registerTab("me",tabMe);G.registerTab("more",tabMore);
     if(!cfg.SUPABASE_URL||!cfg.SUPABASE_ANON_KEY||!window.supabase){return}
     try{

@@ -48,7 +48,8 @@
       {id:"skin_b_candy",name:"사탕 화로",tier:"paid",pal:["#d01a50","#ff7aa8","#fff4f8"],fx:"stripes"},
       {id:"skin_b_bronze",name:"청동 화로",tier:"free",pal:["#2a1a08","#8a6a3a","#e0c890"]},
       {id:"skin_b_aurora",name:"오로라 화로",tier:"event",pal:["#042030","#20c8a8","#c8a0ff"],fx:"aurora"},
-      {id:"skin_b_prism",name:"프리즘 화로",tier:"event",rainbow:true}
+      {id:"skin_b_prism",name:"프리즘 화로",tier:"event",rainbow:true},
+      {id:"skin_b_bungeo",name:"붕어빵 화로",tier:"event",only:"붕어빵 초대 코드 전용",pal:["#7a3a0c","#e89a2e","#ffe9a8"],fx:"bungeo"}
     ],
     f:[
       {id:"skin_f_default",name:"기본 불꽃",tier:"free"},
@@ -142,6 +143,9 @@
       case "stripes": return (((x+y)>>2)&1)?mix(c,[255,255,255],.6):c;
       case "facet": return h<.02?[255,255,255]:((((x>>2)+(y>>2))&1)?mix(c,[255,255,255],.24):mix(c,[0,0,0],.14));
       case "cracks": w=hs(x>>1,y>>1);return w<.17?[255,170+Math.round(w*300),40]:mix(c,[0,0,0],.3);
+      case "bungeo": var rw=(y/4)|0,u=(x+((rw&1)*3))%6,v=y&3,ar=[1,2,3,3,2,1][u];   // 붕어빵 비늘(∪ 모양이 어긋나게 쌓임)
+        if(v===ar)return mix(c,[90,36,6],.55);
+        return (v===ar-1&&(u===2||u===3))?mix(c,[255,244,190],.4):c;
       case "aurora": w=Math.sin(x*.17+y*.08)*.5+.5;var b=mix([40,235,150],[190,110,255],w),sh=.4+.6*t;return [b[0]*sh,b[1]*sh,b[2]*sh];
     }
     return c;
@@ -257,6 +261,8 @@
     else if(k.tier==="paid"){
       if(isOwner){msg="이 스킨을 구매할까요? (대표 구매)";btns.push(["구매하기",function(){closePop();G.ownerBuy(k)}])}
       else{msg="유료 스킨이에요. 구매는 서비스 준비 중이에요. 지금은 미리보기만 볼 수 있어요."}
+    }else if(k.only){
+      msg=k.only+"예요. 더보기 › 내정보에서 코드를 입력하면 받을 수 있어요.";
     }else{
       msg="이벤트 스킨이에요. 신청하면 운영자가 확인해요.";
       if(G.requestItem)btns.push(["신청하기",function(){closePop();G.requestItem(k)}]);
@@ -290,7 +296,7 @@
         var im=el("img");im.alt="";im.src=thumb(o,sl[0]);c.appendChild(im);
         c.appendChild(document.createTextNode(k.name));
         var ex=G.itemsExp&&G.itemsExp[k.id],dl=ex?Math.max(1,Math.ceil((new Date(ex)-Date.now())/86400000)):0;
-        c.appendChild(el("small",null,on?"사용 중":has?(dl?dl+"일 남음":"사용하기"):(k.tier==="paid"?(G.isOwner&&G.isOwner()?"대표 구매":"준비 중"):"신청하기")));
+        c.appendChild(el("small",null,on?"사용 중":has?(dl?dl+"일 남음":"사용하기"):(k.only?"초대 전용":k.tier==="paid"?(G.isOwner&&G.isOwner()?"대표 구매":"준비 중"):"신청하기")));
         if(PV[sl[0]]===k.id&&!on)c.style.borderStyle="dashed";
         c.addEventListener("click",function(){skinPopup(k)});
         grid.appendChild(c);

@@ -111,6 +111,13 @@ button.danger{background:var(--red)}.wrap2{flex-wrap:wrap}.wrap2>*{flex:1 1 45%}
         <div class="muted">하루에 한 번 덮어쓰기 직전 상태가 최근 7일 보관돼요. 날짜를 누르면 그 상태로 되돌려요. 유저가 게임을 다시 열면 반영돼요.</div>
       </div>
       <div class="card">
+        <label>초대 코드 · 친구 초대 현황</label>
+        <div class="row"><button id="pmView" class="ghost" type="button">불러오기</button></div>
+        <div id="pmRes" style="margin-top:8px"></div>
+        <div id="pmList" class="list" style="margin-top:10px"></div>
+        <div class="muted">붕어빵 코드(BUNGEOPPANG · 붕어빵)를 쓴 사람, 친구 초대 총 건수와 많이 초대한 사람 순위가 보여요.</div>
+      </div>
+      <div class="card">
         <label for="rwSeason">시즌 종료 보상 (시즌 번호)</label>
         <input id="rwSeason" type="number" min="0" placeholder="예: 1">
         <div class="row"><button id="rwView" class="ghost" type="button">미리보기</button><button id="rwGo" type="button">지급하기</button></div>
@@ -300,6 +307,14 @@ button.danger{background:var(--red)}.wrap2{flex-wrap:wrap}.wrap2>*{flex:1 1 45%}
       out("rwRes",commit?("지급했어요 (선물 "+r.gifts+"건, 칭호 "+(r.winners||[]).length+"개)"):((r.winners||[]).length?"미리보기예요. 아직 지급하지 않았어요":"이 시즌에 대상자가 없어요"),"ok");
     }).catch(function(e){out("rwRes","실패: "+em(e),"bad")});
   }
+  $("pmView").addEventListener("click",function(){
+    rpc("gogu_admin_promo_stats").then(function(r){
+      var w=$("pmList");w.innerHTML="";
+      (r.promo||[]).forEach(function(x){var d=mk("div");d.appendChild(mk("span",null,"[코드] "+x.nick+" · "+new Date(x.at).toLocaleString("ko-KR")));w.appendChild(d)});
+      (r.top_inviters||[]).forEach(function(x){var d=mk("div");d.appendChild(mk("span",null,"[초대왕] "+x.nick+" · "+x.n+"명"));w.appendChild(d)});
+      out("pmRes","붕어빵 코드 사용 "+(r.promo||[]).length+"명 · 친구 초대 "+r.referrals+"건","ok");
+    }).catch(function(e){out("pmRes","실패: "+em(e),"bad")});
+  });
   $("rwView").addEventListener("click",function(){reward(false)});
   $("rwGo").addEventListener("click",function(){reward(true)});
   $("rsList").addEventListener("click",function(){

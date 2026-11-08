@@ -225,7 +225,7 @@ html,body{touch-action:manipulation}
 
   <div class="top">
     <button class="sq" id="openMis" type="button"><span class="b">미션<i id="misBadge" hidden>0</i></span></button>
-    <div class="title"><b>고구마 굽기</b><small>방치형 군고구마 게임 · v1.43</small></div>
+    <div class="title"><b>고구마 굽기</b><small>방치형 군고구마 게임 · v1.44</small></div>
     <button class="sq" id="openPts" type="button"><span class="b">포인트</span></button>
   </div>
 
@@ -280,7 +280,7 @@ html,body{touch-action:manipulation}
   <div class="sp-in">
     <h2>고구마 굽기</h2>
     <div class="sp-art"><img class="f1" id="spA" alt=""><img class="f2" id="spB" alt=""></div>
-    <div class="sp-tag">방치형 군고구마 게임 · v1.43</div>
+    <div class="sp-tag">방치형 군고구마 게임 · v1.44</div>
     <p class="sp-msg">고구마를 터치해서 굽고,<br>화로를 키워 보세요.</p>
     <p class="sp-sub">3개월마다 새 시즌! 돈·레벨은 새로 시작하고<br>스킨과 아이템은 그대로 남아요.</p>
     <div class="sp-bar"><div></div></div>
@@ -393,7 +393,9 @@ html,body{touch-action:manipulation}
   function lvl(id){return S.lv[id]||0}
   function cost(u){return Math.ceil(u.base*Math.pow(GROW,lvl(u.id)))}
   function shopBonus(key){var b=0;SHOP.forEach(function(p){if(S.shop[p.id])b+=p[key]});return b}
-  function boosting(){return Date.now()<S.boostEnd}
+  var BUTTER=0;   // 7배 버터(서버 아이템) 만료 시각
+  function bEnd(){return Math.max(S.boostEnd||0,BUTTER)}
+  function boosting(){return Date.now()<bEnd()}
   function mult(){return boosting()?7:1}
   function rawC(){var v=1;UP.forEach(function(u){if(u.kind==="c")v+=u.gain*lvl(u.id)});return v*(1+shopBonus("c"))}
   function rawS(){var v=0;UP.forEach(function(u){if(u.kind==="s")v+=u.gain*lvl(u.id)});return v*(1+shopBonus("s"))}
@@ -539,9 +541,9 @@ html,body{touch-action:manipulation}
     var pr=cur?Math.min(1,cur.get()/cur.goal):1;
     $("dia").textContent=lv+1;$("lvb").style.width=(pr*100)+"%";$("lvt").textContent=cur?(claimable()>0?"미션 완료! 눌러서 받기":cur.nm+" "+fmt(Math.floor(Math.min(cur.get(),cur.goal)))+"/"+fmt(cur.goal)):"MAX";$("lvBtn").classList.toggle("can",claimable()>0);
     var cl=claimable(),mb=$("misBadge");mb.hidden=cl===0;mb.textContent=cl;
-    var left=S.boostEnd-Date.now();
+    var left=bEnd()-Date.now();
     $("cpN").textContent=S.coupons;
-    $("cpT").innerHTML=left>0?Math.ceil(left/1000)+"초":"화력<br>최대";
+    $("cpT").innerHTML=left>0?(left>90000?"버터<br>"+Math.ceil(left/60000)+"분":Math.ceil(left/1000)+"초"):"화력<br>최대";
     $("cp").disabled=left>0||S.coupons<1;
     if(sheetOpen){$("hm").textContent=fmt(S.money)+"원";$("hs").textContent=fmt(ps());$("hc").textContent=fmt(pc())}
   }
@@ -602,8 +604,8 @@ html,body{touch-action:manipulation}
     var dt=Math.max(0,Math.min((now-lastT)/1000,offCap()));lastT=now;
     if(dt<=0)return 0;
     var g=rawS()*dt;                                   // 쿠폰 배율은 켜져 있던 구간만 적용
-    if(S.boostEnd>now-dt*1000){
-      var bOn=Math.max(0,Math.min(S.boostEnd,now)-(now-dt*1000))/1000;
+    if(bEnd()>now-dt*1000){
+      var bOn=Math.max(0,Math.min(bEnd(),now)-(now-dt*1000))/1000;
       g+=rawS()*6*Math.min(bOn,dt);
     }
     S.money+=g;S.total+=g;
@@ -676,6 +678,7 @@ html,body{touch-action:manipulation}
   window.GoguGame={
     state:function(){return S},
     setState:function(o){S=o;lastT=Date.now();renderPanel();paintTop();paintPanel();save();if(window.GoguGame&&window.GoguGame.onItems)window.GoguGame.onItems()},
+    setButter:function(t){BUTTER=t||0;paintTop()},
     fresh:fresh,save:save,toast:toast,popup:popup,fmt:fmt,el:el,$:$,
     perks:PERK,
     registerTab:function(id,fn){ext[id]=fn},shopTabs:shopTabs,
