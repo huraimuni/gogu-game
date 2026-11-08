@@ -129,7 +129,6 @@ body.boost .term .f2{animation-duration:.2s}
 @keyframes glowin{0%,25%{opacity:0}70%,100%{opacity:1}}
 @keyframes spark{0%{opacity:0;transform:translate(0,0)}15%{opacity:1}100%{opacity:0;transform:translate(var(--dx),-70px)}}
 @keyframes steam{0%{opacity:0;transform:translate(0,0) scale(.6)}25%{opacity:.7}100%{opacity:0;transform:translate(var(--dx),-60px) scale(1.7)}}
-@media (prefers-reduced-motion:reduce){.sp-art .sp-lit{animation:none}.sp-glow,.sp-art .sk,.sp-art .st{display:none}}
 .sp-tag{font:700 14px var(--f-body);letter-spacing:.08em;color:var(--muted);border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:3px 12px}
 .sp-in h2{margin:0;font:400 clamp(44px,min(17vw,8vh),72px)/1.1 var(--f-display);letter-spacing:.02em;word-break:keep-all;background:linear-gradient(180deg,#fff4c0 10%,#ffb347 55%,#ff6a2a 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 3px 0 rgba(90,30,0,.75)) drop-shadow(0 4px 14px rgba(255,120,30,.5))}
 .sp-msg{margin:0;font:500 clamp(13px,min(4.2vw,2.3vh),18px)/1.6 var(--f-body);word-break:keep-all;color:var(--fg)}
@@ -239,7 +238,7 @@ html,body{touch-action:manipulation}
 
   <div class="top">
     <button class="sq" id="openMis" type="button"><span class="b">미션<i id="misBadge" hidden>0</i></span></button>
-    <div class="title"><b>고구마 굽기</b><small>방치형 군고구마 게임 · v1.71</small></div>
+    <div class="title"><b>고구마 굽기</b><small>방치형 군고구마 게임 · v1.72</small></div>
     <button class="sq" id="openPts" type="button"><span class="b">포인트</span></button>
   </div>
 
@@ -294,7 +293,7 @@ html,body{touch-action:manipulation}
   <div class="sp-in">
     <h2>고구마 굽기</h2>
     <div class="sp-art"><div class="sp-glow"></div><div class="sp-lit"><img class="f1" id="spA" alt=""><img class="f2" id="spB" alt=""></div><i class="sk" style="left:44%;--dx:-18px;animation-delay:0.5s"></i><i class="sk" style="left:52%;--dx:14px;animation-delay:0.7s"></i><i class="sk" style="left:48%;--dx:-6px;animation-delay:0.9s"></i><i class="sk" style="left:56%;--dx:22px;animation-delay:1.05s"></i><i class="sk" style="left:41%;--dx:-24px;animation-delay:1.2s"></i><i class="sk" style="left:50%;--dx:8px;animation-delay:1.35s"></i><i class="st" style="left:46%;--dx:-10px;animation-delay:1.2s"></i><i class="st" style="left:52%;--dx:8px;animation-delay:1.45s"></i><i class="st" style="left:49%;--dx:-4px;animation-delay:1.7s"></i><i class="st" style="left:55%;--dx:14px;animation-delay:1.95s"></i></div>
-    <div class="sp-tag">방치형 군고구마 게임 · v1.71</div>
+    <div class="sp-tag">방치형 군고구마 게임 · v1.72</div>
     <p class="sp-msg">고구마를 터치해서 굽고,<br>화로를 키워 보세요.</p>
     <p class="sp-sub">3개월마다 새 시즌! 돈·레벨은 새로 시작하고<br>스킨과 아이템은 그대로 남아요.</p>
     <div class="sp-bar"><div></div></div>
@@ -303,8 +302,8 @@ html,body{touch-action:manipulation}
 </div>
 <div class="toast" id="toast"></div>
 
-<script src="config.js?v=171"></script>
-<script src="icons.js?v=171"></script>
+<script src="config.js?v=172"></script>
+<script src="icons.js?v=172"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.js"></script>
 <script>
 (function(){
@@ -742,9 +741,9 @@ html,body{touch-action:manipulation}
   paintTop();
 })();
 </script>
-<script src="skins.js?v=171"></script>
-<script src="online.js?v=171"></script>
-<script src="social.js?v=171"></script>
+<script src="skins.js?v=172"></script>
+<script src="online.js?v=172"></script>
+<script src="social.js?v=172"></script>
 
 </body>
 </html>
