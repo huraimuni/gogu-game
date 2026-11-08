@@ -168,9 +168,14 @@
         var o={p:sel.p,b:sel.b,f:sel.f};o[sl[0]]=k.id;
         var im=el("img");im.alt="";im.src=render(o,0);c.appendChild(im);
         c.appendChild(document.createTextNode(k.name));
-        c.appendChild(el("small",null,on?"사용 중":has?"사용하기":"잠김"));
+        var ex=G.itemsExp&&G.itemsExp[k.id],dl=ex?Math.max(1,Math.ceil((new Date(ex)-Date.now())/86400000)):0;
+        c.appendChild(el("small",null,on?"사용 중":has?(dl?dl+"일 남음":"사용하기"):"신청하기"));
         c.addEventListener("click",function(){
-          if(!has){G.toast(k.tier==="paid"?"유료 스킨이에요. 지급받으면 사용할 수 있어요":"이벤트 스킨이에요. 이벤트 보상으로 받을 수 있어요");return}
+          if(!has){
+            if(G.requestItem)G.requestItem(k);
+            else G.toast(k.tier==="paid"?"유료 스킨이에요. 지급받으면 사용할 수 있어요":"이벤트 스킨이에요. 이벤트 보상으로 받을 수 있어요");
+            return;
+          }
           var s=G.state();s.skin=Object.assign({},s.skin||{});s.skin[sl[0]]=k.id;
           G.save();apply();G.refresh();
         });
@@ -178,7 +183,8 @@
       });
       p.appendChild(grid);
     });
-    p.appendChild(el("div","muted","잠긴 스킨은 운영자 지급·이벤트로 받을 수 있어요. 로그인하면 보유 스킨이 불러와져요."));
+    if(G.shareCard){var sb=el("button","cbtn","내 스킨 자랑하기 (이미지 공유)");sb.type="button";sb.style.width="100%";sb.style.marginBottom="10px";sb.addEventListener("click",function(){G.shareCard()});p.insertBefore(sb,pv.nextSibling)}
+    p.appendChild(el("div","muted","잠긴 스킨을 누르면 운영자에게 신청할 수 있어요. 이벤트 룰렛 보상으로도 받을 수 있고, 로그인하면 보유 스킨이 불러와져요."));
   }
 
   function start(game){

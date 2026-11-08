@@ -477,8 +477,8 @@ body.boost .term .f2{animation-duration:.2s}
   var sheetOpen=false;
   function openSheet(t){
     tab=t;sheetOpen=true;
-    var TT={up:"상점",sh:"포인트샵",ms:"미션",rk:"랭킹",more:"더보기",cl:"클랜",me:"내정보",sk:"스킨"};$("sTitle").textContent=TT[t]||"";
-    document.querySelectorAll(".stab button[data-t]").forEach(function(x){x.setAttribute("aria-selected",x.dataset.t===((t==="cl"||t==="me"||t==="sk")?"more":t)?"true":"false")});
+    var TT={up:"상점",sh:"포인트샵",ms:"미션",rk:"랭킹",more:"더보기",cl:"클랜",me:"내정보",sk:"스킨",ev:"이벤트",fr:"친구",rl:"규정 · 안내"};$("sTitle").textContent=TT[t]||"";
+    document.querySelectorAll(".stab button[data-t]").forEach(function(x){x.setAttribute("aria-selected",x.dataset.t===((t==="cl"||t==="me"||t==="sk"||t==="ev"||t==="fr"||t==="rl")?"more":t)?"true":"false")});
     $("sheet").classList.add("on");$("sheet").setAttribute("aria-hidden","false");$("scrim").classList.add("on");
     renderPanel();paintTop();paintPanel();
   }
@@ -575,6 +575,7 @@ body.boost .term .f2{animation-duration:.2s}
 </script>
 <script src="skins.js"></script>
 <script src="online.js"></script>
+<script src="social.js"></script>
 
 </body>
 </html>

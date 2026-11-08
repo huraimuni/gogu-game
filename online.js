@@ -3,7 +3,7 @@
 (function(){
   "use strict";
   var G, sb = null, cfg = window.GOGU_CONFIG || {};
-  var U = { ready:false, user:null, profile:null, season:0, items:[], gifts:0, loaded:false };
+  var U = { ready:false, user:null, profile:null, season:0, items:[], itemsExp:{}, gifts:0, friendIn:0, spun:false, appealOpen:false, loaded:false };
   var cache = {}, busy = {};
   var KST = 9 * 3600 * 1000;
 
@@ -37,11 +37,12 @@
     var has=function(i){return U.items.indexOf(i)>=0};
     G.perks.offlineH = has("perk_offline24")?24:has("perk_offline12")?12:8;
     G.perks.couponMax = has("perk_coupon15")?15:10;
-    G.owned = U.items.slice(); if(G.onItems) G.onItems();
+    G.owned = U.items.slice(); G.itemsExp = U.itemsExp||{}; if(G.onItems) G.onItems();
   }
 
   function afterLoad(d){
-    U.profile=d.profile; U.season=d.season; U.items=d.items||[]; U.gifts=d.gifts||0; U.loaded=true;
+    U.profile=d.profile; U.season=d.season; U.items=d.items||[]; U.itemsExp=d.items_exp||{}; U.gifts=d.gifts||0; U.loaded=true;
+    U.friendIn=d.friend_in||0; U.spun=!!d.spun_today; U.appealOpen=!!d.appeal_open;
     applyItems();
     var local=G.state(), srv=d.save;
     if(srv){
@@ -61,6 +62,7 @@
       sync(true);
     }
     G.refresh();
+    if(window.GoguSocial)window.GoguSocial.onLoad(d);
   }
 
   /* ---------- 저장 동기화 ---------- */
@@ -103,7 +105,7 @@
       .then(function(r){ if(r.error)toast("로그인을 시작할 수 없어요"); });
   }
   function logout(){
-    sb.auth.signOut().then(function(){ U.user=null;U.profile=null;U.loaded=false;U.items=[];U.gifts=0;applyItems();cache={};G.refresh();toast("로그아웃했어요"); });
+    sb.auth.signOut().then(function(){ U.user=null;U.profile=null;U.loaded=false;U.items=[];U.itemsExp={};U.gifts=0;U.friendIn=0;applyItems();cache={};G.refresh();toast("로그아웃했어요"); });
   }
   function cached(key,ttl,fn){
     var c=cache[key]; if(c&&Date.now()-c.t<ttl)return Promise.resolve(c.v);
@@ -149,7 +151,7 @@
       });
       if(RK.kind!=="cl"&&U.user&&RK.season==null){
         rpc("gogu_my_rank",{p_kind:RK.kind}).then(function(m){
-          if(m){var t=el("div","card");t.appendChild(el("div",null,"내 순위 "+m.rank+"위 · "+G.fmt(Number(m.value))));box.insertBefore(t,box.firstChild)}
+          if(m){var t=el("div","card");t.appendChild(el("div",null,m.hidden?"내 기록은 확인 중이라 랭킹에서 잠시 빠져 있어요 (내정보에서 확인)":"내 순위 "+m.rank+"위 · "+G.fmt(Number(m.value))));box.insertBefore(t,box.firstChild)}
         }).catch(function(){});
       }
     }).catch(function(e){box.innerHTML="";box.appendChild(el("div","card muted","랭킹을 불러오지 못했어요"))});
@@ -169,8 +171,11 @@
   }
   function tabMore(p){
     menuItem(p,"스킨","고구마 · 화로 · 불 꾸미기","sk");
+    menuItem(p,"이벤트","하루 한 번 무료 룰렛","ev");
+    menuItem(p,U.friendIn>0?"친구 ("+U.friendIn+")":"친구",U.friendIn>0?"받은 친구 신청이 있어요":"친구 등록 · 친구 프로필 보기 (최대 50명)","fr");
     menuItem(p,"클랜","클랜 만들기 · 가입 · 클랜원 보기","cl");
     menuItem(p,U.gifts>0?"내정보 ("+U.gifts+")":"내정보",U.gifts>0?"받을 선물이 있어요":"닉네임 · 내 코드 · 선물함 · 보유 아이템","me");
+    menuItem(p,"규정 · 안내","공정한 플레이를 위한 규칙","rl");
     var cm=el("a","menu");cm.href="https://open.kakao.com/o/p80tC5Vi";cm.target="_blank";cm.rel="noopener noreferrer";cm.style.textDecoration="none";
     var cl=el("div");cl.appendChild(document.createTextNode("커뮤니티 가기"));cl.appendChild(el("small",null,"카카오톡 오픈채팅에서 같이 이야기해요"));
     cm.appendChild(cl);cm.appendChild(el("i",null,"›"));p.appendChild(cm);
@@ -223,6 +228,19 @@
     }).catch(function(){box.innerHTML="";box.appendChild(el("div","card muted","클랜 정보를 불러오지 못했어요"))});
   }
 
+  /* ---------- 선물 받기 적용 (선물함·룰렛 공용) ---------- */
+  function applyClaim(res){
+    var s=G.state();
+    if(res.kind==="points")s.pts=(s.pts||0)+res.amount;
+    else if(res.kind==="coupon")s.coupons=Math.min(99,(s.coupons||0)+res.amount);
+    else{
+      if(U.items.indexOf(res.item_id)<0)U.items.push(res.item_id);
+      applyItems();
+      rpc("gogu_load").then(function(d){U.items=d.items||[];U.itemsExp=d.items_exp||{};applyItems();G.refresh()}).catch(function(){});
+    }
+    G.save();sync(true);
+  }
+
   /* ---------- 내정보 탭 ---------- */
   function tabMe(p){
     back(p);
@@ -240,6 +258,7 @@
     var r2=el("div","row");r2.appendChild(el("span","codebox",pr.code));
     var cb=el("button","cbtn ghost","복사");cb.type="button";cb.addEventListener("click",function(){copy(pr.code)});r2.appendChild(cb);
     c2.appendChild(r2);p.appendChild(c2);
+    if(window.GoguSocial)window.GoguSocial.meExtras(p);
 
     var gbox=el("div","card");gbox.appendChild(el("h4",null,"선물함"));gbox.appendChild(el("div","muted","불러오는 중…"));p.appendChild(gbox);
     rpc("gogu_gifts_list").then(function(list){
@@ -247,17 +266,14 @@
       if(!list||!list.length){gbox.appendChild(el("div","muted","받을 선물이 없어요"));return}
       list.forEach(function(g){
         var row=el("div","row");row.style.justifyContent="space-between";
-        var name=g.kind==="item"?(g.item_name||g.item_id):g.kind==="points"?"포인트 "+g.amount:"화력 최대 쿠폰 "+g.amount+"장";
+        var name=g.kind==="item"?(g.item_name||g.item_id)+(g.item_days?" ("+g.item_days+"일)":" (영구)"):g.kind==="points"?"포인트 "+g.amount:"화력 최대 쿠폰 "+g.amount+"장";
         var l=el("div");l.appendChild(el("div",null,name));if(g.note)l.appendChild(el("div","muted",g.note));row.appendChild(l);
         var b=el("button","btn","받기");b.type="button";
         b.addEventListener("click",function(){
           b.disabled=true;
           rpc("gogu_gift_claim",{p_id:g.id}).then(function(res){
-            var s=G.state();
-            if(res.kind==="points")s.pts=(s.pts||0)+res.amount;
-            else if(res.kind==="coupon")s.coupons=Math.min(99,(s.coupons||0)+res.amount);
-            else{ if(U.items.indexOf(res.item_id)<0)U.items.push(res.item_id); applyItems(); }
-            U.gifts=Math.max(0,U.gifts-1);G.save();sync(true);toast("선물을 받았어요!");G.refresh();updateBadge();
+            applyClaim(res);
+            U.gifts=Math.max(0,U.gifts-1);toast("선물을 받았어요!");G.refresh();updateBadge();
           }).catch(function(e){b.disabled=false;toast(errMsg(e))});
         });
         row.appendChild(b);gbox.appendChild(row);
@@ -270,7 +286,8 @@
       if(!mine.length){ib.appendChild(el("div","muted","아직 없어요"));return}
       mine.forEach(function(i){
         var row=el("div","row");row.style.justifyContent="space-between";
-        var l=el("div");l.appendChild(el("div",null,i.name));l.appendChild(el("div","muted",i.descr||""));row.appendChild(l);
+        var l=el("div");l.appendChild(el("div",null,i.name));var left=U.itemsExp&&U.itemsExp[i.id]?Math.max(1,Math.ceil((new Date(U.itemsExp[i.id])-Date.now())/86400000))+"일 남음":(i.kind==="title"||i.kind==="perk"?"영구":"");
+        l.appendChild(el("div","muted",(i.descr||"")+(left?" · "+left:"")));row.appendChild(l);
         if(i.kind==="title"){
           var on=pr.title===i.name;var b=el("button","cbtn"+(on?" ghost":""),on?"해제":"달기");b.type="button";
           b.addEventListener("click",function(){rpc("gogu_set_title",{p_item:on?null:i.id}).then(function(){pr.title=on?null:i.name;cache={};G.refresh()}).catch(function(e){toast(errMsg(e))})});row.appendChild(b);
@@ -289,7 +306,7 @@
 
   function updateBadge(){
     var b=document.getElementById("t-more");if(!b)return;
-    b.textContent=U.gifts>0?"더보기 ("+U.gifts+")":"더보기";
+    var n=(U.gifts||0)+(U.friendIn||0);b.textContent=n>0?"더보기 ("+n+")":"더보기";
   }
 
   /* ---------- 시작 ---------- */
@@ -316,6 +333,10 @@
     window.addEventListener("pagehide",function(){ sync(false) });
   }
 
-  window.GoguOnline={start:start,_state:U};
+  window.GoguOnline={start:start,_state:U,api:{
+    U:U, rpc:rpc, el:el, toast:toast, errMsg:errMsg, copy:copy, note:note, needLogin:needLogin, offline:offline,
+    back:back, menuItem:menuItem, seg:seg, applyItems:applyItems, applyClaim:applyClaim, sync:sync, updateBadge:updateBadge,
+    clearCache:function(){cache={}}, seasonEndText:seasonEndText, login:login
+  }};
   if(window.GoguGame)start(window.GoguGame);
 })();

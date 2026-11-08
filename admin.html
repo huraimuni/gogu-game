@@ -23,30 +23,85 @@ button:disabled{opacity:.5}
 .muted{color:var(--muted);font-size:13px}.ok{color:var(--green)}.bad{color:var(--red)}
 .list div{padding:6px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:8px}
 a{color:var(--gold)}
+.tabs{display:flex;gap:6px;margin-bottom:12px}.tabs button{flex:1;background:#2b3758;padding:10px 6px}.tabs button.on{background:var(--blue)}
+button.danger{background:var(--red)}.wrap2{flex-wrap:wrap}.wrap2>*{flex:1 1 45%}
+.crow{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--line);cursor:pointer}.crow input{width:auto;margin-top:4px}
+[hidden]{display:none!important}
+
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>고구마게임 운영자 · 선물 지급</h1>
+  <h1>고구마게임 운영자</h1>
   <div id="msg" class="card muted">불러오는 중…</div>
   <div id="app" hidden>
-    <div class="card">
-      <label for="codes">받는 사람 코드 (여러 명은 줄을 바꿔 붙여 넣기)</label>
-      <textarea id="codes" placeholder="GOGU-ABCD-2345"></textarea>
-      <div class="row"><button class="ghost" id="check" type="button">대상 확인</button></div>
-      <div id="who" class="list" style="margin-top:10px"></div>
+    <div class="tabs" id="tabs">
+      <button data-p="give" class="on">지급</button>
+      <button data-p="flag">제재</button>
+      <button data-p="req">신청</button>
+      <button data-p="ops" class="adm">운영자</button>
     </div>
-    <div class="card">
-      <label for="kind">선물 종류</label>
-      <select id="kind"><option value="item">아이템</option><option value="points">포인트</option><option value="coupon">화력 최대 쿠폰</option></select>
-      <div id="itemBox"><label for="item">아이템</label><select id="item"></select></div>
-      <div id="amtBox" hidden><label for="amt">수량</label><input id="amt" type="number" min="1" max="100000" value="10" inputmode="numeric"></div>
-      <label for="note">메모 (받는 사람에게 보임)</label>
-      <input id="note" maxlength="100" placeholder="예: 시즌 1 우승 보상">
-      <label for="days">받을 수 있는 기간(일, 비우면 무기한)</label>
-      <input id="days" type="number" min="1" max="365" value="30" inputmode="numeric">
-      <div class="row"><button id="give" type="button">지급하기</button></div>
-      <div id="res" style="margin-top:10px"></div>
+
+    <div id="p-give">
+      <div class="card">
+        <label for="codes">받는 사람 코드 (여러 명은 줄을 바꿔 붙여 넣기)</label>
+        <textarea id="codes" placeholder="GOGU-ABCD-2345"></textarea>
+        <div class="row"><button class="ghost" id="check" type="button">대상 확인</button></div>
+        <div id="who" class="list" style="margin-top:10px"></div>
+      </div>
+      <div class="card">
+        <label for="kind">선물 종류</label>
+        <select id="kind"><option value="item">아이템</option><option value="points">포인트</option><option value="coupon">화력 최대 쿠폰</option></select>
+        <div id="itemBox"><label for="item">아이템</label><select id="item"></select>
+          <label for="idays">아이템 사용 기간</label>
+          <select id="idays"><option value="">영구</option><option value="7">7일</option><option value="30" selected>30일</option><option value="90">90일</option></select></div>
+        <div id="amtBox" hidden><label for="amt">수량</label><input id="amt" type="number" min="1" max="100000" value="10" inputmode="numeric"></div>
+        <label for="note">메모 (받는 사람에게 보임)</label>
+        <input id="note" maxlength="100" placeholder="예: 시즌 1 우승 보상">
+        <label for="days">선물함에서 받을 수 있는 기간(일, 비우면 무기한)</label>
+        <input id="days" type="number" min="1" max="365" value="30" inputmode="numeric">
+        <div class="row"><button id="give" type="button">지급하기</button></div>
+        <div id="res" style="margin-top:10px"></div>
+        <p class="muted" id="limitNote" hidden>운영자 한도: 유료 스킨 지급 불가 · 포인트 1000 / 쿠폰 10장 이하 · 하루 30명 · 본인 제외</p>
+      </div>
+      <div class="card adm" id="logCard"><b>최근 지급 기록</b><div id="log" class="list" style="margin-top:8px"></div></div>
+    </div>
+
+    <div id="p-flag" hidden>
+      <div class="card">
+        <div class="muted">자동 검사에 걸린 계정과 이의 신청이에요. 체크 후 아래 버튼으로 일괄 처리하세요. (보류=랭킹 제외 / 해명 인정=경고 1회 후 해제 / 오탐 해제=경고 없이 해제 / 영구 제외=대표만)</div>
+        <div class="row"><button class="ghost" id="flagReload" type="button">새로고침</button></div>
+        <div id="flagList" class="list" style="margin-top:10px"></div>
+        <div class="row wrap2">
+          <button id="fHold" class="ghost" type="button">보류</button>
+          <button id="fRel" type="button">해명 인정(경고 1회)</button>
+          <button id="fClr" class="ghost" type="button">오탐 해제</button>
+          <button id="fBan" class="danger adm" type="button">영구 제외</button>
+        </div>
+        <div id="flagRes" style="margin-top:8px"></div>
+      </div>
+    </div>
+
+    <div id="p-req" hidden>
+      <div class="card">
+        <div class="muted">아이템 신청 목록이에요. 체크해서 한 번에 승인하면 선물함으로 지급돼요. (일반 운영자는 유료 스킨 승인 불가)</div>
+        <div class="row"><button class="ghost" id="reqReload" type="button">새로고침</button></div>
+        <div id="reqList" class="list" style="margin-top:10px"></div>
+        <label for="rdays">승인 시 아이템 사용 기간</label>
+        <select id="rdays"><option value="">영구</option><option value="7">7일</option><option value="30" selected>30일</option><option value="90">90일</option></select>
+        <div class="row"><button id="reqOk" type="button">승인(선물 지급)</button><button id="reqNo" class="ghost" type="button">보류</button></div>
+        <div id="reqRes" style="margin-top:8px"></div>
+      </div>
+    </div>
+
+    <div id="p-ops" hidden>
+      <div class="card">
+        <label for="opcode">운영자로 지정할 코드</label>
+        <input id="opcode" placeholder="GOGU-ABCD-2345">
+        <div class="row"><button id="opAdd" type="button">운영자 지정</button></div>
+        <div id="opRes" style="margin-top:8px"></div>
+        <div id="opList" class="list" style="margin-top:10px"></div>
+      </div>
     </div>
     <p class="muted"><a href="./">← 게임으로 돌아가기</a></p>
   </div>
@@ -57,25 +112,30 @@ a{color:var(--gold)}
 (function(){
   var $=function(i){return document.getElementById(i)};
   var cfg=window.GOGU_CONFIG||{};
-  var msg=$("msg");
+  var msg=$("msg"), isAdmin=false;
   function say(t,cls){msg.className="card "+(cls||"muted");msg.textContent=t;msg.hidden=false}
   if(!cfg.SUPABASE_URL||!cfg.SUPABASE_ANON_KEY||!window.supabase){say("서버가 아직 연결되지 않았어요. config.js를 확인하세요.","bad");return}
   var sb=window.supabase.createClient(cfg.SUPABASE_URL,cfg.SUPABASE_ANON_KEY,{auth:{storageKey:"gogu-auth",persistSession:true,detectSessionInUrl:true,flowType:"pkce"}});
   function rpc(n,a){return sb.rpc(n,a||{}).then(function(r){if(r.error)throw r.error;return r.data})}
+  function mk(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
   function parse(){return $("codes").value.split(/[\s,]+/).map(function(x){return x.trim().toUpperCase()}).filter(Boolean).filter(function(v,i,a){return a.indexOf(v)===i})}
+  function out(id,t,cls){var d=$(id);d.className=cls||"";d.textContent=t}
+  function em(e){return (e&&e.message)||String(e)}
   var TIER={free:"무료",paid:"유료",event:"이벤트"},SLOT={potato:"고구마",brazier:"화로",fire:"불"};
   function showLogin(){
     msg.className="card";msg.innerHTML="";
-    var t=document.createElement("div");t.textContent="운영자 계정으로 로그인하세요.";msg.appendChild(t);
-    var b=document.createElement("button");b.className="kakao";b.type="button";b.textContent="카카오로 로그인";b.style.marginTop="10px";
+    var t=mk("div",null,"운영자 계정으로 로그인하세요.");msg.appendChild(t);
+    var b=mk("button","kakao","카카오로 로그인");b.type="button";b.style.marginTop="10px";
     b.addEventListener("click",function(){sb.auth.signInWithOAuth({provider:"kakao",options:{redirectTo:location.origin+location.pathname,scopes:"profile_nickname"}})});
     msg.appendChild(b);
   }
   function init(session){
     if(!session){showLogin();return}
     rpc("gogu_load").then(function(d){
-      if(!d.profile.is_admin){say("운영자 권한이 없는 계정이에요. (내 코드: "+d.profile.code+")","bad");return}
+      var pr=d.profile; isAdmin=!!pr.is_admin;
+      if(!pr.is_admin&&!pr.is_op){say("운영자 권한이 없는 계정이에요. (내 코드: "+pr.code+")","bad");return}
       msg.hidden=true;$("app").hidden=false;
+      if(!isAdmin){document.querySelectorAll(".adm").forEach(function(x){x.hidden=true});$("limitNote").hidden=false}
       return rpc("gogu_items_list").then(function(items){
         var sel=$("item");sel.innerHTML="";
         items.forEach(function(i){
@@ -83,16 +143,26 @@ a{color:var(--gold)}
           var tag=i.kind==="skin"?" ["+(TIER[i.tier]||"")+" "+(SLOT[i.slot]||"")+"]":"";
           o.textContent=i.name+tag;sel.appendChild(o);
         });
+        if(isAdmin)loadLog();
       });
-    }).catch(function(e){say("불러오지 못했어요: "+(e.message||e),"bad")});
+    }).catch(function(e){say("불러오지 못했어요: "+em(e),"bad")});
   }
+  /* 탭 */
+  var loaded={};
+  $("tabs").addEventListener("click",function(ev){
+    var b=ev.target.closest("button[data-p]");if(!b||b.hidden)return;
+    document.querySelectorAll("#tabs button").forEach(function(x){x.classList.toggle("on",x===b)});
+    ["give","flag","req","ops"].forEach(function(k){$("p-"+k).hidden=(k!==b.dataset.p)});
+    if(b.dataset.p==="flag")loadFlags();if(b.dataset.p==="req")loadReqs();if(b.dataset.p==="ops")loadOps();
+  });
+
+  /* 지급 */
   $("kind").addEventListener("change",function(){var k=$("kind").value;$("itemBox").hidden=k!=="item";$("amtBox").hidden=k==="item"});
   $("check").addEventListener("click",function(){
     var codes=parse().slice(0,50),w=$("who");w.innerHTML="";
     if(!codes.length){w.textContent="코드를 입력하세요";return}
     codes.forEach(function(c){
-      var r=document.createElement("div"),a=document.createElement("span"),b=document.createElement("span");
-      a.textContent=c;b.textContent="확인 중…";r.appendChild(a);r.appendChild(b);w.appendChild(r);
+      var r=mk("div"),a=mk("span",null,c),b=mk("span",null,"확인 중…");r.appendChild(a);r.appendChild(b);w.appendChild(r);
       rpc("gogu_admin_lookup",{p_code:c}).then(function(n){b.textContent=n?n:"없는 코드";b.className=n?"ok":"bad"}).catch(function(){b.textContent="오류";b.className="bad"});
     });
   });
@@ -102,16 +172,97 @@ a{color:var(--gold)}
     var codes=parse(),kind=$("kind").value;
     if(!codes.length){$("res").textContent="코드를 입력하세요";return}
     var amt=parseInt($("amt").value,10),days=$("days").value?parseInt($("days").value,10):null;
-    var label=kind==="item"?$("item").selectedOptions[0].textContent:kind==="points"?"포인트 "+amt:"쿠폰 "+amt+"장";
+    var idays=$("idays").value?parseInt($("idays").value,10):null;
+    var label=kind==="item"?$("item").selectedOptions[0].textContent+" ("+(idays?idays+"일":"영구")+")":kind==="points"?"포인트 "+amt:"쿠폰 "+amt+"장";
     if(!confirm(codes.length+"명에게 지급할까요?\n\n"+label))return;
     sending=true;$("give").disabled=true;
-    rpc("gogu_admin_give",{p_codes:codes,p_kind:kind,p_item:kind==="item"?$("item").value:null,p_amount:kind==="item"?null:amt,p_note:$("note").value,p_days:days})
+    rpc("gogu_admin_give",{p_codes:codes,p_kind:kind,p_item:kind==="item"?$("item").value:null,p_amount:kind==="item"?null:amt,p_note:$("note").value,p_days:days,p_item_days:kind==="item"?idays:null})
       .then(function(r){
         var t=r.given+"명에게 지급했어요.";if(r.missing&&r.missing.length)t+=" 없는 코드: "+r.missing.join(", ");
-        var d=$("res");d.className=r.missing&&r.missing.length?"bad":"ok";d.textContent=t;
-      }).catch(function(e){var d=$("res");d.className="bad";d.textContent="실패: "+(e.message||e)})
+        out("res",t,r.missing&&r.missing.length?"bad":"ok");if(isAdmin)loadLog();
+      }).catch(function(e){out("res","실패: "+em(e),"bad")})
       .then(function(){sending=false;$("give").disabled=false});
   });
+  function fmtT(t){var d=new Date(t);return (d.getMonth()+1)+"/"+d.getDate()+" "+("0"+d.getHours()).slice(-2)+":"+("0"+d.getMinutes()).slice(-2)}
+  function loadLog(){
+    rpc("gogu_admin_log",{p_limit:30}).then(function(rows){
+      var w=$("log");w.innerHTML="";
+      if(!rows.length){w.textContent="기록이 없어요";return}
+      rows.forEach(function(r){
+        var what=r.kind==="item"?(r.item||"아이템")+(r.item_days?" "+r.item_days+"일":" 영구"):r.kind==="points"?"포인트 "+r.amount:"쿠폰 "+r.amount;
+        var d=mk("div");d.appendChild(mk("span",null,fmtT(r.at)+" "+(r.by_nick||"?")+" → "+(r.to_nick||"?")));d.appendChild(mk("span","muted",what+(r.claimed?"":" (미수령)")));w.appendChild(d);
+      });
+    }).catch(function(){});
+  }
+
+  /* 체크 목록 도우미 */
+  function checkRow(w,val,title,sub,extra){
+    var r=mk("label","crow");var cb=document.createElement("input");cb.type="checkbox";cb.value=val;r.appendChild(cb);
+    var d=mk("div");d.appendChild(mk("div",null,title));if(sub)d.appendChild(mk("div","muted",sub));if(extra)d.appendChild(mk("div","muted",extra));r.appendChild(d);w.appendChild(r);
+  }
+  function checked(w){return [].slice.call(w.querySelectorAll("input:checked")).map(function(x){return x.value})}
+
+  /* 제재 */
+  var STX={hold:"보류",warned:"경고 1회",banned:"영구 제외",ok:"정상"};
+  function loadFlags(){
+    var w=$("flagList");w.textContent="불러오는 중…";
+    rpc("gogu_admin_flagged").then(function(rows){
+      w.innerHTML="";if(!rows.length){w.textContent="의심·제재 계정이 없어요";return}
+      rows.forEach(function(r){
+        var sub=(STX[r.state]||r.state)+(r.note?" · "+r.note:"")+" · 규칙 구간 "+r.sus+" · 최장 연속 "+r.max_streak+"구간"+(r.save_flags>=3?" · 서버검증 이상 "+r.save_flags:"");
+        checkRow(w,r.code,r.nickname+" ("+r.code+")",sub,r.appeal?"이의 신청: "+r.appeal:null);
+      });
+    }).catch(function(e){w.textContent="불러오지 못했어요: "+em(e)});
+  }
+  $("flagReload").addEventListener("click",loadFlags);
+  function sanction(action,label){
+    var codes=checked($("flagList"));if(!codes.length){out("flagRes","대상을 체크하세요","bad");return}
+    var note=null;if(action==="hold"||action==="ban"){note=prompt("메모(선택)","")||null}
+    if(!confirm(codes.length+"명을 '"+label+"' 처리할까요?"))return;
+    rpc("gogu_admin_sanction",{p_codes:codes,p_action:action,p_note:note}).then(function(r){out("flagRes",r.done+"명 처리했어요"+(r.skipped?" (건너뜀 "+r.skipped+")":""),"ok");loadFlags()})
+      .catch(function(e){out("flagRes","실패: "+em(e),"bad")});
+  }
+  $("fHold").addEventListener("click",function(){sanction("hold","보류")});
+  $("fRel").addEventListener("click",function(){sanction("release","해명 인정 · 경고 1회")});
+  $("fClr").addEventListener("click",function(){sanction("clear","오탐 해제")});
+  $("fBan").addEventListener("click",function(){sanction("ban","영구 제외")});
+
+  /* 신청 */
+  function loadReqs(){
+    var w=$("reqList");w.textContent="불러오는 중…";
+    rpc("gogu_admin_requests").then(function(rows){
+      w.innerHTML="";if(!rows.length){w.textContent="대기 중인 신청이 없어요";return}
+      rows.forEach(function(r){checkRow(w,r.id,r.nickname+" → "+r.item_name+" ["+(TIER[r.tier]||"")+"]",fmtT(r.created_at),r.note?"사유: "+r.note:null)});
+    }).catch(function(e){w.textContent="불러오지 못했어요: "+em(e)});
+  }
+  $("reqReload").addEventListener("click",loadReqs);
+  function resolve(ok){
+    var ids=checked($("reqList"));if(!ids.length){out("reqRes","대상을 체크하세요","bad");return}
+    var d=$("rdays").value?parseInt($("rdays").value,10):null;
+    if(!confirm(ids.length+"건을 "+(ok?"승인(지급)":"보류")+"할까요?"))return;
+    rpc("gogu_admin_requests_resolve",{p_ids:ids,p_approve:ok,p_item_days:ok?d:null}).then(function(r){out("reqRes",r.done+"건 처리"+(r.skipped?" (건너뜀 "+r.skipped+": 유료 스킨·한도·본인 신청)":""),"ok");loadReqs()})
+      .catch(function(e){out("reqRes","실패: "+em(e),"bad")});
+  }
+  $("reqOk").addEventListener("click",function(){resolve(true)});
+  $("reqNo").addEventListener("click",function(){resolve(false)});
+
+  /* 운영자 관리 */
+  function loadOps(){
+    rpc("gogu_admin_ops").then(function(rows){
+      var w=$("opList");w.innerHTML="";
+      rows.forEach(function(r){
+        var d=mk("div");d.appendChild(mk("span",null,r.nickname+" ("+r.code+")"+(r.is_admin?" · 대표":"")));
+        if(!r.is_admin){var b=mk("button","ghost","해제");b.type="button";b.addEventListener("click",function(){setOp(r.code,false)});d.appendChild(b)}
+        w.appendChild(d);
+      });
+    }).catch(function(){});
+  }
+  function setOp(code,on){
+    rpc("gogu_admin_set_op",{p_code:code,p_on:on}).then(function(n){out("opRes",n+"님을 "+(on?"운영자로 지정했어요":"운영자에서 해제했어요"),"ok");loadOps()})
+      .catch(function(e){out("opRes","실패: "+em(e),"bad")});
+  }
+  $("opAdd").addEventListener("click",function(){var c=$("opcode").value.trim().toUpperCase();if(c)setOp(c,true)});
+
   sb.auth.getSession().then(function(r){init(r.data&&r.data.session)});
 })();
 </script>
