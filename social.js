@@ -206,8 +206,8 @@
       "body .rlbox{position:relative;width:min(296px,78vw);aspect-ratio:1;margin:14px auto 16px}"+
       "body .rlwheel{position:absolute;inset:0;transform:rotate(0deg)}"+
       "body .rlwheel canvas{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated}"+
-      "body .rlwheel span{position:absolute;left:50%;top:50%;width:44%;transform-origin:0 50%;font:700 12px var(--f-body);color:#fff;text-align:right;line-height:1.15;"+
-        "text-shadow:-1px 0 0 #0b0719,1px 0 0 #0b0719,0 -1px 0 #0b0719,0 1px 0 #0b0719,1px 1px 0 #0b0719,-1px -1px 0 #0b0719;padding-right:8px;box-sizing:border-box;word-break:keep-all}"+
+      "body .rlwheel span{position:absolute;left:50%;top:50%;width:44%;transform-origin:0 50%;font:700 12px var(--f-body);color:#fff;text-align:center;line-height:1.15;white-space:pre-line;padding:0 4px 0 7%;"+
+        "text-shadow:-1px 0 0 #0b0719,1px 0 0 #0b0719,0 -1px 0 #0b0719,0 1px 0 #0b0719,1px 1px 0 #0b0719,-1px -1px 0 #0b0719;box-sizing:border-box;word-break:keep-all}"+
       "body .rlhub{display:none}"+
       "body .rlpin{position:absolute;left:50%;top:-14px;width:36px;height:36px;margin-left:-18px;z-index:3}"+
       "body .rlpin canvas{width:100%;height:100%;image-rendering:pixelated;display:block}"+
@@ -302,10 +302,11 @@
       var n = slots.length, seg = 360 / n;
       wheel.appendChild(drawPxWheel(n));
       slots.forEach(function(lab, i){
-        var t = el("span", null, lab.replace("화력 최대 ", ""));
+        var SUB = {"유료 스킨": "\n(7·30·90일)", "이벤트 스킨": "\n(7일~영구)", "선정 스킨": "\n(영구)"};
+        var t = el("span", null, lab.replace("화력 최대 ", "") + (SUB[lab] || ""));
         var th = i * seg + seg / 2 - 90, left = ((th % 360) + 360) % 360;
         if(left > 90 && left < 270){   // 왼쪽 칸은 글자가 뒤집히지 않게 반대쪽에서 시작
-          t.style.cssText = "transform-origin:100% 50%;margin-left:-44%;text-align:left;padding:0 0 0 8px;transform:translateY(-50%) rotate(" + (th + 180) + "deg)";
+          t.style.cssText = "transform-origin:100% 50%;margin-left:-44%;padding:0 7% 0 4px;transform:translateY(-50%) rotate(" + (th + 180) + "deg)";
         } else {
           t.style.transform = "translateY(-50%) rotate(" + th + "deg)";
         }
