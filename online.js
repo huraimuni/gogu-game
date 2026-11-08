@@ -224,7 +224,7 @@
       });
       if(RK.kind!=="cl"&&U.user&&RK.season==null){
         rpc("gogu_my_rank",{p_kind:RK.kind}).then(function(m){
-          if(m){var t=el("div","card");t.appendChild(el("div",null,m.hidden?"내 기록은 확인 중이라 랭킹에서 잠시 빠져 있어요 (내정보에서 확인)":"내 순위 "+m.rank+"위 · "+G.fmt(Number(m.value))));box.insertBefore(t,box.firstChild)}
+          if(m){var t=el("div","card");t.appendChild(el("div",null,m.admin?"운영자 계정은 랭킹에 반영되지 않아요":m.hidden?"내 기록은 확인 중이라 랭킹에서 잠시 빠져 있어요 (내정보에서 확인)":"내 순위 "+m.rank+"위 · "+G.fmt(Number(m.value))));box.insertBefore(t,box.firstChild)}
         }).catch(function(){});
       }
     }).catch(function(e){box.innerHTML="";box.appendChild(el("div","card muted","랭킹을 불러오지 못했어요"))});

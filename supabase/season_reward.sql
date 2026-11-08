@@ -1,7 +1,7 @@
 -- 시즌 종료 보상: 초당·터치당 각각 상위 3명
 --  · 칭호(영구, 시즌마다 쌓임): "시즌N 초당 1위" 처럼 시즌별 칭호를 새로 만들어 지급
 --  · 선물(30일): 오프라인 적립 24시간 + 쿠폰 보관 +5, 1위는 황금 스킨(초당=황금 화로, 터치당=황금고구마) 30일 추가
---  · 매크로 의심·제외 계정(ok/warned 가 아닌 계정)은 제외
+--  · 매크로 의심·제외 계정(ok/warned 가 아닌 계정)과 대표 운영자 계정은 제외
 --  · 같은 시즌은 한 번만 지급(두 번 눌러도 중복 지급 안 됨)
 -- 대표 운영자만 실행 가능. p_commit=false 면 미리보기만 하고 아무것도 바꾸지 않음.
 create or replace function public.gogu_admin_season_reward(p_season int, p_commit boolean default false) returns jsonb
@@ -29,7 +29,7 @@ begin
                row_number() over (order by case when k = 'ps' then rec.best_ps else rec.best_pc end desc, rec.updated_at asc) as rn
         from public.gogu_records rec
         join public.gogu_profiles p on p.id = rec.user_id
-        where rec.season = p_season and p.flag_state in ('ok','warned')
+        where rec.season = p_season and p.flag_state in ('ok','warned') and not p.is_admin
           and (case when k = 'pc' then rec.best_pc > 1 else rec.best_ps > 0 end)
       ) x where x.rn <= 3 order by x.rn
     loop
