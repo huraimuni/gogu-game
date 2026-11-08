@@ -176,15 +176,22 @@
     return (cache[key]=c.toDataURL("image/png"));
   }
 
-  // 목록용 작은 그림: 고구마/화로/불 중 해당 부분만 잘라서 크게 보여준다
+  // 목록용 작은 그림: 고구마/불은 그 부분만, 화로는 불이 들어간 채로 잘라서 크게 보여준다 (가로로 긴 고구마도 꽉 차게)
   function thumb(o,slot){
     var key="T|"+o.p+"|"+o.b+"|"+o.f+"|"+slot;if(rcache[key])return rcache[key];
     render(o,0);
     var src=canv[o.p+"|"+o.b+"|"+o.f+"|0"];
     var k=slot==="p"?1:slot==="b"?2:3,bb=BB[k];
-    var bw=bb[2]-bb[0]+1,bh=bb[3]-bb[1]+1,side=Math.max(bw,bh)+4;
-    var c=document.createElement("canvas");c.width=c.height=side;
-    c.getContext("2d").drawImage(src,bb[0],bb[1],bw,bh,Math.floor((side-bw)/2),Math.floor((side-bh)/2),bw,bh);
+    var bw=bb[2]-bb[0]+1,bh=bb[3]-bb[1]+1,pad=2;
+    var c=document.createElement("canvas");c.width=bw+pad*2;c.height=bh+pad*2;
+    var x=c.getContext("2d");x.drawImage(src,bb[0],bb[1],bw,bh,pad,pad,bw,bh);
+    if(slot!=="b"){   // 고구마·불 칸은 해당 픽셀만 남김
+      var d=x.getImageData(0,0,c.width,c.height),C=cls[0];
+      for(var yy=0;yy<bh;yy++)for(var xx=0;xx<bw;xx++){
+        if(C[(bb[1]+yy)*W+bb[0]+xx]!==k){d.data[((yy+pad)*c.width+xx+pad)*4+3]=0}
+      }
+      x.putImageData(d,0,0);
+    }
     return (rcache[key]=c.toDataURL("image/png"));
   }
 
@@ -225,7 +232,7 @@
       ".skprev img{width:120px;height:120px;image-rendering:pixelated}"+
       ".skgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}"+
       ".sk{position:relative;border:2px solid var(--line);background:#fff;border-radius:14px;padding:6px 4px 8px;text-align:center;cursor:pointer;font:700 12px var(--f-body);color:var(--sheet-fg)}"+
-      ".sk img{width:64px;height:64px;image-rendering:pixelated;display:block;margin:0 auto 4px}"+
+      ".sk img{width:100%;height:68px;object-fit:contain;box-sizing:border-box;padding:6px;background:#1b1438;border-radius:10px;image-rendering:pixelated;display:block;margin:12px auto 6px}"+
       ".sk[aria-pressed=\"true\"]{border-color:var(--blue);background:#eef4ff}"+
       ".sk.lock{opacity:.55}"+
       ".sk .tg{position:absolute;top:4px;left:4px;font:700 10px var(--f-body);padding:1px 6px;border-radius:999px;background:#e6ebf3;color:var(--sheet-muted)}"+
