@@ -199,15 +199,20 @@
       "@keyframes rlpop{0%{transform:scale(.6);opacity:0}100%{transform:none;opacity:1}}";
     document.head.appendChild(st);
   }
-  // 서버가 돌려준 결과가 상품표의 몇 번째 칸인지 찾는다
-  function wheelIndex(rows, r){
-    var i, lab = r.label || "";
-    for(i = 0; i < rows.length; i++) if(rows[i].label === lab) return i;
-    if(r.kind === "event_skin"){
-      var m = /\((\d+)일\)/.exec(lab), d = m ? m[1] : "";
-      for(i = 0; i < rows.length; i++) if(rows[i].label.indexOf("스킨") >= 0 && rows[i].label.indexOf("(" + d + "일") >= 0) return i;
-    }
-    return 0;
+  // 돌림판 칸: 스킨 상품은 종류별로 한 칸으로 묶어서 보여준다
+  function slotKey(label, kind){
+    if(kind === "paid_skin" || (!kind && label.indexOf("유료 스킨") >= 0)) return "유료 스킨";
+    if(kind === "event_skin" || (!kind && label.indexOf("이벤트 스킨") >= 0)) return "이벤트 스킨";
+    return label;
+  }
+  function wheelSlots(rows){
+    var out = [];
+    rows.forEach(function(r){ var k = slotKey(r.label); if(out.indexOf(k) < 0) out.push(k); });
+    return out;
+  }
+  function wheelIndex(slots, r){
+    var i = slots.indexOf(slotKey(r.label, r.kind));
+    return i < 0 ? 0 : i;
   }
   function tabEvent(p){
     O.back(p);
@@ -221,12 +226,12 @@
     btn.disabled = true; c.appendChild(btn); p.appendChild(c);
     var oc = el("div", "card"); oc.appendChild(el("h4", null, "당첨 확률")); p.appendChild(oc);
 
-    var rows = null, rot = 0;
+    var rows = null, slots = null, rot = 0;
     function build(){
-      var n = rows.length, seg = 360 / n, grad = [];
-      rows.forEach(function(r, i){
+      var n = slots.length, seg = 360 / n, grad = [];
+      slots.forEach(function(lab, i){
         grad.push(WHEEL_COLORS[i % WHEEL_COLORS.length] + " " + (i * seg) + "deg " + ((i + 1) * seg) + "deg");
-        var t = el("span", null, r.label.replace("화력 최대 ", "").replace("이벤트 ", "").replace(", 무작위", ""));
+        var t = el("span", null, lab.replace("화력 최대 ", ""));
         t.style.transform = "translateY(-50%) rotate(" + (i * seg + seg / 2 - 90) + "deg)";
         wheel.appendChild(t);
       });
@@ -239,7 +244,7 @@
       btn.disabled = true; res.className = "rlres"; res.textContent = "룰렛이 돌아가요…";
       rpc("gogu_roulette_spin").then(function(r){
         return rpc("gogu_gift_claim", { p_id: r.gift_id }).then(function(cl){
-          var n = rows.length, seg = 360 / n, idx = wheelIndex(rows, r);
+          var n = slots.length, seg = 360 / n, idx = wheelIndex(slots, r);
           // 칸의 가운데가 위쪽 바늘에 오도록 여러 바퀴 돌린 뒤 멈춘다
           var target = 360 * 6 + (360 - (idx * seg + seg / 2)) + (Math.random() * seg * 0.5 - seg * 0.25);
           rot = Math.ceil(rot / 360) * 360 + target;
@@ -258,14 +263,14 @@
       }).catch(function(e){ res.className = "rlres"; res.textContent = "룰렛을 돌려 보세요!"; btn.disabled = false; toast(errMsg(e)); });
     });
     rpc("gogu_roulette_odds").then(function(list){
-      rows = list;
+      rows = list; slots = wheelSlots(list);
       list.forEach(function(r){
         var row = el("div", "row"); row.style.justifyContent = "space-between";
         row.appendChild(el("span", null, r.label)); row.appendChild(el("span", "muted", r.pct + "%")); oc.appendChild(row);
       });
       build();
     }).catch(function(){ oc.appendChild(el("div", "muted", "불러오지 못했어요")); });
-    O.note(p, "무료 이벤트예요. 돈으로 사거나 팔 수 없고, 당첨 스킨은 기간제(7일·30일)로 지급돼요. 기간이 끝나면 기본 모습으로 돌아가요.");
+    O.note(p, "무료 이벤트예요. 돈으로 사거나 팔 수 없고, 당첨 스킨은 기간제로 지급되고, 아주 드물게 영구 스킨도 나와요. 기간이 끝나면 기본 모습으로 돌아가요.");
     if(!U.user) O.needLogin(p);
   }
 

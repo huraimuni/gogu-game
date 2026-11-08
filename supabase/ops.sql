@@ -169,7 +169,7 @@ create unique index if not exists gogu_requests_pending on public.gogu_requests(
 create table if not exists public.gogu_roulette_prizes(
   id serial primary key,
   label text not null,
-  kind text not null check (kind in ('points','coupon','event_skin')),
+  kind text not null,
   amount int,
   item_days int,
   weight int not null check (weight > 0)
@@ -200,6 +200,19 @@ select * from (values
   ('이벤트 스킨 (30일, 무작위)', 'event_skin', null, 30, 5)
 ) v(label, kind, amount, item_days, weight)
 where not exists (select 1 from public.gogu_roulette_prizes);
+
+-- 룰렛에 유료 스킨·영구 상품 추가 (낮은 확률). 이미 들어 있으면 건너뜀
+alter table public.gogu_roulette_prizes drop constraint if exists gogu_roulette_prizes_kind_check;
+alter table public.gogu_roulette_prizes add constraint gogu_roulette_prizes_kind_check check (kind in ('points','coupon','event_skin','paid_skin'));
+insert into public.gogu_roulette_prizes(label, kind, amount, item_days, weight)
+select v.label, v.kind, v.amount, v.item_days, v.weight from (values
+  ('유료 스킨 (7일, 무작위)',  'paid_skin',  null::int, 7,    20),
+  ('유료 스킨 (30일, 무작위)', 'paid_skin',  null, 30,   6),
+  ('유료 스킨 (90일, 무작위)', 'paid_skin',  null, 90,   2),
+  ('이벤트 스킨 (영구, 무작위)', 'event_skin', null, null, 1),
+  ('유료 스킨 (영구, 무작위)',  'paid_skin',  null, null, 1)
+) v(label, kind, amount, item_days, weight)
+where not exists (select 1 from public.gogu_roulette_prizes r where r.label = v.label);
 
 do $$
 declare t text;
@@ -687,20 +700,22 @@ begin
     acc := acc + pr.weight;
     if roll <= acc then exit; end if;
   end loop;
-  if pr.kind = 'event_skin' then
-    select * into skin from public.gogu_items where kind = 'skin' and tier = 'event' order by random() limit 1;
+  if pr.kind in ('event_skin','paid_skin') then
+    -- 아직 없는 스킨을 먼저 고르고, 다 가졌으면 무작위
+    select * into skin from public.gogu_items where kind = 'skin' and tier = (case when pr.kind = 'paid_skin' then 'paid' else 'event' end)
+      order by public.gogu_has_item(uid, id), random() limit 1;
     if not found then
       pr.kind := 'points'; pr.amount := 30; pr.label := '포인트 30';
     end if;
   end if;
   update public.gogu_profiles set last_spin = today where id = uid;
   insert into public.gogu_gifts(to_user, kind, item_id, amount, note, expires_at, item_days)
-  values (uid, case when pr.kind = 'event_skin' then 'item' else pr.kind end,
-          case when pr.kind = 'event_skin' then skin.id end,
-          case when pr.kind <> 'event_skin' then pr.amount end,
-          '룰렛 당첨', now() + interval '7 days', case when pr.kind = 'event_skin' then pr.item_days end)
+  values (uid, case when pr.kind in ('event_skin','paid_skin') then 'item' else pr.kind end,
+          case when pr.kind in ('event_skin','paid_skin') then skin.id end,
+          case when pr.kind not in ('event_skin','paid_skin') then pr.amount end,
+          '룰렛 당첨', now() + interval '7 days', case when pr.kind in ('event_skin','paid_skin') then pr.item_days end)
   returning id into gid;
-  return jsonb_build_object('gift_id', gid, 'label', case when pr.kind = 'event_skin' then skin.name || ' (' || pr.item_days || '일)' else pr.label end,
+  return jsonb_build_object('gift_id', gid, 'label', case when pr.kind in ('event_skin','paid_skin') then skin.name || ' (' || coalesce(pr.item_days::text || '일', '영구') || ')' else pr.label end,
                             'kind', pr.kind);
 end $$;
 
