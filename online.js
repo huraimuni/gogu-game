@@ -340,7 +340,8 @@
       else if(fr==="sent"){var b2=el("button","cbtn","신청 보냄");b2.disabled=true;row.appendChild(b2)}
       var cb=el("button","cbtn ghost","닫기");cb.type="button";cb.addEventListener("click",function(){ov.remove()});row.appendChild(cb);
       bx.appendChild(row);
-    }).catch(function(e){bx.innerHTML="";bx.appendChild(el("div","muted",errMsg(e)));var cb=el("button","cbtn ghost","닫기");cb.type="button";cb.addEventListener("click",function(){ov.remove()});bx.appendChild(cb)});
+    }).catch(function(e){if(/could not find|schema cache|PGRST202/i.test((e&&(e.message||e.code))||"")){ov.remove();return}   // 서버 준비 전에는 조용히 닫음
+      bx.innerHTML="";bx.appendChild(el("div","muted",errMsg(e)));var cb=el("button","cbtn ghost","닫기");cb.type="button";cb.addEventListener("click",function(){ov.remove()});bx.appendChild(cb)});
   }
 
   /* ---------- 클랜 탭 ---------- */
