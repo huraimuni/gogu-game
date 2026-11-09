@@ -296,6 +296,9 @@
     var cm=el("a","menu");cm.href="https://open.kakao.com/o/p80tC5Vi";cm.target="_blank";cm.rel="noopener noreferrer";cm.style.textDecoration="none";
     var cl=el("div");cl.appendChild(document.createTextNode("커뮤니티 가기"));cl.appendChild(el("small",null,"카카오톡 오픈채팅에서 같이 이야기해요"));
     cm.appendChild(cl);cm.appendChild(el("i",null,"›"));p.appendChild(cm);
+    var rv=el("a","menu");rv.href="https://cafe.naver.com/f-e/cafes/31807016/menus/8?viewType=L";rv.target="_blank";rv.rel="noopener noreferrer";rv.style.textDecoration="none";
+    var rl=el("div");rl.appendChild(document.createTextNode("후기 쓰기"));rl.appendChild(el("small",null,"네이버 카페 게시판에 플레이 후기를 남겨 주세요"));
+    rv.appendChild(rl);rv.appendChild(el("i",null,"›"));p.appendChild(rv);
     menuItem(p,"규정 · 안내","공정한 플레이를 위한 규칙","rl");
     if(U.profile&&(U.profile.is_admin||U.profile.is_op))menuItem(p,"운영자","가입자 · 신청 · 제재 현황 (운영자 전용)","op");
     ["이용약관|terms.html","개인정보처리방침|privacy.html"].forEach(function(x){
