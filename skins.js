@@ -359,6 +359,43 @@
     p.appendChild(el("div","muted","유료 스킨은 서비스 준비 중이에요. 이벤트 스킨은 이벤트 룰렛 보상 등으로 받을 수 있고, 로그인하면 보유 스킨이 불러와져요."));
   }
 
+
+  // 내 가방: 보유 중 / 아직 없는 스킨을 이미지로 모아 보여줘요. 칭호·특전은 online.js(G.bagExtra)가 이어서 그려요
+  var bagOpen=false;
+  function tabBag(p){
+    var el=G.el;
+    var b=el("button","cbtn ghost back","← 더보기");b.type="button";
+    b.addEventListener("click",function(){PV={};G.openSheet("more")});p.appendChild(b);
+    if(!ready){p.appendChild(el("div","muted","불러오는 중…"));return}
+    var sel=equipped(),mine=[],lack=[];
+    SLOTS.forEach(function(sl){CAT[sl[0]].forEach(function(k){(owned(k.id)?mine:lack).push([sl,k])})});
+    function grid(list,own){
+      var g=el("div","skgrid");
+      list.forEach(function(x){
+        var sl=x[0],k=x[1],on=sel[sl[0]]===k.id;
+        var c=el("button","sk"+(own?"":" lock"));c.type="button";c.setAttribute("aria-pressed",on?"true":"false");
+        c.appendChild(el("span","tg "+k.tier,sl[1]));
+        var o={p:sel.p,b:sel.b,f:sel.f};o[sl[0]]=k.id;
+        c.appendChild(thumbEl(el,o,sl[0],k));
+        c.appendChild(document.createTextNode(k.name));
+        var ex=G.itemsExp&&G.itemsExp[k.id],dl=ex?Math.max(1,Math.ceil((new Date(ex)-Date.now())/86400000)):0;
+        c.appendChild(el("small",null,own?(on?"사용 중":dl?dl+"일 남음":"사용하기"):(k.only?"초대 전용":k.tier==="paid"?"유료":"이벤트")));
+        c.addEventListener("click",function(){skinPopup(k)});
+        g.appendChild(c);
+      });
+      return g;
+    }
+    p.appendChild(el("div","group","스킨 · 보유 중 ("+mine.length+")"));p.lastChild.style.marginBottom="6px";
+    p.appendChild(grid(mine,true));
+    if(lack.length){
+      var tg=el("button","cbtn ghost",(bagOpen?"▲ 접기 · ":"▼ 펼치기 · ")+"스킨 · 아직 없어요 ("+lack.length+")");tg.type="button";tg.style.cssText="width:100%;margin:2px 0 8px";
+      tg.addEventListener("click",function(){bagOpen=!bagOpen;G.refresh()});p.appendChild(tg);
+      if(bagOpen)p.appendChild(grid(lack,false));
+    }else p.appendChild(el("div","muted","모든 스킨을 모았어요!"));
+    if(G.bagExtra)G.bagExtra(p);
+    if(G.shareCard){var sb=el("button","cbtn","내 스킨 자랑하기 (이미지 공유)");sb.type="button";sb.style.width="100%";sb.style.margin="6px 0 10px";sb.addEventListener("click",function(){G.shareCard()});p.appendChild(sb)}
+  }
+
   // 상점 탭에 넣는 스킨 상품 목록 (유료 스킨). 누르면 구매 신청, 보유 중이면 스킨 화면으로
   function tabCash(p){
     var el=G.el;
@@ -399,13 +436,13 @@
 
   function start(game){
     G=game;css();
-    G.registerTab("sk",tabSkin);G.registerTab("cash",tabCash);
+    G.registerTab("sk",tabSkin);G.registerTab("cash",tabCash);G.registerTab("bag",tabBag);
     var a=document.querySelectorAll("#term img");
     prepare([a[0].src,a[1].src],function(){
       D.ready=true;apply();
-      if(G.currentTab()==="sk"||G.currentTab()==="cash"||G.currentTab()==="free")G.refresh();
+      if(G.currentTab()==="sk"||G.currentTab()==="cash"||G.currentTab()==="free"||G.currentTab()==="bag")G.refresh();
     });
-    G.onItems=function(){apply();if(G.currentTab()==="sk"||G.currentTab()==="cash"||G.currentTab()==="free")G.refresh()};
+    G.onItems=function(){apply();if(G.currentTab()==="sk"||G.currentTab()==="cash"||G.currentTab()==="free"||G.currentTab()==="bag")G.refresh()};
   }
   window.GoguSkins={start:start,products:products,freeProducts:function(p){products(p,"free")},render:function(s,f){return render(s,f||0)},thumb:function(o,sl){return thumb(o,sl)},equipped:function(){return equipped()},ready:function(){return ready}};
   if(window.GoguGame)start(window.GoguGame);

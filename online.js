@@ -290,7 +290,8 @@
       var hl=el("div");hl.appendChild(document.createTextNode("홈 화면에 추가"));hl.appendChild(el("small",null,"바탕화면에서 바로 열어요 · 앱처럼 전체 화면"));
       hb.appendChild(hl);hb.appendChild(el("i",null,"›"));hb.addEventListener("click",addToHome);p.appendChild(hb);
     }
-    menuItem(p,U.gifts>0?"내정보 ("+U.gifts+")":"내정보",U.gifts>0?"받을 선물이 있어요":"선물함 · 닉네임 · 내 코드 · 보유 아이템","me");
+    menuItem(p,U.gifts>0?"내정보 ("+U.gifts+")":"내정보",U.gifts>0?"받을 선물이 있어요":"선물함 · 닉네임 · 내 코드","me");
+    menuItem(p,"내 가방","보유 스킨 · 칭호 · 특전을 이미지로 모아봐요","bag");
     menuItem(p,U.friendIn>0?"친구 ("+U.friendIn+")":"친구",U.friendIn>0?"받은 친구 신청이 있어요":"친구 등록 · 친구 랭킹 (최대 50명)","fr");
     menuItem(p,"클랜","클랜 만들기 · 가입 · 클랜원 보기","cl");
     var cm=el("a","menu");cm.href="https://open.kakao.com/o/p80tC5Vi";cm.target="_blank";cm.rel="noopener noreferrer";cm.style.textDecoration="none";
@@ -496,22 +497,6 @@
       });
     }).catch(function(){gbox.innerHTML="";gbox.appendChild(el("div","muted","선물함을 불러오지 못했어요"))});
 
-    var ib=el("div","card");ib.appendChild(el("h4",null,"보유 아이템"));
-    rpc("gogu_items_list").then(function(all){
-      var mine=all.filter(function(i){return U.items.indexOf(i.id)>=0});
-      if(!mine.length){ib.appendChild(el("div","muted","아직 없어요"));return}
-      mine.forEach(function(i){
-        var row=el("div","row");row.style.justifyContent="space-between";
-        var l=el("div");l.appendChild(el("div",null,i.name));var left=U.itemsExp&&U.itemsExp[i.id]?Math.max(1,Math.ceil((new Date(U.itemsExp[i.id])-Date.now())/86400000))+"일 남음":(i.kind==="title"||i.kind==="perk"?"영구":"");
-        l.appendChild(el("div","muted",(i.descr||"")+(left?" · "+left:"")));row.appendChild(l);
-        if(i.kind==="title"){
-          var on=pr.title===i.name;var b=el("button","cbtn"+(on?" ghost":""),on?"해제":"달기");b.type="button";
-          b.addEventListener("click",function(){rpc("gogu_set_title",{p_item:on?null:i.id}).then(function(){pr.title=on?null:i.name;cache={};G.refresh()}).catch(function(e){toast(errMsg(e))})});row.appendChild(b);
-        }
-        ib.appendChild(row);
-      });
-    }).catch(function(){});
-    p.appendChild(ib);
 
     var ft=el("div","row");ft.style.justifyContent="space-between";
     if(pr.is_admin){var a=el("a","cbtn ghost","운영자 페이지");a.href="admin.html";a.style.textDecoration="none";ft.appendChild(a)}
@@ -606,9 +591,46 @@
     }).catch(function(){});
   }
 
+
+  /* ---------- 내 가방: 칭호·특전 (스킨은 skins.js) ---------- */
+  var BAGICON={title:"🏷️",perk:"⚡"};
+  function bagExtra(p){
+    if(!U.user)return;
+    var box=el("div");p.appendChild(box);
+    rpc("gogu_items_list").then(function(all){
+      var list=(all||[]).filter(function(i){return i.kind==="title"||i.kind==="perk"});
+      if(!list.length)return;
+      [["title","칭호"],["perk","특전"]].forEach(function(kd){
+        var items=list.filter(function(i){return i.kind===kd[0]});if(!items.length)return;
+        var mine=items.filter(function(i){return U.items.indexOf(i.id)>=0}),lack=items.filter(function(i){return U.items.indexOf(i.id)<0});
+        function grid(arr,own){
+          var g=el("div","skgrid");
+          arr.forEach(function(i){
+            var on=kd[0]==="title"&&U.profile&&U.profile.title===i.name;
+            var c=el("button","sk"+(own?"":" lock"));c.type="button";c.setAttribute("aria-pressed",on?"true":"false");
+            var ic=el("div",null,BAGICON[kd[0]]);ic.style.cssText="font-size:30px;height:68px;line-height:68px;background:#1b1438;border-radius:10px;margin:12px 0 6px";c.appendChild(ic);
+            c.appendChild(document.createTextNode(i.name));
+            var left=U.itemsExp&&U.itemsExp[i.id]?Math.max(1,Math.ceil((new Date(U.itemsExp[i.id])-Date.now())/86400000))+"일 남음":"";
+            c.appendChild(el("small",null,own?(kd[0]==="title"?(on?"사용 중 · 눌러서 해제":"눌러서 달기"):(left||"영구")):"아직 없어요"));
+            c.addEventListener("click",function(){
+              if(own&&kd[0]==="title"){
+                rpc("gogu_set_title",{p_item:on?null:i.id}).then(function(){if(U.profile)U.profile.title=on?null:i.name;cache={};G.refresh()}).catch(function(e){toast(errMsg(e))});
+              }else toast((i.descr||i.name)+(own?"":" · 아직 없어요"));
+            });
+            g.appendChild(c);
+          });
+          return g;
+        }
+        box.appendChild(el("div","group",kd[1]+" · 보유 중 ("+mine.length+")"));box.lastChild.style.margin="8px 0 6px";
+        if(mine.length)box.appendChild(grid(mine,true));else box.appendChild(el("div","muted","아직 없어요"));
+        if(lack.length){box.appendChild(el("div","group",kd[1]+" · 아직 없어요 ("+lack.length+")"));box.lastChild.style.margin="8px 0 6px";box.appendChild(grid(lack,false))}
+      });
+    }).catch(function(){});
+  }
+
   /* ---------- 시작 ---------- */
   function start(game){
-    G=game;
+    G=game;G.bagExtra=bagExtra;
     captureInvite();
     G.registerTab("rk",tabRank);G.registerTab("cl",tabClan);G.registerTab("me",tabMe);G.registerTab("more",tabMore);G.registerTab("iv",tabInvite);G.registerTab("op",tabOp);
     if(!cfg.SUPABASE_URL||!cfg.SUPABASE_ANON_KEY||!window.supabase){return}
