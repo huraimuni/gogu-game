@@ -444,6 +444,6 @@
     });
     G.onItems=function(){apply();if(G.currentTab()==="sk"||G.currentTab()==="cash"||G.currentTab()==="free"||G.currentTab()==="bag")G.refresh()};
   }
-  window.GoguSkins={start:start,products:products,freeProducts:function(p){products(p,"free")},render:function(s,f){return render(s,f||0)},thumb:function(o,sl){return thumb(o,sl)},equipped:function(){return equipped()},ready:function(){return ready}};
+  window.GoguSkins={start:start,preview:function(o,cls){return previewNode(G.el,{p:o.p||DEF.p,b:o.b||DEF.b,f:o.f||DEF.f,g:o.g||DEF.g},cls)},products:products,freeProducts:function(p){products(p,"free")},render:function(s,f){return render(s,f||0)},thumb:function(o,sl){return thumb(o,sl)},equipped:function(){return equipped()},ready:function(){return ready}};
   if(window.GoguGame)start(window.GoguGame);
 })();

@@ -107,10 +107,10 @@
     var lab = el("label", "muted"); lab.style.cssText = "display:flex;gap:8px;align-items:center;margin-top:10px";
     var cb = el("input"); cb.type = "checkbox"; cb.checked = pr.show_profile !== false;
     cb.addEventListener("change", function(){
-      rpc("gogu_set_show_profile", { p_on: cb.checked }).then(function(){ pr.show_profile = cb.checked; toast(cb.checked ? "친구에게 프로필이 보여요" : "프로필을 숨겼어요"); })
+      rpc("gogu_set_show_profile", { p_on: cb.checked }).then(function(){ pr.show_profile = cb.checked; toast(cb.checked ? "다른 회원에게 프로필이 보여요" : "프로필을 숨겼어요"); })
         .catch(function(e){ cb.checked = !cb.checked; toast(errMsg(e)); });
     });
-    lab.appendChild(cb); lab.appendChild(document.createTextNode("친구에게 내 프로필(스킨·기록) 보이기"));
+    lab.appendChild(cb); lab.appendChild(document.createTextNode("다른 회원에게 내 프로필(스킨·기록) 보이기"));
     sc.appendChild(lab); p.appendChild(sc);
 
     var rq = el("div", "card"); rq.appendChild(el("h4", null, "아이템 신청 내역 (최근 30일)"));

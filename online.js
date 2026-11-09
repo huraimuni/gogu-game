@@ -220,6 +220,7 @@
           if(r.clan)nm.appendChild(el("small",null,"· "+r.clan));
         }
         d.appendChild(nm);d.appendChild(el("div","v",G.fmt(Number(RK.kind==="cl"?r.score:r.value))));
+        if(RK.kind!=="cl"&&U.user&&r.nickname!==mine){d.style.cursor="pointer";d.addEventListener("click",function(){openProfile(r.nickname)})}
         box.appendChild(d);
       });
       if(RK.kind!=="cl"&&U.user&&RK.season==null){
@@ -308,6 +309,38 @@
     });
     if(!U.ready)note(p,"서버 연결 후 이용할 수 있어요.");
     else if(!U.user)needLogin(p);
+  }
+
+
+  /* ---------- 랭킹에서 보는 공개 프로필 ---------- */
+  function openProfile(nick){
+    var old=document.getElementById("skpop");if(old)old.remove();
+    var ov=el("div","skpop");ov.id="skpop";
+    ov.addEventListener("click",function(e){if(e.target===ov)ov.remove()});
+    var bx=el("div","skbox");ov.appendChild(bx);
+    bx.appendChild(el("b",null,nick));bx.appendChild(el("div","muted","불러오는 중…"));
+    document.body.appendChild(ov);
+    rpc("gogu_public_profile",{p_nickname:nick}).then(function(pf){
+      bx.innerHTML="";
+      var h=el("div");h.style.cssText="font-weight:800;font-size:18px;margin-bottom:4px";h.textContent=(pf.title?"["+pf.title+"] ":"")+pf.nickname;bx.appendChild(h);
+      if(pf.hidden){bx.appendChild(el("div","muted","이 회원은 프로필을 숨겼어요"))}
+      else{
+        if(window.GoguSkins&&window.GoguSkins.ready())bx.appendChild(window.GoguSkins.preview(pf.skin||{},"skpvbig"));
+        if(pf.clan)bx.appendChild(el("div","muted","클랜 "+pf.clan));
+        var st=el("div",null,pf.ps==null?"기록 확인 중":"초당 최고 "+G.fmt(Number(pf.ps))+"원 · 터치당 최고 "+G.fmt(Number(pf.pc))+"원");st.style.cssText="margin:6px 0";bx.appendChild(st);
+        if(pf.joined)bx.appendChild(el("div","muted","가입일 "+String(pf.joined).slice(0,10)));
+      }
+      var row=el("div","skrow");
+      var fr=pf.friend;
+      if(fr==="none"||fr==="received"){
+        var fb=el("button","cbtn",fr==="received"?"친구 수락":"친구 신청");fb.type="button";
+        fb.addEventListener("click",function(){fb.disabled=true;rpc("gogu_friend_request_nick",{p_nickname:pf.nickname}).then(function(){toast(fr==="received"?"친구가 됐어요!":"친구 신청을 보냈어요");fb.textContent=fr==="received"?"친구예요":"신청 완료";cache={}}).catch(function(e){fb.disabled=false;toast(errMsg(e))})});
+        row.appendChild(fb);
+      }else if(fr==="friend"){var b1=el("button","cbtn","친구예요");b1.disabled=true;row.appendChild(b1)}
+      else if(fr==="sent"){var b2=el("button","cbtn","신청 보냄");b2.disabled=true;row.appendChild(b2)}
+      var cb=el("button","cbtn ghost","닫기");cb.type="button";cb.addEventListener("click",function(){ov.remove()});row.appendChild(cb);
+      bx.appendChild(row);
+    }).catch(function(e){bx.innerHTML="";bx.appendChild(el("div","muted",errMsg(e)));var cb=el("button","cbtn ghost","닫기");cb.type="button";cb.addEventListener("click",function(){ov.remove()});bx.appendChild(cb)});
   }
 
   /* ---------- 클랜 탭 ---------- */
