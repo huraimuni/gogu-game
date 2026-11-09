@@ -35,6 +35,10 @@ button.danger{background:var(--red)}.wrap2{flex-wrap:wrap}.wrap2>*{flex:1 1 45%}
   <h1>고구마게임 운영자</h1>
   <div id="msg" class="card muted">불러오는 중…</div>
   <div id="app" hidden>
+    <div class="card adm" id="statCard" style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+      <div><div class="muted">전체 회원수</div><div id="statUsers" style="font-size:24px;font-weight:800;color:var(--gold)">–</div><div id="statSub" class="muted"></div></div>
+      <button id="statReload" class="ghost" type="button" style="flex:none">새로고침</button>
+    </div>
     <div class="tabs" id="tabs">
       <button data-p="give" class="on">지급</button>
       <button data-p="flag">제재</button>
@@ -181,10 +185,18 @@ button.danger{background:var(--red)}.wrap2{flex-wrap:wrap}.wrap2>*{flex:1 1 45%}
           var tag=i.kind==="skin"?" ["+(TIER[i.tier]||"")+" "+(SLOT[i.slot]||"")+"]":"";
           o.textContent=i.name+tag;sel.appendChild(o);
         });
-        if(isAdmin)loadLog();
+        if(isAdmin){loadLog();loadStat()}
       });
     }).catch(function(e){say("불러오지 못했어요: "+em(e),"bad")});
   }
+  function loadStat(){
+    $("statSub").textContent="불러오는 중…";
+    rpc("gogu_admin_usage").then(function(r){
+      $("statUsers").textContent=Number(r.users).toLocaleString()+"명";
+      $("statSub").textContent="오늘 +"+r.new_today+" · 7일 +"+r.new_7d+" · 오늘 활동 "+r.active_1d+"명";
+    }).catch(function(e){$("statUsers").textContent="–";$("statSub").textContent="불러오지 못했어요: "+em(e)});
+  }
+  $("statReload").addEventListener("click",loadStat);
   /* 탭 */
   var loaded={};
   $("tabs").addEventListener("click",function(ev){
