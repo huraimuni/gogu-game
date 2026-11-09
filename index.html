@@ -115,11 +115,15 @@ body.boost .term .f2{animation-duration:.2s}
 .lv .bar>div{height:100%;width:0;background:linear-gradient(90deg,#4ccf86,#4aa3ff,#a56bff);transition:width .2s}
 .lv .bar span{position:absolute;inset:0;text-align:center;font:700 10px/14px var(--f-body);color:#173}
 .splash{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;
-  background:linear-gradient(180deg,var(--night1) 0%,var(--night2) 70%,#222c44 100%);
+  background:var(--night1);overflow:hidden;
   padding:max(24px,env(safe-area-inset-top,0px)) max(24px,env(safe-area-inset-right,0px)) max(24px,env(safe-area-inset-bottom,0px)) max(24px,env(safe-area-inset-left,0px));
   transition:opacity .35s}
 .splash.off{opacity:0;pointer-events:none}
-.sp-in{max-width:440px;width:100%;display:flex;flex-direction:column;align-items:center;gap:clamp(8px,2.4vh,24px);text-align:center}
+.splash::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,var(--night1) 0%,var(--night2) 70%,#222c44 100%);opacity:0;animation:spin .7s ease-out .15s forwards}
+.sp-flash{position:absolute;inset:0;pointer-events:none;z-index:2;opacity:0;background:radial-gradient(circle at 50% 46%,rgba(255,214,120,.9) 0%,rgba(255,140,40,.32) 38%,rgba(255,120,30,0) 70%);animation:spflash .75s ease-out .25s forwards}
+@keyframes spflash{0%{opacity:0}14%{opacity:1}100%{opacity:0}}
+@keyframes spin{from{opacity:0}to{opacity:1}}
+.sp-in{position:relative;z-index:1;animation:spin .4s ease-out both;max-width:440px;width:100%;display:flex;flex-direction:column;align-items:center;gap:clamp(8px,2.4vh,24px);text-align:center}
 .sp-art{display:grid;width:min(300px,72vw,28vh)}
 .sp-art img{grid-area:1/1;width:100%;aspect-ratio:1;image-rendering:pixelated;filter:drop-shadow(0 12px 12px rgba(0,0,0,.45))}
 .sp-art .f1{animation:fa .5s steps(1) infinite}
@@ -140,8 +144,13 @@ body.boost .term .f2{animation-duration:.2s}
 .sp-msg{margin:0;font:500 clamp(13px,min(4.2vw,2.3vh),18px)/1.6 var(--f-body);word-break:keep-all;color:var(--fg)}
 .sp-sub{margin:0;font:400 clamp(12px,min(3.6vw,1.9vh),15px)/1.5 var(--f-body);color:var(--muted);word-break:keep-all}
 .sp-bar{width:100%;height:10px;border-radius:4px;background:rgba(255,255,255,.14);overflow:hidden;margin-top:6px}
-.sp-bar>div{height:100%;width:0;background:linear-gradient(90deg,#ff8a1c,#ffd23d);animation:spload 2s linear forwards}
+.sp-bar>div{height:100%;width:0;background:#7a3fd0;animation:spload 2s linear forwards,spcol 2s linear forwards}
 @keyframes spload{to{width:100%}}
+@keyframes spcol{0%{background:#7a3fd0}40%{background:#b8552e}75%{background:#ff9a2e}100%{background:#ffd23d}}
+.sp-gauge{position:relative;width:100%;margin-top:6px}
+.sp-gauge .sp-bar{margin-top:0}
+.sp-pt{position:absolute;top:50%;left:0;font-size:24px;line-height:1;transform:translate(-50%,-52%);filter:brightness(.55) saturate(.7);animation:sppt 2s linear forwards;pointer-events:none}
+@keyframes sppt{60%{filter:brightness(.9) saturate(.95)}to{left:100%;filter:brightness(1.08) saturate(1.15) drop-shadow(0 0 6px rgba(255,170,60,.9))}}
 .sp-load{margin:0;font:700 14px var(--f-body);color:var(--muted)}
 .sp-go{border:0;border-radius:14px;padding:clamp(11px,2vh,16px) 44px;font:400 clamp(18px,2.8vh,22px) var(--f-display);color:#4a2c00;cursor:pointer;
   background:linear-gradient(160deg,#ffe58a,var(--gold2));border:2px solid #fff2c4}
@@ -232,7 +241,7 @@ body.boost .term .f2{animation-duration:.2s}
 .toast{position:fixed;left:50%;bottom:calc(110px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:#fff;color:var(--sheet-fg);
   padding:10px 16px;border-radius:14px;font:700 14px var(--f-body);opacity:0;pointer-events:none;transition:.25s;z-index:40;max-width:90vw;text-align:center}
 .toast.on{opacity:1;transform:translate(-50%,0)}
-@media (prefers-reduced-motion:reduce){.heat .sm,.heat .em{animation:none;display:none}body.boost .heat::before{animation:none}body.boost .term .f1,body.boost .term .f2{animation:none}body.boost .term .f2{opacity:0}.sp-art .f1,.sp-art .f2{animation:none}.sp-art .f2{opacity:0}.sp-bar>div{animation:none;width:100%}.term .f1,.term .f2{animation:none}.term .f2{opacity:0}.fx,.bill{animation:none;opacity:0}.term,.sheet,.scrim{transition:none}}
+@media (prefers-reduced-motion:reduce){.heat .sm,.heat .em{animation:none;display:none}body.boost .heat::before{animation:none}body.boost .term .f1,body.boost .term .f2{animation:none}body.boost .term .f2{opacity:0}.sp-art .f1,.sp-art .f2{animation:none}.sp-art .f2{opacity:0}.sp-bar>div{animation:none;width:100%;background:#ffd23d}.sp-pt{animation:none;left:100%;filter:none}.sp-flash{display:none}.splash::before,.sp-in{animation:none}.splash::before{opacity:1}.term .f1,.term .f2{animation:none}.term .f2{opacity:0}.fx,.bill{animation:none;opacity:0}.term,.sheet,.scrim{transition:none}}
 html,body{touch-action:manipulation}
 </style>
 </head>
@@ -244,7 +253,7 @@ html,body{touch-action:manipulation}
 
   <div class="top">
     <button class="sq" id="openMis" type="button"><span class="b">미션<i id="misBadge" hidden>0</i></span></button>
-    <div class="title"><b>고구마 굽기</b><small>방치형 군고구마 게임 · v1.90</small></div>
+    <div class="title"><b>고구마 굽기</b><small>방치형 군고구마 게임 · v1.91</small></div>
     <button class="sq" id="openPts" type="button"><span class="b">포인트</span></button>
   </div>
 
@@ -296,20 +305,21 @@ html,body{touch-action:manipulation}
   <div style="height:calc(10px + env(safe-area-inset-bottom,0px))"></div>
 </section>
 <div class="splash" id="splash" role="dialog" aria-label="안내">
+  <div class="sp-flash"></div>
   <div class="sp-in">
     <h2>고구마 굽기</h2>
     <div class="sp-art"><div class="sp-glow"></div><div class="sp-lit"><img class="f1" id="spA" alt=""><img class="f2" id="spB" alt=""></div><i class="sk" style="left:44%;--dx:-18px;animation-delay:0.5s"></i><i class="sk" style="left:52%;--dx:14px;animation-delay:0.7s"></i><i class="sk" style="left:48%;--dx:-6px;animation-delay:0.9s"></i><i class="sk" style="left:56%;--dx:22px;animation-delay:1.05s"></i><i class="sk" style="left:41%;--dx:-24px;animation-delay:1.2s"></i><i class="sk" style="left:50%;--dx:8px;animation-delay:1.35s"></i><i class="st" style="left:46%;--dx:-10px;animation-delay:1.2s"></i><i class="st" style="left:52%;--dx:8px;animation-delay:1.45s"></i><i class="st" style="left:49%;--dx:-4px;animation-delay:1.7s"></i><i class="st" style="left:55%;--dx:14px;animation-delay:1.95s"></i></div>
-    <div class="sp-tag">방치형 군고구마 게임 · v1.90</div>
+    <div class="sp-tag">방치형 군고구마 게임 · v1.91</div>
     <p class="sp-msg">고구마를 터치해서 굽고,<br>화로를 키워 보세요.</p>
     <p class="sp-sub">3개월마다 새 시즌! 돈·레벨은 새로 시작하고<br>스킨과 아이템은 그대로 남아요.</p>
-    <div class="sp-bar"><div></div></div>
-    <p class="sp-load" id="spLoad">불이 꺼져 있어요…</p>
+    <div class="sp-gauge"><div class="sp-bar"><div></div></div><span class="sp-pt" aria-hidden="true">🍠</span></div>
+    <p class="sp-load" id="spLoad">어두운 화로…</p>
   </div>
 </div>
 <div class="toast" id="toast"></div>
 
-<script src="config.js?v=190"></script>
-<script src="icons.js?v=190"></script>
+<script src="config.js?v=191"></script>
+<script src="icons.js?v=191"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.js"></script>
 <script>
 (function(){
@@ -710,7 +720,7 @@ html,body{touch-action:manipulation}
   window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();window.GoguInstallEv=e});
   window.addEventListener("appinstalled",function(){window.GoguInstallEv=null;toast("홈 화면에 추가됐어요!")});
   if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}
-  var APP_VER=190,updTry=0;
+  var APP_VER=191,updTry=0;
   function chkUpdate(){
     if(/[?&#](code|access_token|refresh_token|error|error_description|state)=/.test(location.search+location.hash))return;   // 카카오 로그인 복귀 중에는 새로고침하지 않음 (로그인 코드가 사라짐)
     if(document.getElementById("gate"))return;   // 로그인·닉네임·튜토리얼 화면 중에는 다음 확인 때 업데이트
@@ -745,8 +755,37 @@ html,body{touch-action:manipulation}
   if($("splash")&&isApp){                              // 홈 화면 앱으로 열면 로딩 화면 없이 바로 시작 (앱 자체 시작 화면이 대신함)
     $("splash").remove();spDone=true;setTimeout(function(){showOffline();popFlush()},300);
   }else if($("splash")){                               // 매번: 불 꺼짐 → 불 피우는 중 → 불 붙고 김 모락모락 (2초), 터치하면 건너뜀
-    setTimeout(function(){if($("spLoad"))$("spLoad").textContent="불 피우는 중…"},700);
-    setTimeout(function(){if($("spLoad"))$("spLoad").textContent="고구마 굽는 중!"},1400);
+    var spFx=null,spFxDone=false;
+    function matchSound(){                             // 성냥 긋는 소리 "치익" + 불붙는 "훅" (파일 없이 WebAudio로 합성)
+      if(spFxDone)return;
+      try{
+        var AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
+        if(!spFx)spFx=new AC();
+        if(spFx.state!=="running"){spFx.resume&&spFx.resume()}
+        if(spFx.state!=="running")return;               // 자동재생 차단 중이면 첫 터치 때 다시 시도
+        spFxDone=true;
+        var c=spFx,t=c.currentTime,len=Math.floor(c.sampleRate*.9),b=c.createBuffer(1,len,c.sampleRate),d=b.getChannelData(0);
+        for(var i=0;i<len;i++)d[i]=Math.random()*2-1;
+        var s1=c.createBufferSource();s1.buffer=b;
+        var hp=c.createBiquadFilter();hp.type="bandpass";hp.frequency.setValueAtTime(5200,t);hp.frequency.exponentialRampToValueAtTime(2200,t+.28);hp.Q.value=.9;
+        var g1=c.createGain();g1.gain.setValueAtTime(0,t);g1.gain.linearRampToValueAtTime(.34,t+.03);g1.gain.exponentialRampToValueAtTime(.001,t+.32);
+        s1.connect(hp);hp.connect(g1);g1.connect(c.destination);s1.start(t);s1.stop(t+.35);
+        var s2=c.createBufferSource();s2.buffer=b;
+        var lp=c.createBiquadFilter();lp.type="lowpass";lp.frequency.setValueAtTime(500,t+.26);lp.frequency.exponentialRampToValueAtTime(1500,t+.6);
+        var g2=c.createGain();g2.gain.setValueAtTime(0,t+.26);g2.gain.linearRampToValueAtTime(.3,t+.36);g2.gain.exponentialRampToValueAtTime(.001,t+.85);
+        s2.connect(lp);lp.connect(g2);g2.connect(c.destination);s2.start(t+.26);s2.stop(t+.88);
+      }catch(e){}
+    }
+    function spTouchRetry(){if($("splash")){matchSound()}document.removeEventListener("pointerdown",spTouchRetry,true)}
+    var calm=false;try{calm=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches}catch(e){}
+    setTimeout(function(){
+      matchSound();document.addEventListener("pointerdown",spTouchRetry,true);
+      try{if(!calm&&navigator.vibrate)navigator.vibrate([22,28,50])}catch(e){}
+      if($("spLoad"))$("spLoad").textContent="치익— 불 붙는 중!";
+    },250);
+    setTimeout(function(){if($("spLoad"))$("spLoad").textContent="고구마 굽는 중…"},900);
+    setTimeout(function(){if($("spLoad"))$("spLoad").textContent="노릇노릇 익어가요!"},1450);
+    setTimeout(function(){if($("spLoad"))$("spLoad").textContent="군고구마 완성! 🍠"},1850);
     setTimeout(spFinish,2000);
     $("splash").addEventListener("click",spFinish);
   }
@@ -783,9 +822,9 @@ html,body{touch-action:manipulation}
   paintTop();
 })();
 </script>
-<script src="skins.js?v=190"></script>
-<script src="online.js?v=190"></script>
-<script src="social.js?v=190"></script>
+<script src="skins.js?v=191"></script>
+<script src="online.js?v=191"></script>
+<script src="social.js?v=191"></script>
 
 </body>
 </html>
