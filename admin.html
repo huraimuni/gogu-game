@@ -89,7 +89,7 @@ button.danger{background:var(--red)}.wrap2{flex-wrap:wrap}.wrap2>*{flex:1 1 45%}
         <div id="reqList" class="list" style="margin-top:10px"></div>
         <label for="rdays">승인 시 아이템 사용 기간</label>
         <select id="rdays"><option value="">영구</option><option value="7">7일</option><option value="30" selected>30일</option><option value="90">90일</option></select>
-        <div class="row"><button id="reqOk" type="button">승인(선물 지급)</button><button id="reqNo" class="ghost" type="button">보류</button></div>
+        <div class="row"><button id="reqOk" type="button">승인(선물 지급)</button><button id="reqNo" class="ghost" type="button">보류</button><button id="reqDel" class="danger" type="button">삭제</button></div>
         <div id="reqRes" style="margin-top:8px"></div>
       </div>
     </div>
@@ -291,6 +291,21 @@ button.danger{background:var(--red)}.wrap2{flex-wrap:wrap}.wrap2>*{flex:1 1 45%}
     rpc("gogu_admin_requests_resolve",{p_ids:ids,p_approve:ok,p_item_days:ok?d:null}).then(function(r){out("reqRes",r.done+"건 처리"+(r.skipped?" (건너뜀 "+r.skipped+": 유료 스킨·한도·본인 신청)":""),"ok");loadReqs()})
       .catch(function(e){out("reqRes","실패: "+em(e),"bad")});
   }
+  function delReqs(){
+    var box=$("reqList");var ids=checked(box);if(!ids.length){out("reqRes","대상을 체크하세요","bad");return}
+    var names=[].slice.call(box.querySelectorAll("input:checked")).map(function(x){var t=x.nextSibling&&x.nextSibling.firstChild;return t?t.textContent:x.value});
+    if(!confirm("신청 내역을 삭제할까요? 되돌릴 수 없어요.\n(이미 지급된 아이템은 그대로예요)\n\n"+names.join("\n")))return;
+    rpc("gogu_admin_requests_delete",{p_ids:ids}).then(function(r){
+      var rb=$("reqRes");rb.innerHTML="";rb.className="";
+      (r.results||[]).forEach(function(x){
+        var d=mk("div",null,(x.ok?"🗑 ":"⏭ ")+(x.nickname?x.nickname+" → "+x.item:"신청")+" — "+(x.ok?"삭제 완료":"건너뜀: "+x.why));
+        d.style.cssText="padding:6px 8px;margin:4px 0;border-radius:8px;font-weight:700;background:"+(x.ok?"rgba(80,200,120,.2);color:#7ee2a0":"rgba(255,180,60,.18);color:#ffcf7a");
+        rb.appendChild(d);
+      });
+      setTimeout(loadReqs,1500);
+    }).catch(function(e){out("reqRes","실패: "+em(e),"bad")});
+  }
+  $("reqDel").addEventListener("click",delReqs);
   $("reqOk").addEventListener("click",function(){resolve(true)});
   $("reqNo").addEventListener("click",function(){resolve(false)});
 
