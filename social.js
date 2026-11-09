@@ -116,7 +116,7 @@
     var rq = el("div", "card"); rq.appendChild(el("h4", null, "아이템 신청 내역 (최근 30일)"));
     p.appendChild(rq);
     rpc("gogu_request_my").then(function(list){
-      if(!list || !list.length){ rq.appendChild(el("div", "muted", "스킨 탭에서 잠긴 스킨을 눌러 신청할 수 있어요")); return; }
+      if(!list || !list.length){ rq.appendChild(el("div", "muted", "내 가방에서 잠긴 스킨을 눌러 신청할 수 있어요")); return; }
       var TXT = { pending: "대기 중", approved: "승인 (선물함 확인)", rejected: "보류됨" };
       list.forEach(function(x){
         var row = el("div", "row"); row.style.justifyContent = "space-between";
@@ -481,7 +481,7 @@
     p.appendChild(sw);
     var kc = el("div", "card"); kc.appendChild(el("h4", null, "스킨은 어떻게 얻나요?"));
     ["스킨은 고구마 · 화로 · 불 · 배경 네 칸을 따로 골라 조합해요.",
-     "무료 스킨은 누구나 바로 쓸 수 있어요. (상점 › 기본 상점과 더보기 › 스킨에서 고를 수 있어요)",
+     "무료 스킨은 누구나 바로 쓸 수 있어요. (상점 › 기본 상점이나 더보기 › 내 가방에서 고를 수 있어요)",
      "이벤트 스킨은 룰렛, 친구 3명 초대, 이벤트 코드로 받아요. 유료 스킨은 룰렛에서 랜덤으로 받을 수 있고, 구매는 준비 중이에요.",
      "룰렛의 '랜덤' 스킨은 아직 없는 스킨 중에서 무작위로 지급돼요. 기간제는 기간이 끝나면 기본 모습으로 돌아가요."].forEach(function(t){ var d = el("div", null, t); d.style.marginTop = "4px"; kc.appendChild(d); });
     p.appendChild(kc);

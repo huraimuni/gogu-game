@@ -97,7 +97,7 @@
       pendingSet(null);
       reloadItems().catch(function(){});
       if(r.kind==="promo"){
-        G.popup({first:true,title:r.label+" 선물 도착!",lines:(r.items||[]).map(function(n){return "· "+n+" (영구)"}).concat(["· 슈퍼장작 타임 "+butterText(r.minutes)]),msg:"더보기 › 스킨에서 바꿔 보세요",btn:"좋아요"});
+        G.popup({first:true,title:r.label+" 선물 도착!",lines:(r.items||[]).map(function(n){return "· "+n+" (영구)"}).concat(["· 슈퍼장작 타임 "+butterText(r.minutes)]),msg:"더보기 › 내 가방에서 바꿔 보세요",btn:"좋아요"});
       }else{
         G.popup({first:true,title:"초대 완료!",lines:[r.inviter+"님 덕분에 시작해요","슈퍼장작 타임 "+butterText(r.minutes)+" 적용됐어요"],btn:"좋아요"});
       }
@@ -249,14 +249,20 @@
     var url="https://huraimuni.github.io/gogu-game/";
     if(window.GoguInstallEv){var ev=window.GoguInstallEv;window.GoguInstallEv=null;ev.prompt();return}
     if(inapp){
-      G.popup({first:true,title:"홈 화면에 추가",lines:ios?["지금 화면은 카카오톡·앱 안의 화면이라 추가가 안 돼요","오른쪽 아래 ⋯ 또는 공유 버튼 › Safari로 열기","Safari에서 다시 이 메뉴를 눌러 주세요"]:["지금 화면은 카카오톡·앱 안의 화면이라 추가가 안 돼요","오른쪽 위 ⋮ › 다른 브라우저로 열기 › Chrome","Chrome에서 다시 이 메뉴를 눌러 주세요"],btn:"알겠어요"});
+      G.popup({first:true,title:"홈 화면에 추가",lines:ios?["지금 화면은 카카오톡·앱 안의 화면이라 추가가 안 돼요","오른쪽 아래 ⋯ 또는 공유 버튼 › Safari로 열기","Safari에서 다시 이 메뉴를 눌러 주세요"]:["지금 화면은 카카오톡·앱 안의 화면이라 추가가 안 돼요","오른쪽 위 ⋮ › 다른 브라우저로 열기 › Chrome","Chrome에서 다시 이 메뉴를 눌러 주세요"],link:ios?null:["Chrome으로 열기","intent://huraimuni.github.io/gogu-game/#Intent;scheme=https;package=com.android.chrome;end"],btn:"알겠어요"});
       return;
     }
     if(ios){
       G.popup({first:true,title:"홈 화면에 추가",lines:["① Safari 아래의 공유 버튼 (□↑) 누르기","② '홈 화면에 추가' 누르기","③ 오른쪽 위 '추가' 누르기"],msg:"Safari에서만 돼요 · 예전에 만든 바로가기가 있으면 지우고 다시 추가해 주세요",btn:"알겠어요"});
       return;
     }
-    G.popup({first:true,title:"홈 화면에 추가",lines:["① Chrome 오른쪽 위 ⋮ 누르기","② '홈 화면에 추가' 또는 '앱 설치' 누르기","③ '추가'(설치) 누르기"],msg:"Chrome에서만 앱처럼 열려요 · 예전에 만든 바로가기가 있으면 지우고 다시 추가해 주세요",btn:"알겠어요"});
+    var samsung=/SamsungBrowser/i.test(ua);
+    var chromeLink=["Chrome으로 열기","intent://huraimuni.github.io/gogu-game/#Intent;scheme=https;package=com.android.chrome;end"];
+    if(samsung){
+      G.popup({first:true,title:"홈 화면에 추가 (삼성 인터넷)",lines:["① 화면 아래 오른쪽 ≡ 메뉴 누르기","② '현재 페이지 추가' (또는 + 페이지 추가) 누르기","③ '홈 화면' 선택 후 '추가' 누르기"],msg:"메뉴 이름은 버전에 따라 조금 달라요. 안 보이면 아래 버튼으로 Chrome에서 열어 다시 이 메뉴를 눌러 주세요. 예전에 만든 바로가기가 있으면 지우고 다시 추가해 주세요",link:chromeLink,btn:"알겠어요"});
+      return;
+    }
+    G.popup({first:true,title:"홈 화면에 추가",lines:["① 브라우저 오른쪽 위 ⋮ (또는 ≡) 누르기","② '홈 화면에 추가' 또는 '앱 설치' 누르기","③ '추가'(설치) 누르기"],msg:"Chrome이나 삼성 인터넷에서 할 수 있어요 · 예전에 만든 바로가기가 있으면 지우고 다시 추가해 주세요",link:chromeLink,btn:"알겠어요"});
   }
   /* ---------- 운영자 (대표·운영자 계정에만 보임) ---------- */
   function tabOp(p){
@@ -303,12 +309,13 @@
     rv.appendChild(rl);rv.appendChild(el("i",null,"›"));p.appendChild(rv);
     menuItem(p,"규정 · 안내","공정한 플레이를 위한 규칙","rl");
     if(U.profile&&(U.profile.is_admin||U.profile.is_op))menuItem(p,"운영자","가입자 · 신청 · 제재 현황 (운영자 전용)","op");
-    ["이용약관|terms.html","개인정보처리방침|privacy.html"].forEach(function(x){
+    ["이용약관|terms.html","개인정보처리방침|privacy.html","환불정책|refund.html"].forEach(function(x){
       var a=x.split("|"),lk=el("a","menu");lk.href=a[1];lk.target="_blank";lk.rel="noopener";lk.style.textDecoration="none";
       var d=el("div");d.appendChild(document.createTextNode(a[0]));lk.appendChild(d);lk.appendChild(el("i",null,"›"));p.appendChild(lk);
     });
     if(!U.ready)note(p,"서버 연결 후 이용할 수 있어요.");
     else if(!U.user)needLogin(p);
+    p.appendChild(bizFooter(false));
   }
 
 
@@ -342,6 +349,14 @@
       bx.appendChild(row);
     }).catch(function(e){if(/could not find|schema cache|PGRST202/i.test((e&&(e.message||e.code))||"")){ov.remove();return}   // 서버 준비 전에는 조용히 닫음
       bx.innerHTML="";bx.appendChild(el("div","muted",errMsg(e)));var cb=el("button","cbtn ghost","닫기");cb.type="button";cb.addEventListener("click",function(){ov.remove()});bx.appendChild(cb)});
+  }
+
+
+  /* ---------- 사업자 정보 (전자상거래법 표시) ---------- */
+  function bizFooter(dark){
+    var f=el("div");f.style.cssText="margin:18px 0 8px;font-size:11px;line-height:1.7;opacity:.7;"+(dark?"color:#fff;text-align:center;":"")
+    f.innerHTML="상호 광주 토스단말기 카드단말기 딱알 건기식 · 대표 양문희<br>사업자등록번호 798-17-02137 · 통신판매업신고 제 2024-광주동구-0120호<br>주소 광주광역시 동구 선교로 38-33<br>문의·환불 <a href=\"mailto:huraimuni@naver.com\" style=\"color:inherit\">huraimuni@naver.com</a> · <a href=\"refund.html\" target=\"_blank\" rel=\"noopener\" style=\"color:inherit\">환불정책</a>";
+    return f;
   }
 
   /* ---------- 클랜 탭 ---------- */
@@ -563,7 +578,7 @@
     var b=el("button","kakao","카카오로 시작하기");b.type="button";b.addEventListener("click",login);
     var n=el("div");n.style.cssText="margin-top:14px;font-size:12px;opacity:.7;line-height:1.6";
     n.innerHTML='시작하면 <a href="terms.html" style="color:#ffd067">이용약관</a>과 <a href="privacy.html" style="color:#ffd067">개인정보처리방침</a>에 동의한 것으로 봐요.';
-    w.appendChild(t);w.appendChild(d);w.appendChild(b);w.appendChild(n);o.appendChild(w);
+    w.appendChild(t);w.appendChild(d);w.appendChild(b);w.appendChild(n);w.appendChild(bizFooter(true));o.appendChild(w);
   }
   function showNick(cur){
     var o=ovl(); o.innerHTML="";

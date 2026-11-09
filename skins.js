@@ -377,10 +377,15 @@
   var bagOpen=false;
   function tabBag(p){
     var el=G.el;
-    var b=el("button","cbtn ghost back","← 더보기");b.type="button";
-    b.addEventListener("click",function(){PV={};G.openSheet("more")});p.appendChild(b);
+    var from=G.skFrom||"more";
+    var b=el("button","cbtn ghost back",from==="up"?"← 아이템":from==="free"?"← 기본 상점":from==="cash"?"← 캐쉬 상점":"← 더보기");b.type="button";
+    b.addEventListener("click",function(){PV={};G.skFrom=null;G.openSheet(from)});p.appendChild(b);
     if(!ready){p.appendChild(el("div","muted","불러오는 중…"));return}
     var sel=equipped(),mine=[],lack=[];
+    var cm=combo(),previewing=Object.keys(PV).some(function(x){return PV[x]!==sel[x]});
+    p.appendChild(previewNode(el,cm,"skprev"));
+    var pn=el("div","sknm",(previewing?"미리보기 중 · ":"내 조합 · ")+comboNames(cm));pn.style.marginBottom="8px";p.appendChild(pn);
+    if(previewing){var pr=el("button","cbtn ghost","미리보기 끝내기");pr.type="button";pr.style.marginBottom="8px";pr.addEventListener("click",function(){PV={};G.refresh()});p.appendChild(pr)}
     SLOTS.forEach(function(sl){CAT[sl[0]].forEach(function(k){(owned(k.id)?mine:lack).push([sl,k])})});
     function grid(list,own){
       var g=el("div","skgrid");
@@ -414,9 +419,9 @@
     var el=G.el;
     G.shopTabs(p,"cash");
     var mb=el("button","menu");mb.type="button";
-    var ml=el("div");ml.appendChild(document.createTextNode("내 스킨 보기"));ml.appendChild(el("small",null,"스킨 바꾸기 · 자랑 이미지 공유"));
+    var ml=el("div");ml.appendChild(document.createTextNode("내 가방"));ml.appendChild(el("small",null,"보유 스킨 · 칭호 · 특전 · 스킨 바꾸기"));
     mb.appendChild(ml);mb.appendChild(el("i",null,"›"));
-    mb.addEventListener("click",function(){G.skFrom="cash";G.openSheet("sk")});p.appendChild(mb);
+    mb.addEventListener("click",function(){G.skFrom="cash";G.openSheet("bag")});p.appendChild(mb);
     if(!ready){p.appendChild(el("div","muted","불러오는 중…"));return}
     products(p);
   }
