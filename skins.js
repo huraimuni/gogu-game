@@ -307,12 +307,12 @@
     var h=el("div","skh");h.appendChild(el("b",null,k.name));h.appendChild(el("span","tg "+k.tier,TIER[k.tier]));bx.appendChild(h);
     bx.appendChild(previewNode(el,combo(),"skpvbig"));
     bx.appendChild(el("div","sknm","내 조합: "+comboNames(combo())));
-    var msg,btns=[];
+    var msg,btns=[],periodRows=false;
     if(on){msg="지금 사용 중인 스킨이에요.";btns.push(["사용 중",null,true])}
     else if(has){msg="보유 중이에요. 사용하면 위 조합 그대로 적용돼요.";btns.push(["사용하기",function(){equip(k);closePop()}])}
     else if(k.tier==="paid"){
       if(isOwner){msg="이 스킨을 구매할까요? (대표 구매)";btns.push(["구매하기",function(){closePop();G.ownerBuy(k)}])}
-      else{msg="유료 스킨이에요. 구매는 서비스 준비 중이에요. 지금은 미리보기만 볼 수 있어요."}
+      else{msg="유료 스킨이에요. 기간을 고르면 구매할 수 있어요. 결제는 서비스 준비 중이라 지금은 미리보기만 볼 수 있어요.";periodRows=true}
     }else if(k.only){
       msg=k.only+"예요. 더보기 › 내정보에서 코드를 입력하면 받을 수 있어요.";
     }else{
@@ -320,6 +320,19 @@
       if(G.requestItem)btns.push(["신청하기",function(){closePop();G.requestItem(k)}]);
     }
     bx.appendChild(el("div","skmsg",msg));
+    if(periodRows){
+      var PR=(window.GOGU_CONFIG&&window.GOGU_CONFIG.SKIN_PRICES)||{};
+      var periods=[["d7","7일"],["d30","30일"],["d90","90일"],["perm","영구"]].filter(function(x){return PR[x[0]]!=null||x[0]!=="perm"});
+      var pl=el("div");pl.style.cssText="display:grid;gap:6px;margin:8px 0";
+      periods.forEach(function(x){
+        var b=el("button","cbtn ghost");b.type="button";b.disabled=true;b.style.cssText="display:flex;justify-content:space-between;width:100%";
+        b.appendChild(el("span",null,x[1]));
+        b.appendChild(el("span",null,PR[x[0]]!=null?Number(PR[x[0]]).toLocaleString("ko-KR")+"원":"가격 준비 중"));
+        pl.appendChild(b);
+      });
+      bx.appendChild(pl);
+      var nt=el("div","muted","결제 준비 중이에요. 열리면 이 창에서 바로 구매할 수 있어요.");nt.style.fontSize="12px";bx.appendChild(nt);
+    }
     var row=el("div","skrow");
     btns.forEach(function(b){var x=el("button","cbtn",b[0]);x.type="button";if(b[2])x.disabled=true;else x.addEventListener("click",b[1]);row.appendChild(x)});
     var cb=el("button","cbtn ghost","닫기");cb.type="button";cb.addEventListener("click",function(){closePop();G.refresh()});row.appendChild(cb);
