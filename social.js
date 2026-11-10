@@ -491,6 +491,47 @@
     a.appendChild(l); a.appendChild(el("i", null, "›")); p.appendChild(a);
   }
 
+  /* ---------- 의견 보내기 (버그 신고 · 기능 제안) ---------- */
+  var FB = { kind: "bug", text: "" };
+  function tabFeedback(p){
+    O.back(p);
+    if(!U.ready){ O.offline(p); return; }
+    if(!U.user){ O.needLogin(p); return; }
+    var c = el("div", "card");
+    c.appendChild(el("h4", null, "운영자에게 보내기"));
+    c.appendChild(el("div", "muted", "불편한 점, 오류, 바라는 기능을 적어 주세요. 닉네임과 함께 운영자에게 전달돼요."));
+    var segw = el("div", "seg"); segw.style.marginTop = "8px";
+    [["bug", "버그 신고"], ["idea", "기능 제안"], ["etc", "기타"]].forEach(function(o){
+      var b = el("button", null, o[1]); b.type = "button"; b.setAttribute("aria-pressed", String(FB.kind === o[0]));
+      b.addEventListener("click", function(){ FB.text = ta.value; FB.kind = o[0]; G.refresh(); });
+      segw.appendChild(b);
+    });
+    c.appendChild(segw);
+    var ta = el("textarea");
+    ta.maxLength = 600; ta.value = FB.text; ta.style.cssText = "width:100%;min-height:130px;margin-top:10px;border:1px solid var(--line);border-radius:10px;padding:10px;font:500 15px var(--f-body);background:#fff;color:var(--sheet-fg);box-sizing:border-box;resize:vertical";
+    ta.placeholder = FB.kind === "bug" ? "어떤 화면에서 무슨 일이 생겼나요? (예: 랭킹 화면에서 내 이름이 안 보여요)"
+      : FB.kind === "idea" ? "이런 기능이 있으면 좋겠어요" : "하고 싶은 말을 적어 주세요";
+    c.appendChild(ta);
+    var cnt = el("div", "muted", ta.value.length + " / 600자"); cnt.style.cssText = "text-align:right;margin-top:4px";
+    ta.addEventListener("input", function(){ FB.text = ta.value; cnt.textContent = ta.value.length + " / 600자"; });
+    c.appendChild(cnt);
+    var row = el("div", "row");
+    var send = el("button", "btn", "보내기"); send.type = "button"; send.style.flex = "1";
+    send.addEventListener("click", function(){
+      var t = ta.value.trim();
+      if(t.length < 5){ toast("내용을 5자 이상 적어 주세요"); return; }
+      send.disabled = true;
+      var ua = ""; try{ ua = (navigator.userAgent || "").slice(0, 200) + " | " + (document.querySelector(".title small") || {}).textContent; }catch(e){}
+      rpc("gogu_feedback_send", { p_kind: FB.kind, p_body: t, p_ua: ua }).then(function(){
+        FB.text = ""; G.refresh(); toast("운영자에게 보냈어요. 고맙습니다!");
+      }).catch(function(e){ toast(errMsg(e)); }).then(function(){ send.disabled = false; });
+    });
+    row.appendChild(send); c.appendChild(row);
+    p.appendChild(c);
+    O.note(p, "하루 5건까지 보낼 수 있어요. 답변이 필요한 문의는 커뮤니티 오픈채팅이 더 빨라요.");
+  }
+
+  G.registerTab("fb", tabFeedback);
   G.registerTab("ev", tabEvent);
   G.registerTab("fr", tabFriends);
   G.registerTab("rl", tabRules);

@@ -43,6 +43,7 @@ button.danger{background:var(--red)}.wrap2{flex-wrap:wrap}.wrap2>*{flex:1 1 45%}
       <button data-p="give" class="on">지급</button>
       <button data-p="flag">제재</button>
       <button data-p="req">신청</button>
+      <button data-p="fb">건의</button>
       <button data-p="ops" class="adm">운영자</button>
     </div>
 
@@ -95,6 +96,16 @@ button.danger{background:var(--red)}.wrap2{flex-wrap:wrap}.wrap2>*{flex:1 1 45%}
         <select id="rdays"><option value="">영구</option><option value="7">7일</option><option value="30" selected>30일</option><option value="90">90일</option></select>
         <div class="row"><button id="reqOk" type="button">승인(선물 지급)</button><button id="reqNo" class="ghost" type="button">보류</button><button id="reqDel" class="danger" type="button">삭제</button></div>
         <div id="reqRes" style="margin-top:8px"></div>
+      </div>
+    </div>
+
+    <div id="p-fb" hidden>
+      <div class="card">
+        <div class="muted">회원이 게임에서 보낸 버그 신고·기능 제안이에요. 새 글이 먼저 나와요. 체크 후 아래 버튼으로 처리하세요.</div>
+        <div class="row"><button class="ghost" id="fbReload" type="button">새로고침</button></div>
+        <div id="fbList" class="list" style="margin-top:10px"></div>
+        <div class="row"><button id="fbDone" type="button">확인 완료</button><button id="fbDel" class="danger" type="button">삭제</button></div>
+        <div id="fbRes" style="margin-top:8px"></div>
       </div>
     </div>
 
@@ -202,8 +213,8 @@ button.danger{background:var(--red)}.wrap2{flex-wrap:wrap}.wrap2>*{flex:1 1 45%}
   $("tabs").addEventListener("click",function(ev){
     var b=ev.target.closest("button[data-p]");if(!b||b.hidden)return;
     document.querySelectorAll("#tabs button").forEach(function(x){x.classList.toggle("on",x===b)});
-    ["give","flag","req","ops"].forEach(function(k){$("p-"+k).hidden=(k!==b.dataset.p)});
-    if(b.dataset.p==="flag")loadFlags();if(b.dataset.p==="req")loadReqs();if(b.dataset.p==="ops")loadOps();
+    ["give","flag","req","fb","ops"].forEach(function(k){$("p-"+k).hidden=(k!==b.dataset.p)});
+    if(b.dataset.p==="flag")loadFlags();if(b.dataset.p==="req")loadReqs();if(b.dataset.p==="fb")loadFb();if(b.dataset.p==="ops")loadOps();
   });
 
   /* 지급 */
@@ -320,6 +331,31 @@ button.danger{background:var(--red)}.wrap2{flex-wrap:wrap}.wrap2>*{flex:1 1 45%}
   $("reqDel").addEventListener("click",delReqs);
   $("reqOk").addEventListener("click",function(){resolve(true)});
   $("reqNo").addEventListener("click",function(){resolve(false)});
+
+  /* 건의 (버그 신고 · 기능 제안) */
+  var FBK={bug:"🐞 버그",idea:"💡 제안",etc:"💬 기타"};
+  function loadFb(){
+    var w=$("fbList");w.textContent="불러오는 중…";
+    rpc("gogu_admin_feedback").then(function(rows){
+      w.innerHTML="";if(!rows.length){w.textContent="받은 건의가 없어요";return}
+      rows.forEach(function(r){
+        var done=r.status==="done";
+        checkRow(w,r.id,(done?"✔ ":"")+(FBK[r.kind]||r.kind)+" · "+r.nickname+" ("+r.code+")",fmtT(r.created_at),r.body);
+        var last=w.lastChild;if(done)last.style.opacity=".55";
+        var ex=last.querySelectorAll(".muted");var b=ex[ex.length-1];if(b){b.style.whiteSpace="pre-wrap";b.style.color="var(--fg)";b.style.marginTop="4px"}
+        if(r.ua){var u=mk("div","muted",r.ua);u.style.cssText="font-size:11px;word-break:break-all;margin-top:4px";last.lastChild.appendChild(u)}
+      });
+    }).catch(function(e){w.textContent="불러오지 못했어요: "+em(e)});
+  }
+  $("fbReload").addEventListener("click",loadFb);
+  function fbAct(act){
+    var ids=checked($("fbList"));if(!ids.length){out("fbRes","대상을 체크하세요","bad");return}
+    if(act==="delete"&&!confirm(ids.length+"건을 삭제할까요? 되돌릴 수 없어요."))return;
+    rpc("gogu_admin_feedback_resolve",{p_ids:ids,p_action:act}).then(function(r){out("fbRes",r.done+"건 "+(act==="done"?"확인 완료 처리":"삭제")+"했어요","ok");loadFb()})
+      .catch(function(e){out("fbRes","실패: "+em(e),"bad")});
+  }
+  $("fbDone").addEventListener("click",function(){fbAct("done")});
+  $("fbDel").addEventListener("click",function(){fbAct("delete")});
 
   /* 운영자 관리 */
   function loadOps(){

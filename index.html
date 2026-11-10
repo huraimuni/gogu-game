@@ -253,7 +253,7 @@ html,body{touch-action:manipulation}
 
   <div class="top">
     <button class="sq" id="openMis" type="button"><span class="b">미션<i id="misBadge" hidden>0</i></span></button>
-    <div class="title"><b>고구마 굽기</b><small>방치형 군고구마 게임 · v1.91</small></div>
+    <div class="title"><b>고구마 굽기</b><small>방치형 군고구마 게임 · v1.92</small></div>
     <button class="sq" id="openPts" type="button"><span class="b">포인트</span></button>
   </div>
 
@@ -309,7 +309,7 @@ html,body{touch-action:manipulation}
   <div class="sp-in">
     <h2>고구마 굽기</h2>
     <div class="sp-art"><div class="sp-glow"></div><div class="sp-lit"><img class="f1" id="spA" alt=""><img class="f2" id="spB" alt=""></div><i class="sk" style="left:44%;--dx:-18px;animation-delay:0.5s"></i><i class="sk" style="left:52%;--dx:14px;animation-delay:0.7s"></i><i class="sk" style="left:48%;--dx:-6px;animation-delay:0.9s"></i><i class="sk" style="left:56%;--dx:22px;animation-delay:1.05s"></i><i class="sk" style="left:41%;--dx:-24px;animation-delay:1.2s"></i><i class="sk" style="left:50%;--dx:8px;animation-delay:1.35s"></i><i class="st" style="left:46%;--dx:-10px;animation-delay:1.2s"></i><i class="st" style="left:52%;--dx:8px;animation-delay:1.45s"></i><i class="st" style="left:49%;--dx:-4px;animation-delay:1.7s"></i><i class="st" style="left:55%;--dx:14px;animation-delay:1.95s"></i></div>
-    <div class="sp-tag">방치형 군고구마 게임 · v1.91</div>
+    <div class="sp-tag">방치형 군고구마 게임 · v1.92</div>
     <p class="sp-msg">고구마를 터치해서 굽고,<br>화로를 키워 보세요.</p>
     <p class="sp-sub">3개월마다 새 시즌! 돈·레벨은 새로 시작하고<br>스킨과 아이템은 그대로 남아요.</p>
     <div class="sp-gauge"><div class="sp-bar"><div></div></div><span class="sp-pt" aria-hidden="true">🍠</span></div>
@@ -318,8 +318,8 @@ html,body{touch-action:manipulation}
 </div>
 <div class="toast" id="toast"></div>
 
-<script src="config.js?v=191"></script>
-<script src="icons.js?v=191"></script>
+<script src="config.js?v=192"></script>
+<script src="icons.js?v=192"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.js"></script>
 <script>
 (function(){
@@ -612,8 +612,8 @@ html,body{touch-action:manipulation}
   var sheetOpen=false;
   function openSheet(t){
     tab=t;sheetOpen=true;
-    var TT={up:"상점",cash:"캐쉬 상점",free:"기본 상점",sh:"포인트샵",ms:"미션",rk:"랭킹",more:"더보기",cl:"클랜",me:"내정보",sk:"스킨",ev:"이벤트",fr:"친구",rl:"규정 · 안내",op:"운영자",bag:"내 가방"};$("sTitle").textContent=TT[t]||"";
-    document.querySelectorAll(".stab button[data-t]").forEach(function(x){x.setAttribute("aria-selected",x.dataset.t===((t==="cl"||t==="me"||t==="sk"||t==="bag"||t==="ev"||t==="fr"||t==="rl"||t==="op")?"more":(t==="cash"||t==="free")?"up":t)?"true":"false")});
+    var TT={up:"상점",cash:"캐쉬 상점",free:"기본 상점",sh:"포인트샵",ms:"미션",rk:"랭킹",more:"더보기",cl:"클랜",me:"내정보",sk:"스킨",ev:"이벤트",fr:"친구",rl:"규정 · 안내",fb:"의견 보내기",op:"운영자",bag:"내 가방"};$("sTitle").textContent=TT[t]||"";
+    document.querySelectorAll(".stab button[data-t]").forEach(function(x){x.setAttribute("aria-selected",x.dataset.t===((t==="cl"||t==="me"||t==="sk"||t==="bag"||t==="ev"||t==="fr"||t==="rl"||t==="fb"||t==="op")?"more":(t==="cash"||t==="free")?"up":t)?"true":"false")});
     $("sheet").classList.add("on");$("sheet").setAttribute("aria-hidden","false");$("scrim").classList.add("on");
     renderPanel();paintTop();paintPanel();
   }
@@ -720,7 +720,7 @@ html,body{touch-action:manipulation}
   window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();window.GoguInstallEv=e});
   window.addEventListener("appinstalled",function(){window.GoguInstallEv=null;toast("홈 화면에 추가됐어요!")});
   if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}
-  var APP_VER=191,updTry=0;
+  var APP_VER=192,updTry=0;
   function chkUpdate(){
     if(/[?&#](code|access_token|refresh_token|error|error_description|state)=/.test(location.search+location.hash))return;   // 카카오 로그인 복귀 중에는 새로고침하지 않음 (로그인 코드가 사라짐)
     if(document.getElementById("gate"))return;   // 로그인·닉네임·튜토리얼 화면 중에는 다음 확인 때 업데이트
@@ -822,9 +822,9 @@ html,body{touch-action:manipulation}
   paintTop();
 })();
 </script>
-<script src="skins.js?v=191"></script>
-<script src="online.js?v=191"></script>
-<script src="social.js?v=191"></script>
+<script src="skins.js?v=192"></script>
+<script src="online.js?v=192"></script>
+<script src="social.js?v=192"></script>
 
 </body>
 </html>
